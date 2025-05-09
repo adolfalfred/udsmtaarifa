@@ -4,20 +4,14 @@ import { Stack } from 'expo-router';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-    const isLoggedIn = false;
     return (
         <Stack
             screenOptions={{
+                headerShown: false,
                 contentStyle: { backgroundColor: colors.background[colorScheme] }
             }}
         >
-            <Stack.Protected guard={!isLoggedIn}>
-                <Stack.Screen name="(unprotected)" options={{ headerShown: false }} />
-            </Stack.Protected>
-            <Stack.Protected guard={isLoggedIn}>
-                <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-            </Stack.Protected>
-            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
     );
 }

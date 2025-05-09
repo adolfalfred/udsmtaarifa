@@ -35,6 +35,15 @@ export default function Login() {
                         className="flex-1 h-10 border-0 p-0 text-lg text-foreground-light dark:text-foreground-dark"
                         placeholderTextColor="#aaa"
                     />
+                    {/* <TextInput
+                        placeholder="Tafuta..."
+                        value={text}
+                        onChangeText={searchFxn}
+                        placeholderTextColor="white"
+                        style={{ fontFamily: "Hedvig" }}
+                        cursorColor="#ffffff"
+                        className="flex-grow bg-background/10 text-white rounded-xl py-1 px-2 ml-2"
+                    /> */}
                 </View>
                 <View>
                     <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
