@@ -1,3 +1,4 @@
+import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
@@ -12,7 +13,7 @@ export default function BlurTabBarBackground() {
             // and matches the native tab bar appearance on iOS.
             tint={colorScheme === 'dark' ? "dark" : "light"}
             intensity={100}
-            style={StyleSheet.absoluteFill}
+            style={[StyleSheet.absoluteFill, { backgroundColor: colorScheme === 'dark' ? `${colors.background.dark}d0` : `${colors.background.light}d0` }]}
         />
     );
 }

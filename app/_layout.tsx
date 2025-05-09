@@ -35,19 +35,23 @@ export default function RootLayout() {
     if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
+  const isLoggedIn = false;
+
   if (!loaded) return null
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <GestureHandlerRootView className='flex-1 bg-background-light dark:bg-background-dark'>
         <Stack
           screenOptions={{
-            contentStyle: {
-              backgroundColor: colorScheme === "dark" ? colors.background.dark : colors.background.light
-            }
+            contentStyle: { backgroundColor: colors.background[colorScheme] }
           }}
         >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
+          <Stack.Protected guard={!isLoggedIn}>
+            <Stack.Screen name="(stack)" options={{ headerShown: false }} />
+          </Stack.Protected>
+          <Stack.Protected guard={isLoggedIn}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack.Protected>
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

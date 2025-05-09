@@ -11,7 +11,7 @@ module.exports = {
       colors: {
         background: {
           light: "#ffffff",
-          dark: "#191819",
+          dark: "#201E22",
         },
         foreground: {
           light: "#11181c",
@@ -64,6 +64,10 @@ module.exports = {
         danger: {
           light: "#f31260",
           dark: "#f31260",
+        },
+        active: {
+          light: "#ecedee",
+          dark: "#191819",
         },
       },
     },

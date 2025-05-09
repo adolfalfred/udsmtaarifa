@@ -6,7 +6,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const theme = useColorScheme() ?? 'light';
+  const theme = useColorScheme();
 
   return (
     <View className='bg-background-light dark:bg-background-dark'>

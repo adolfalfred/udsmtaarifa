@@ -1,3 +1,4 @@
+import DropdownMenu from '@/components/DropdownMenu';
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { colors } from '@/constants/Colors';
@@ -13,7 +14,14 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colorScheme === "dark" ? colors.primary.dark : colors.primary.light,
-        headerShown: false,
+        headerShown: true,
+        headerBackgroundContainerStyle: {
+          backgroundColor: colorScheme === "dark" ? `${colors.background.dark}d0` : `${colors.background.light}d0`
+        },
+        headerTransparent: true,
+        headerTitleAlign: "center",
+        headerTitleStyle: { textTransform: "uppercase" },
+        headerRight: () => <DropdownMenu />,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -23,14 +31,14 @@ export default function TabLayout() {
           },
           default: {
             position: 'absolute',
-            opacity: 0.98
+            opacity: 0.99
           },
         }),
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'News',
           tabBarIcon: ({ color }) => <MaterialIcons color={color} size={24} name='home' />,
         }}
       />
