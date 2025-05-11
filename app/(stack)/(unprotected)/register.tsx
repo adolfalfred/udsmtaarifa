@@ -25,7 +25,7 @@ export default function Register() {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isPassword2Visible, setIsPassword2Visible] = useState(false);
-    const [verified, setVerified] = useState(true)
+    const [verified, setVerified] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const toastRef = useRef<{ show: (params: { type: ToastType; text: string; shouldClose?: boolean }) => void }>(null);
