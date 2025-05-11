@@ -1,3 +1,4 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useState } from "react";
 import {
     View,
@@ -20,22 +21,25 @@ export default function ComboBoxModal() {
     );
 
     return (
-        <View className="w-full max-w-xs mx-auto mt-10">
+        <View className="w-full mx-auto">
             <TouchableOpacity
-                className="border border-gray-300 p-3 rounded-md bg-white dark:bg-gray-800"
+                className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl"
                 onPress={() => {
                     setModalVisible(true);
                     setQuery("");
                 }}
             >
-                <Text className="text-black dark:text-white">
-                    {selected || "Select an option"}
-                </Text>
+                <FontAwesome name="graduation-cap" size={16} color="#aaa" className="mr-4" />
+                <View className="h-10 flex-col items-center justify-center">
+                    <Text className="text-[#aaa] text-lg">
+                        {selected || "Programme Taking"}
+                    </Text>
+                </View>
             </TouchableOpacity>
 
             <Modal
                 transparent
-                animationType="slide"
+                animationType="fade"
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
@@ -46,7 +50,10 @@ export default function ComboBoxModal() {
                             placeholder="Search..."
                             placeholderTextColor="#999"
                             value={query}
-                            onChangeText={setQuery}
+                            onChangeText={(e) => {
+                                if (e === '') setSelected('')
+                                setQuery(e)
+                            }}
                             autoFocus
                         />
                         <FlatList
@@ -58,6 +65,7 @@ export default function ComboBoxModal() {
                                     className="p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
                                     onPress={() => {
                                         setSelected(item);
+                                        setQuery(item)
                                         setModalVisible(false);
                                     }}
                                 >

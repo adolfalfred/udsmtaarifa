@@ -1,4 +1,4 @@
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
 import { colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
