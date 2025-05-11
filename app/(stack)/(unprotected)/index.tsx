@@ -1,12 +1,16 @@
 import Button from "@/components/Button";
 import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
+import { colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Image, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function Login() {
+    const colorScheme = useColorScheme()
     const [regNo, setRegNo] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -25,7 +29,7 @@ export default function Login() {
         >
             <KeyboardAvoidingView className="flex-col gap-10">
                 <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
-                    <MaterialIcons name="person" size={20} color="#aaa" className="mr-5" />
+                    <FontAwesome6 name="user-circle" size={20} color="#aaa" className="mr-5" />
                     <TextInput
                         placeholder="Registration Number"
                         value={regNo}
@@ -34,20 +38,12 @@ export default function Login() {
                         keyboardType="numbers-and-punctuation"
                         className="flex-1 h-10 border-0 p-0 text-lg text-foreground-light dark:text-foreground-dark"
                         placeholderTextColor="#aaa"
+                        cursorColor={colors.primary[colorScheme]}
                     />
-                    {/* <TextInput
-                        placeholder="Tafuta..."
-                        value={text}
-                        onChangeText={searchFxn}
-                        placeholderTextColor="white"
-                        style={{ fontFamily: "Hedvig" }}
-                        cursorColor="#ffffff"
-                        className="flex-grow bg-background/10 text-white rounded-xl py-1 px-2 ml-2"
-                    /> */}
                 </View>
                 <View>
                     <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
-                        <MaterialIcons name="person" size={20} color="#aaa" className="mr-5" />
+                        <MaterialIcons name="lock" size={20} color="#aaa" className="mr-5" />
                         <TextInput
                             placeholder="Password"
                             value={password}
@@ -55,6 +51,7 @@ export default function Login() {
                             autoCapitalize="none"
                             className="flex-1 h-10 border-0 p-0 text-lg text-foreground-light dark:text-foreground-dark"
                             placeholderTextColor="#aaa"
+                            cursorColor={colors.primary[colorScheme]}
                             secureTextEntry={!isPasswordVisible}
                         />
                         <TouchableOpacity

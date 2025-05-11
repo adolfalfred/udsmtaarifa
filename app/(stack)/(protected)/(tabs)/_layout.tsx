@@ -13,10 +13,10 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colorScheme === "dark" ? colors.primary.dark : colors.primary.light,
+        tabBarActiveTintColor: colors.primary[colorScheme],
         headerShown: true,
         headerBackgroundContainerStyle: {
-          backgroundColor: colorScheme === "dark" ? `${colors.background.dark}d0` : `${colors.background.light}d0`
+          backgroundColor: `${colors.background[colorScheme]}d0`
         },
         headerTransparent: true,
         headerTitleAlign: "center",
