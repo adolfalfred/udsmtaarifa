@@ -27,7 +27,7 @@ export default function Login() {
                 </View>
             }
         >
-            <KeyboardAvoidingView className="flex-col gap-10">
+            <KeyboardAvoidingView className="flex-col gap-10 bg-background-light dark:bg-background-dark">
                 <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
                     <FontAwesome6 name="user-circle" size={20} color="#aaa" className="mr-5" />
                     <TextInput

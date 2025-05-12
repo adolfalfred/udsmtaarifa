@@ -9,9 +9,11 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Image, KeyboardAvoidingView, Pressable, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Combobox from "@/components/ui/Combobox";
 import axios from "axios"
 import Toast, { type ToastType } from "@/components/ui/Toast";
+import SelectProgramme from "@/components/SelectProgramme";
+import { useQuery } from "@tanstack/react-query";
+import SelectImage from "@/components/SelectImage";
 
 export default function Register() {
     const colorScheme = useColorScheme()
@@ -20,6 +22,8 @@ export default function Register() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [image, setImage] = useState<string | null>(null);
+    const [programmeId, setProgrammeId] = useState<string | null>(null);
     const [photo, setPhoto] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
@@ -31,9 +35,7 @@ export default function Register() {
     const toastRef = useRef<{ show: (params: { type: ToastType; text: string; shouldClose?: boolean }) => void }>(null);
 
     const addToast = (type: ToastType, text: string, shouldClose?: boolean) => {
-        if (toastRef.current) {
-            toastRef.current.show({ type, text, shouldClose });
-        }
+        if (toastRef.current) toastRef.current.show({ type, text, shouldClose })
     };
 
     const verifyFxn = async () => {
@@ -61,8 +63,15 @@ export default function Register() {
                 console.log('Error', error.message);
                 addToast('danger', "An error occurred while setting up the request.", true)
             }
-        } finally { setLoading(false) }
+        } finally {
+            setLoading(false)
+        }
     }
+
+    const { data } = useQuery({
+        queryKey: ["programme", { search: "", limit: 10000, page: 1 }],
+        queryFn: () => axios.get(`${process.env.EXPO_PUBLIC_DB_SERVER}/programme?s=&limit=10000&page=1`, { withCredentials: true }),
+    });
 
     return (
         <>
@@ -77,9 +86,8 @@ export default function Register() {
                             {!verified ? 'Create Account!' : "Setup Account"}
                         </Text>
                     </View>
-                }
-            >
-                <KeyboardAvoidingView className="flex-col gap-8">
+                }>
+                <KeyboardAvoidingView className="flex-col gap-8 bg-background-light dark:bg-background-dark">
                     {!verified ? (
                         <>
                             <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
@@ -149,7 +157,7 @@ export default function Register() {
                                     cursorColor={colors.primary[colorScheme]}
                                 />
                             </View>
-                            <Combobox />
+                            <SelectProgramme data={data?.data.data || []} setProgrammeId={setProgrammeId} />
                             <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
                                 <MaterialIcons name="lock" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
@@ -196,6 +204,7 @@ export default function Register() {
                                     />
                                 </TouchableOpacity>
                             </View>
+                            <SelectImage photo={photo} setImageId={setImage} />
                             <Button
                                 onPress={() => { }}
                                 className="bg-primary-light dark:bg-primary-dark "

@@ -19,6 +19,7 @@ export default function TabLayout() {
           backgroundColor: `${colors.background[colorScheme]}d0`
         },
         headerTransparent: true,
+        animation: "shift",
         headerTitleAlign: "center",
         headerTitleStyle: { textTransform: "uppercase" },
         headerRight: () => <DropdownMenu />,

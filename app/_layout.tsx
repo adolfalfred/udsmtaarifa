@@ -1,5 +1,6 @@
 import FallOutUI from '@/components/FallOutUI';
 import { colors } from '@/constants/Colors';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeStore } from '@/lib/zustand/useThemeStore';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -10,6 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme as useScheme } from "nativewind";
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import 'react-native-reanimated';
 import "../global.css";
 
@@ -27,6 +29,8 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { theme } = useThemeStore();
 
+  const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } })
+
   useEffect(() => {
     if (error) throw error;
     setColorScheme(theme);
@@ -39,17 +43,21 @@ export default function RootLayout() {
   if (!loaded) return <FallOutUI />
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <GestureHandlerRootView className='flex-1 bg-background-light dark:bg-background-dark'>
-        <Stack
-          screenOptions={{
-            contentStyle: { backgroundColor: colors.background[colorScheme] }
-          }}
-        >
-          <Stack.Screen name="(stack)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView className='flex-1 bg-background-light dark:bg-background-dark'>
+          <BottomSheetModalProvider>
+            <Stack
+              screenOptions={{
+                contentStyle: { backgroundColor: colors.background[colorScheme] }
+              }}
+            >
+              <Stack.Screen name="(stack)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </BottomSheetModalProvider>
+          <StatusBar style="auto" />
+        </GestureHandlerRootView>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

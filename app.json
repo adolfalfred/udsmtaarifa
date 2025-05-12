@@ -37,6 +37,14 @@
             "backgroundColor": "#201E22"
           }
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow UDSM Taarifa to access your photos",
+          "cameraPermission": "Allow UDSM Taarifa to access your camera",
+          "microphonePermission": "Allow UDSM Taarifa to access your microphone"
+        }
       ]
     ],
     "experiments": {
