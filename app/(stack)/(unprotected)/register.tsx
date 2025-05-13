@@ -14,6 +14,7 @@ import Toast, { type ToastType } from "@/components/ui/Toast";
 import SelectProgramme from "@/components/SelectProgramme";
 import { useQuery } from "@tanstack/react-query";
 import SelectImage from "@/components/SelectImage";
+import * as FileSystem from "expo-file-system";
 
 export default function Register() {
     const colorScheme = useColorScheme()
@@ -40,17 +41,108 @@ export default function Register() {
 
     const verifyFxn = async () => {
         try {
+            const missingFields = [];
+            if (regNo.length === 0) missingFields.push("Registration Number")
+            if (phone.length === 0) missingFields.push("Phone Number")
+            if (email.length === 0) missingFields.push("Email")
+            if (missingFields.length > 0) {
+                const formattedFields =
+                    missingFields.length > 1
+                        ? missingFields.slice(0, -1).join(", ") +
+                        " and " +
+                        missingFields.slice(-1)
+                        : missingFields[0];
+                addToast("danger", `${formattedFields} ${missingFields.length === 1 ? "is" : "are"} required!`, true)
+                return
+            }
+            if (!phone.startsWith("+255")) {
+                addToast('danger', "Phone Number must start with +255!", true)
+                return
+            }
             setLoading(true)
             addToast('loading', "Verifying data...")
             const res = await axios.post(`${process.env.EXPO_PUBLIC_DB_SERVER}/auth/verify`, { email, phone, regNo });
-            console.log(res.status);
-            console.log(res.data);
             setPhoto(res.data?.image || null)
             setRegNo((prev) => res.data?.regNo ? res.data?.regNo : prev)
             setEmail((prev) => res.data?.email ? res.data?.email : prev)
             setPhone((prev) => res.data?.phone ? res.data?.phone : prev)
             setVerified(true)
             addToast('success', "Your data is verified, Finish setting up account.", true)
+        } catch (error: any) {
+            if (error.isAxiosError && error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                addToast('danger', error.response.data, true)
+            } else if (error.request) {
+                console.log(error.request);
+                addToast('danger', "No response received from the server. Check your network.", true)
+            } else {
+                console.log('Error', error.message);
+                addToast('danger', "An error occurred while setting up the request.", true)
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const signupFxn = async () => {
+        try {
+            const missingFields = [];
+            if (name.length === 0) missingFields.push("Name")
+            if (!programmeId) missingFields.push("Studying Programme")
+            if (password.length === 0) missingFields.push("Password")
+            if (missingFields.length > 0) {
+                const formattedFields =
+                    missingFields.length > 1
+                        ? missingFields.slice(0, -1).join(", ") +
+                        " and " +
+                        missingFields.slice(-1)
+                        : missingFields[0];
+                addToast("danger", `${formattedFields} ${missingFields.length === 1 ? "is" : "are"} required!`, true)
+                return
+            }
+            if (password.length < 8) {
+                addToast('danger', "Password is too short!", true)
+                return
+            }
+            if (password !== repeatPassword) {
+                addToast('danger', "Passwords do not match!", true)
+                return
+            }
+            setLoading(true)
+            addToast('loading', "Verifying data...")
+
+            const e = new FormData();
+
+            if (image) {
+                const fileInfo = await FileSystem.getInfoAsync(image);
+                if (!fileInfo.exists) {
+                    console.error(`File not found: ${image}`);
+                    return { error: "File not uploaded!" };
+                }
+                const uriParts = image.split(".");
+                const fileExtension = uriParts[uriParts.length - 1];
+                const fileName = `image.${fileExtension}`;
+                const mimeType = `image/${fileExtension}`;
+                e.append("image", {
+                    uri: image,
+                    name: fileName,
+                    type: mimeType,
+                } as any);
+            } else if (photo) e.append("image", photo)
+            else e.delete('image')
+
+            e.append("name", name)
+            e.append("email", email)
+            e.append("regNo", regNo)
+            e.append("phone", phone)
+            e.append("password", password)
+            if (programmeId) e.append("programmeId", programmeId)
+
+            const res = await axios.post(`${process.env.EXPO_PUBLIC_DB_SERVER}/auth/signup`, e);
+            addToast('success', "Account created successfully", true)
+            console.log(res?.data)
+
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -106,7 +198,7 @@ export default function Register() {
                             <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
                                 <MaterialCommunityIcons name="phone" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
-                                    placeholder="Phone Number"
+                                    placeholder="Phone Number (+255...)"
                                     value={phone}
                                     onChangeText={setPhone}
                                     keyboardType="phone-pad"
@@ -165,6 +257,7 @@ export default function Register() {
                                     value={password}
                                     onChangeText={setPassword}
                                     autoCapitalize="none"
+                                    keyboardType="visible-password"
                                     className="flex-1 h-10 border-0 p-0 text-lg text-foreground-light dark:text-foreground-dark"
                                     placeholderTextColor="#aaa"
                                     cursorColor={colors.primary[colorScheme]}
@@ -206,7 +299,7 @@ export default function Register() {
                             </View>
                             <SelectImage photo={photo} setImageId={setImage} />
                             <Button
-                                onPress={() => { }}
+                                onPress={signupFxn}
                                 className="bg-primary-light dark:bg-primary-dark "
                                 textClassName="text-foreground-dark text-2xl"
                                 disabled={loading}

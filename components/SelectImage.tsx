@@ -5,8 +5,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { colors } from '@/constants/Colors';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import Button from './ui/Button';
 import * as ImagePicker from 'expo-image-picker';
+import Button from './ui/Button';
 
 export default function SelectImage({ photo, setImageId }: { photo: string | null; setImageId: (setImageId: string | null) => void }) {
     const [image, setImage] = useState<string | null>(null)
@@ -18,9 +18,9 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
         bottomSheetModalRef.current?.present();
     }, []);
     const closeModal = useCallback(() => {
-        // setImageId(selected ? selected.id : null)
+        setImageId(image)
         bottomSheetModalRef.current?.close();
-    }, []);
+    }, [image, setImageId]);
 
     const pickImage = async () => {
         try {
@@ -30,10 +30,7 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                 aspect: [1, 1],
                 quality: 0.8,
             });
-
-            if (!result.canceled) {
-                setImage(result.assets[0].uri);
-            }
+            if (!result.canceled) setImage(result.assets[0].uri);
         } catch (error) {
             console.error('Error picking image:', error);
             Alert.alert('Error', 'Failed to pick image. Please try again.');
@@ -56,9 +53,7 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                 quality: 0.8,
             });
 
-            if (!result.canceled) {
-                setImage(result.assets[0].uri);
-            }
+            if (!result.canceled) setImage(result.assets[0].uri)
         } catch (error) {
             console.error('Error taking photo:', error);
             Alert.alert('Error', 'Failed to take photo. Please try again.');
@@ -74,13 +69,10 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                         Select Image
                     </Text>
                 </View>
-                {photo ? <Image
-                    source={{ uri: photo }}
-                    className="w-10 h-10 ml-auto"
-                /> : <Image
-                    source={require('@/assets/images/icon.png')}
-                    className="w-10 h-10 ml-auto"
-                />}
+                {image
+                    ? <Image source={{ uri: image }} className="w-10 h-10 ml-auto" />
+                    : <>{photo ? <Image source={{ uri: photo }} className="w-10 h-10 ml-auto" /> : null}</>
+                }
             </TouchableOpacity>
             <BottomSheetModal
                 ref={bottomSheetModalRef}
@@ -103,11 +95,9 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                                 </TouchableOpacity>
                             </>
                         ) : <>
-                            {photo ? (
-                                <Image source={{ uri: photo }} className='w-80 h-80 rounded-2xl' />
-                            )
-                                : <View className='w-80 h-80 rounded-2xl border-2 border-dashed border-primary-light/50 dark:border-primary-dark/50 items-center justify-center'>
-                                    <MaterialIcons name='image' size={48} color={colors.primary[colorScheme]} />
+                            {photo ? <Image source={{ uri: photo }} className='w-80 h-80 rounded-2xl' />
+                                : <View className='w-80 h-80 rounded-2xl border-2 border-dashed border-secondary-light/50 dark:border-secondary-dark/50 items-center justify-center'>
+                                    <MaterialIcons name='image' size={48} color={colors.secondary[colorScheme]} />
                                     <Text className='text-foreground-light dark:text-foreground-dark mt-4'>
                                         No image selected
                                     </Text>
