@@ -11,7 +11,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme as useScheme } from "nativewind";
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { refreshSession } from '@/lib/auth';
 import 'react-native-reanimated';
 import "../global.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync();
+    refreshSession()
   }, [loaded]);
 
   if (!loaded) return <FallOutUI />

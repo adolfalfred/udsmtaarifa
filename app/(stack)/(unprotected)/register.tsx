@@ -15,9 +15,14 @@ import SelectProgramme from "@/components/SelectProgramme";
 import { useQuery } from "@tanstack/react-query";
 import SelectImage from "@/components/SelectImage";
 import * as FileSystem from "expo-file-system";
+import SelectStartYear from "@/components/SelectStartYear";
+import SelectCurrentYear from "@/components/SelectCurrentYear";
+import { signIn } from "@/lib/auth";
+import { useSessionStore } from "@/lib/zustand/useSessionStore";
 
 export default function Register() {
     const colorScheme = useColorScheme()
+    const { setIsLoggedIn, setUser } = useSessionStore()
 
     const [regNo, setRegNo] = useState('');
     const [name, setName] = useState('');
@@ -25,6 +30,9 @@ export default function Register() {
     const [phone, setPhone] = useState('');
     const [image, setImage] = useState<string | null>(null);
     const [programmeId, setProgrammeId] = useState<string | null>(null);
+    const [startYear, setStartYear] = useState<number | null>(null);
+    const [totalYears, setTotalYears] = useState<number | null>(null);
+    const [currentStudyYear, setCurrentStudyYear] = useState<number>(0);
     const [photo, setPhoto] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
@@ -34,7 +42,6 @@ export default function Register() {
     const [loading, setLoading] = useState(false)
 
     const toastRef = useRef<{ show: (params: { type: ToastType; text: string; shouldClose?: boolean }) => void }>(null);
-
     const addToast = (type: ToastType, text: string, shouldClose?: boolean) => {
         if (toastRef.current) toastRef.current.show({ type, text, shouldClose })
     };
@@ -67,7 +74,7 @@ export default function Register() {
             setEmail((prev) => res.data?.email ? res.data?.email : prev)
             setPhone((prev) => res.data?.phone ? res.data?.phone : prev)
             setVerified(true)
-            addToast('success', "Your data is verified, Finish setting up account.", true)
+            addToast('success', "Your data is verified, Finish setting up your account.", true)
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -110,7 +117,7 @@ export default function Register() {
                 return
             }
             setLoading(true)
-            addToast('loading', "Verifying data...")
+            addToast('loading', "Creating account...")
 
             const e = new FormData();
 
@@ -129,6 +136,7 @@ export default function Register() {
                     name: fileName,
                     type: mimeType,
                 } as any);
+                console.log("Image", e.get("image"))
             } else if (photo) e.append("image", photo)
             else e.delete('image')
 
@@ -136,13 +144,25 @@ export default function Register() {
             e.append("email", email)
             e.append("regNo", regNo)
             e.append("phone", phone)
+            e.append("currentStudyYear", `${currentStudyYear}`)
+            e.append("startYear", `${startYear}`)
             e.append("password", password)
             if (programmeId) e.append("programmeId", programmeId)
 
-            const res = await axios.post(`${process.env.EXPO_PUBLIC_DB_SERVER}/auth/signup`, e);
+            const res = await axios.post(`${process.env.EXPO_PUBLIC_DB_SERVER}/auth/signup`, e, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
             addToast('success', "Account created successfully", true)
             console.log(res?.data)
-
+            const auth = await signIn(regNo, password)
+            if (auth) {
+                setIsLoggedIn(true)
+                setUser(auth)
+                addToast('success', "Welcome!", true)
+                return;
+            }
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -213,6 +233,7 @@ export default function Register() {
                                     placeholder="Email"
                                     value={email}
                                     onChangeText={setEmail}
+                                    autoCapitalize="none"
                                     keyboardType="email-address"
                                     className="flex-1 h-10 border-0 p-0 text-lg text-foreground-light dark:text-foreground-dark"
                                     placeholderTextColor="#aaa"
@@ -249,7 +270,21 @@ export default function Register() {
                                     cursorColor={colors.primary[colorScheme]}
                                 />
                             </View>
-                            <SelectProgramme data={data?.data.data || []} setProgrammeId={setProgrammeId} />
+                            <SelectProgramme
+                                data={data?.data.data || []}
+                                setProgrammeId={setProgrammeId}
+                                programmeId={programmeId}
+                                setTotalYears={setTotalYears}
+                            />
+                            <SelectStartYear
+                                setStartYear={setStartYear}
+                                startYear={startYear}
+                            />
+                            <SelectCurrentYear
+                                currentYear={currentStudyYear}
+                                setCurrentYear={setCurrentStudyYear}
+                                totalYears={totalYears}
+                            />
                             <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
                                 <MaterialIcons name="lock" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
@@ -257,7 +292,6 @@ export default function Register() {
                                     value={password}
                                     onChangeText={setPassword}
                                     autoCapitalize="none"
-                                    keyboardType="visible-password"
                                     className="flex-1 h-10 border-0 p-0 text-lg text-foreground-light dark:text-foreground-dark"
                                     placeholderTextColor="#aaa"
                                     cursorColor={colors.primary[colorScheme]}

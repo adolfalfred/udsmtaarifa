@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
-import { View, Text, TouchableOpacity, Alert, Image } from 'react-native'
-import { useCallback, useRef, useState } from 'react'
+import { View, Text, TouchableOpacity, Alert, Image, StatusBar } from 'react-native'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { colors } from '@/constants/Colors';
@@ -18,9 +18,9 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
         bottomSheetModalRef.current?.present();
     }, []);
     const closeModal = useCallback(() => {
-        setImageId(image)
         bottomSheetModalRef.current?.close();
-    }, [image, setImageId]);
+    }, []);
+    const snapPoints = useMemo(() => ['100%'], []);
 
     const pickImage = async () => {
         try {
@@ -81,6 +81,8 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                 backgroundStyle={{ backgroundColor: colors.background[colorScheme] }}
                 handleIndicatorStyle={{ backgroundColor: colors.foreground[colorScheme] }}
                 backdropComponent={() => <View className='bg-black/40 flex-1 absolute inset-0'></View>}
+                topInset={StatusBar.currentHeight || 0}
+                snapPoints={snapPoints}
                 onDismiss={closeModal}>
                 <BottomSheetView className='flex-1 h-[90vh] p-6 bg-background-light dark:bg-background-dark'>
                     <View className='rounded-2xl overflow-hidden mb-6 relative self-center items-center justify-center'>
@@ -96,8 +98,8 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                             </>
                         ) : <>
                             {photo ? <Image source={{ uri: photo }} className='w-80 h-80 rounded-2xl' />
-                                : <View className='w-80 h-80 rounded-2xl border-2 border-dashed border-secondary-light/50 dark:border-secondary-dark/50 items-center justify-center'>
-                                    <MaterialIcons name='image' size={48} color={colors.secondary[colorScheme]} />
+                                : <View className='w-80 h-80 rounded-2xl border-2 border-dashed border-primary-light/50 dark:border-primary-dark/50 items-center justify-center'>
+                                    <MaterialIcons name='image' size={48} color={colors.primary[colorScheme]} />
                                     <Text className='text-foreground-light dark:text-foreground-dark mt-4'>
                                         No image selected
                                     </Text>
@@ -105,26 +107,37 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                             }
                         </>}
 
-                        <View className='flex-row items-center mt-8'>
+                        <Text className='text-foreground-light dark:text-foreground-dark text-center mt-5 text-lg'>
+                            Select a Photo for your Account
+                        </Text>
+
+                        <View className='flex-row items-center mt-5'>
                             <Button
                                 icon={<MaterialIcons name='upload' size={20} color="white" />}
                                 onPress={pickImage}
-                                className='border-2 border-secondary-light dark:border-secondary-dark rounded-l-full rounded-r-sm bg-secondary-light dark:bg-secondary-dark'
+                                className='border-2 border-primary-light dark:border-primary-dark rounded-l-full rounded-r-sm bg-primary-light dark:bg-primary-dark'
                                 textClassName='text-foreground-dark'
                             >
                                 Gallery
                             </Button>
                             <Button
-                                icon={<MaterialIcons name='camera' size={20} color={colors.secondary[colorScheme]} />}
+                                icon={<MaterialIcons name='camera' size={20} color={colors.primary[colorScheme]} />}
                                 onPress={takePhoto}
-                                className='border-2 border-secondary-light dark:border-secondary-dark rounded-r-full rounded-l-sm bg-transparent'
-                                textClassName='text-secondary-light dark:text-secondary-dark'
+                                className='border-2 border-primary-light dark:border-primary-dark rounded-r-full rounded-l-sm bg-transparent'
+                                textClassName='text-primary-light dark:text-primary-dark'
                             >
                                 Camera
                             </Button>
                         </View>
                     </View>
-
+                    <Button
+                        onPress={() => {
+                            if (image) setImageId(image)
+                            closeModal()
+                        }}
+                        className="bg-primary-light dark:bg-primary-dark "
+                        textClassName="text-foreground-dark text-2xl"
+                    >Confirm</Button>
                 </BottomSheetView>
             </BottomSheetModal>
         </>

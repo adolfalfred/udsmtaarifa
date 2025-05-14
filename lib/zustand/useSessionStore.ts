@@ -3,19 +3,23 @@
 // import { Platform } from "react-native";
 import { create } from "zustand";
 
-interface SessionProps {
-  session: "dark" | "light" | "system" | null;
-  setSession: (e: "dark" | "light" | "system") => void;
-}
+type AuthState = {
+  isLoggedIn: boolean;
+  user: any | null;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  setUser: (user: any) => void;
+};
 
-// export const useSessionStore = create<SessionProps>()(
+// export const useSessionStore = create<AuthState>()(
 //   persist(
 //     (set) => ({
-//       session: null,
-//       setSession: (e) => set(() => ({ session: e })),
+//       isLoggedIn: false,
+//       user: null,
+//       setIsLoggedIn: (e) => set(() => ({ isLoggedIn: e })),
+//       setUser: (e) => set(() => ({ user: e })),
 //     }),
 //     {
-//       name: "settings-store",
+//       name: "session-store",
 //       storage:
 //         Platform.OS === "web"
 //           ? createJSONStorage(() => localStorage)
@@ -24,7 +28,9 @@ interface SessionProps {
 //   )
 // );
 
-export const useSessionStore = create<SessionProps>((set) => ({
-  session: null,
-  setSession: (e) => set(() => ({ session: e })),
+export const useSessionStore = create<AuthState>((set) => ({
+  isLoggedIn: false,
+  user: null,
+  setIsLoggedIn: (e) => set(() => ({ isLoggedIn: e })),
+  setUser: (e) => set(() => ({ user: e })),
 }));

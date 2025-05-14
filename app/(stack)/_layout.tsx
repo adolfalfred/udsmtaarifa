@@ -1,10 +1,12 @@
 import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useSessionStore } from '@/lib/zustand/useSessionStore';
 import { Stack } from 'expo-router';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-    const isLoggedIn = false;
+    const { isLoggedIn, user } = useSessionStore();
+    console.log(user)
     return (
         <Stack
             screenOptions={{

@@ -1,6 +1,6 @@
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
-import { View, Text, TouchableOpacity, TextInput, FlatList } from 'react-native'
-import { useCallback, useRef, useState } from 'react'
+import { BottomSheetFlatList, BottomSheetModal, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
+import { View, Text, TouchableOpacity, StatusBar } from 'react-native'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { colors } from '@/constants/Colors';
@@ -24,7 +24,17 @@ export type ProgrammeProps = {
     };
 }
 
-export default function SelectProgramme({ data, setProgrammeId }: { data: ProgrammeProps[]; setProgrammeId: (programmeId: string | null) => void }) {
+export default function SelectProgramme({
+    data,
+    programmeId,
+    setProgrammeId,
+    setTotalYears,
+}: {
+    data: ProgrammeProps[];
+    programmeId: string | null;
+    setProgrammeId: (programmeId: string | null) => void;
+    setTotalYears: (years: number) => void;
+}) {
     const [selected, setSelected] = useState<ProgrammeProps | null>(null)
     const [query, setQuery] = useState("");
 
@@ -34,10 +44,14 @@ export default function SelectProgramme({ data, setProgrammeId }: { data: Progra
     const presentModal = useCallback(() => {
         bottomSheetModalRef.current?.present();
     }, []);
-    const closeModal = useCallback(() => {
-        setProgrammeId(selected ? selected.id : null)
+    const closeModal = useCallback((item: ProgrammeProps | undefined | null) => {
+        if (item) {
+            setTotalYears(item.years)
+            setProgrammeId(item.id)
+        }
         bottomSheetModalRef.current?.close();
-    }, [selected, setProgrammeId]);
+    }, [setProgrammeId, setTotalYears]);
+    const snapPoints = useMemo(() => ['50%', '100%'], []);
 
     const filtered = data.filter((item) =>
         item.name.toLowerCase().includes(query.toLowerCase())
@@ -62,9 +76,12 @@ export default function SelectProgramme({ data, setProgrammeId }: { data: Progra
                 backgroundStyle={{ backgroundColor: colors.background[colorScheme] }}
                 handleIndicatorStyle={{ backgroundColor: colors.foreground[colorScheme] }}
                 backdropComponent={() => <View className='bg-black/40 flex-1 absolute inset-0'></View>}
-                onDismiss={closeModal}>
+                topInset={StatusBar.currentHeight || 0}
+                keyboardBehavior="extend"
+                snapPoints={snapPoints}
+                onDismiss={() => closeModal(null)}>
                 <BottomSheetView className='flex-1 h-[90vh] p-6 bg-background-light dark:bg-background-dark'>
-                    <TextInput
+                    <BottomSheetTextInput
                         className="border border-[#aaa] p-3 rounded-md mb-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                         placeholder="Search..."
                         placeholderTextColor="#999"
@@ -75,16 +92,17 @@ export default function SelectProgramme({ data, setProgrammeId }: { data: Progra
                         }}
                         autoFocus
                     />
-                    <FlatList
+                    <BottomSheetFlatList
                         data={filtered}
                         keyExtractor={(item) => item.id}
-                        className="max-h-60"
+                        className='min-h-[50vh]'
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 className="p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                                style={{ backgroundColor: programmeId === item.id ? `${colors.foreground[colorScheme]}20` : undefined }}
                                 onPress={() => {
                                     setSelected(item);
-                                    setQuery(item.name)
+                                    closeModal(item)
                                 }}
                             >
                                 <Text className="text-black dark:text-white">{`${item.name} (${item.code})`}</Text>
