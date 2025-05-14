@@ -5,8 +5,8 @@ import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Tabs } from 'expo-router';
-import { Platform } from 'react-native';
+import { router, Tabs } from 'expo-router';
+import { Platform, TouchableOpacity } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -23,6 +23,12 @@ export default function TabLayout() {
         headerTitleAlign: "center",
         headerTitleStyle: { textTransform: "uppercase" },
         headerRight: () => <DropdownMenu />,
+        headerLeft: ({ canGoBack }) => {
+          if (canGoBack) return <TouchableOpacity onPress={() => router.back()}>
+            <MaterialIcons color={'#aaa'} size={24} name='chevron-left' />
+          </TouchableOpacity>
+          return null
+        },
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -37,7 +43,7 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="index"
+        name="post"
         options={{
           title: 'News',
           tabBarIcon: ({ color }) => <MaterialIcons color={color} size={24} name='home' />,

@@ -6,7 +6,7 @@ export const signIn = async (regNo: string, password: string) => {
   try {
     const response = await axios.post(
       `${process.env.EXPO_PUBLIC_DB_SERVER}/auth/login`,
-      { regNo, password }
+      { regNo: regNo.trim(), password }
     );
 
     const token = response.headers["set-cookie"] || response.headers["cookie"];
@@ -24,8 +24,8 @@ export const signIn = async (regNo: string, password: string) => {
     setAuthCookie(token[0]);
     await SecureStore.setItemAsync("userToken", token[0]);
     return res.data.user;
-  } catch (err) {
-    console.error("Login error:", err);
+  } catch (err: any) {
+    console.error(err.message || "Login error");
     return null;
   }
 };

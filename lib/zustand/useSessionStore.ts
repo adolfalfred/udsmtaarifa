@@ -3,11 +3,20 @@
 // import { Platform } from "react-native";
 import { create } from "zustand";
 
+type UserProps = {
+  email: string;
+  id: string;
+  image: string | null;
+  name: string | null;
+  phone: string;
+  regNo: string;
+};
+
 type AuthState = {
   isLoggedIn: boolean;
-  user: any | null;
+  user: UserProps | null;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  setUser: (user: any) => void;
+  setUser: (user: UserProps | null) => void;
 };
 
 // export const useSessionStore = create<AuthState>()(

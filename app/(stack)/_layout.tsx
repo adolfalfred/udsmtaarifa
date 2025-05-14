@@ -5,8 +5,7 @@ import { Stack } from 'expo-router';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-    const { isLoggedIn, user } = useSessionStore();
-    console.log(user)
+    const { isLoggedIn } = useSessionStore();
     return (
         <Stack
             screenOptions={{
