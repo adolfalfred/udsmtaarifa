@@ -43,7 +43,7 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="post"
+        name="news"
         options={{
           title: 'News',
           tabBarIcon: ({ color }) => <MaterialIcons color={color} size={24} name='home' />,

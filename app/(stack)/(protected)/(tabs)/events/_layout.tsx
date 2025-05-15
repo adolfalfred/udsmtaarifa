@@ -11,9 +11,14 @@ export default function TabLayout() {
                 contentStyle: { backgroundColor: colors.background[colorScheme] }
             }}
         >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="post" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="eventpost" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen
+                name="event"
+                options={{ title: 'Events', headerShown: false }}
+            />
+            <Stack.Screen
+                name="[id]"
+                options={{ title: 'Event', headerShown: false }}
+            />
         </Stack>
     );
 }

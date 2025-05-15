@@ -1,27 +1,29 @@
 import api from "@/lib/api";
-import type { PostProps, PostTypesProps } from "@/types/post";
+import type { EventProps } from "@/types/event";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export const usePostsQuery = (
+export const useEventsQuery = (
   search: string,
   page: number,
-  type: PostTypesProps
+  category: number | ""
 ) => {
-  const [store, setStore] = useState<PostProps[]>([]);
+  const [store, setStore] = useState<EventProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["post", { search, page, type }],
+    queryKey: ["event", { search, page, category }],
     queryFn: () =>
       api
         .get(
-          `/post?s=${search}&limit=20&page=${page}&type=${type}&available=true`
+          `/event?s=${search}&limit=20&page=${page}&category=${category}&available=true`
         )
         .then((res) => res.data),
   });
 
   useEffect(() => {
-    if (data) {
+    if (page === 1) {
+      setStore(data?.data ?? []);
+    } else if (data) {
       setStore((prev) => {
         const map = new Map();
         [...prev, ...data.data].forEach((item) => {
@@ -30,15 +32,15 @@ export const usePostsQuery = (
         return Array.from(map.values());
       });
     }
-  }, [data]);
+  }, [data, page]);
 
   return { data: store, isLoading, nextPage: data?.nextPage || false };
 };
 
-export const usePostQuery = (id: string) => {
-  const { data, isLoading } = useQuery<PostProps>({
-    queryKey: ["post", id],
-    queryFn: () => api.get(`/post/${id}`).then((res) => res.data),
+export const useEventQuery = (id: string) => {
+  const { data, isLoading } = useQuery<EventProps>({
+    queryKey: ["event", id],
+    queryFn: () => api.get(`/event/${id}`).then((res) => res.data),
   });
   return { data: data || null, isLoading };
 };

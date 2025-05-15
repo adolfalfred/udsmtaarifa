@@ -2,7 +2,7 @@ export interface PostProps {
   id: string;
   createdAt: Date;
   updatedAt: Date;
-  type: "college" | "department" | "category" | "news" | "class" | "special";
+  type: PostTypesProps;
   media: {
     [key: number]: {
       url: string;
@@ -75,3 +75,11 @@ export interface PostProps {
     image: string | null;
   };
 }
+
+export type PostTypesProps =
+  | "college"
+  | "department"
+  | "category"
+  | "news"
+  | "class"
+  | "special";
