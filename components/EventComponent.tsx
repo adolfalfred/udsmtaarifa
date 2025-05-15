@@ -16,17 +16,17 @@ export function EventComponent({ item, page = false }: { item: EventProps, page?
             <Link href={`/(stack)/(protected)/(tabs)/events/${item.id}`} asChild>
                 <Pressable className='w-full px-6 py-4'>
                     <View className='flex flex-row gap-2 justify-between border border-foreground-light/20 dark:border-foreground-dark/20 rounded-xl overflow-hidden'>
-                        <View className='p-3'>
+                        <View className='p-3 w-1/2'>
                             {item?.title
                                 ? <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
                                 : null}
                             {item?.content
-                                ? <Text className='text-foreground-light/60 dark:text-foreground-dark/80'>{item.content}</Text>
+                                ? <Text className='text-foreground-light/60 dark:text-foreground-dark/80 truncate'>{item.content}</Text>
                                 : null}
                         </View>
 
                         {mediaArray.length > 0 ? (
-                            <View className='w-36 h-36'>
+                            <View className='w-36 h-36 shrink-0'>
                                 <Image
                                     source={mediaArray[0].url}
                                     contentFit='cover'

@@ -1,22 +1,18 @@
-import SelectMedia from "@/components/SelectMedia";
-import SelectUnits from "@/components/SelectUnits";
 import Button from "@/components/ui/Button";
 import Toast, { ToastType } from "@/components/ui/Toast";
 import { useRef, useState } from "react";
 import { KeyboardAvoidingView, TextInput, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as FileSystem from "expo-file-system";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import api from "@/lib/api";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
+import SelectFeedbackType from "@/components/SelectFeedbackType";
 
 export default function PostScreen() {
     const [title, setTitle] = useState('')
-    const [content, setContent] = useState('')
-    const [media, setMedia] = useState<string[]>([])
-    const [units, setUnits] = useState<string[]>([])
+    const [description, setDescription] = useState('')
+    const [typeId, setTypeId] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
-    const { type } = useLocalSearchParams();
 
     const { user } = useSessionStore()
 
@@ -28,8 +24,8 @@ export default function PostScreen() {
     const postFxn = async () => {
         try {
             const missingFields = [];
-            if (title.length === 0) missingFields.push("News Title")
-            if (content.length === 0) missingFields.push("News Content")
+            if (title.length === 0) missingFields.push("Feeedback Title")
+            if (description.length === 0) missingFields.push("Feeedback Description")
             if (missingFields.length > 0) {
                 const formattedFields =
                     missingFields.length > 1
@@ -41,55 +37,10 @@ export default function PostScreen() {
                 return
             }
             setLoading(true)
-            addToast('loading', "Posting news...")
-
-            const e = new FormData();
-
-            if (media?.length && media.length > 0) {
-                e.append('mediaLength', `${media.length}`)
-                await Promise.all(
-                    media.map(async (image, i) => {
-                        const fileInfo = await FileSystem.getInfoAsync(image);
-                        if (!fileInfo.exists) {
-                            console.error(`File not found: ${image}`);
-                            throw new Error("File not uploaded!");
-                        }
-
-                        const uriParts = image.split(".");
-                        const fileExtension = uriParts[uriParts.length - 1];
-                        const fileName = `image.${fileExtension}`;
-                        const mimeType = `image/${fileExtension}`;
-
-                        e.append(`media-${i + 1}`, {
-                            uri: image,
-                            name: fileName,
-                            type: mimeType,
-                        } as any);
-                    })
-                );
-            }
-            if (units?.length && units.length > 0) {
-                e.append('unitLength', `${units.length}`)
-                await Promise.all(
-                    units.map(async (item, i) => {
-                        e.append(`unitId-${i + 1}`, item);
-                    })
-                );
-            }
-
-            e.append("userId", `${user!.id}`)
-            e.append("title", title)
-            e.append("content", content)
-            e.append("type", type as string)
-            e.append("availability", 'true')
-            await api.post(`/post`, e, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
-            addToast('success', "News posted successfully", true)
-            if (type === 'class') router.push('/(stack)/(protected)/(tabs)/schooling/school?refresh=true')
-            else router.push('/(stack)/(protected)/(tabs)/news?refresh=true')
+            addToast('loading', "Posting feeedback...")
+            await api.post(`/feeedback`, { userId: user!.id, title, description, typeId });
+            addToast('success', "Feeedback posted successfully", true)
+            router.push('/(stack)/(protected)/(tabs)/feedback/feedbacks?refresh=true')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -111,11 +62,11 @@ export default function PostScreen() {
         <>
             <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark pt-5 px-6">
                 <ScrollView className="flex-1">
-                    <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">{type === 'class' ? `Post Class News` : 'Post News'}</Text>
+                    <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">Post Feeedback</Text>
                     <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
                         <TextInput
                             className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="News Title"
+                            placeholder="Feeedback Title"
                             placeholderTextColor="#999"
                             value={title}
                             onChangeText={setTitle}
@@ -123,23 +74,23 @@ export default function PostScreen() {
                         />
                         <TextInput
                             className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="News Description"
+                            placeholder="Feeedback Description"
                             placeholderTextColor="#999"
-                            value={content}
-                            onChangeText={setContent}
+                            value={description}
+                            onChangeText={setDescription}
                             multiline
                             numberOfLines={20}
                             textAlignVertical="top"
                         />
-                        <SelectMedia media={media} setMedia={setMedia} />
-                        <SelectUnits units={units} setUnits={setUnits} />
+
+                        <SelectFeedbackType type={typeId} setType={setTypeId} />
                         <Button
                             onPress={postFxn}
                             className="bg-primary-light dark:bg-primary-dark w-full my-6"
                             textClassName="text-foreground-dark text-2xl"
                             disabled={loading}
                         >
-                            Post News
+                            Post Feeedback
                         </Button>
                     </KeyboardAvoidingView>
                 </ScrollView>

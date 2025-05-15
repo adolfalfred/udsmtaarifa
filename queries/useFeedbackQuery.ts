@@ -1,16 +1,20 @@
 import api from "@/lib/api";
-import type { FeedbackTypesProps } from "@/types/feedbackTypes";
+import type { FeedbackProps } from "@/types/feedback";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export const useFeedbacktypesQuery = (search: string, page: number) => {
-  const [store, setStore] = useState<FeedbackTypesProps[]>([]);
+export const useFeedbackQuery = (
+  search: string,
+  page: number,
+  status: FeedbackProps["status"] | ""
+) => {
+  const [store, setStore] = useState<FeedbackProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["feedbacktype", { search, page }],
+    queryKey: ["feedback", { search, page, status }],
     queryFn: () =>
       api
-        .get(`/feedbacktype?s=${search}&limit=20&page=${page}`)
+        .get(`/feedback?s=${search}&limit=20&page=${page}&status=${status}`)
         .then((res) => res.data),
   });
 

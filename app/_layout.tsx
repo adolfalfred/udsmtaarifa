@@ -17,10 +17,10 @@ import 'react-native-reanimated';
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
-// SplashScreen.setOptions({
-//   duration: 400,
-//   fade: true
-// })
+SplashScreen.setOptions({
+  duration: 400,
+  fade: true
+})
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({

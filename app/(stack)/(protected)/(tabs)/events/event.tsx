@@ -71,7 +71,7 @@ export default function HomeScreen() {
             )
           return (
             <View className="items-center justify-center h-96">
-              <Text className='text-foreground-light dark:text-foreground-dark'>No news available</Text>
+              <Text className='text-foreground-light dark:text-foreground-dark'>No events available</Text>
             </View>
           )
         }}
@@ -98,7 +98,7 @@ export default function HomeScreen() {
           </ScrollView>
         )}
       />
-      <View className="absolute bottom-20 right-5 z-50">
+      <View className="absolute bottom-28 right-5 z-50">
         <Link href="/(stack)/(protected)/eventpost" asChild>
           <TouchableOpacity className="rounded-full bg-primary-light dark:bg-primary-dark p-4" style={{ elevation: 3 }}>
             <MaterialIcons color="#ffffff" size={24} name="add" />
