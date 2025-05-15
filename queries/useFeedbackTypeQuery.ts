@@ -19,7 +19,7 @@ export const useFeedbacktypesQuery = (search: string, page: number) => {
       setStore((prev) => {
         const map = new Map();
         [...prev, ...data.data].forEach((item) => {
-          map.set(item.id, item);
+          map.set(item.name, item);
         });
         return Array.from(map.values());
       });

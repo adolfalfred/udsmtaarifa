@@ -3,7 +3,7 @@ import type { FeedbackProps } from "@/types/feedback";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-export const useFeedbackQuery = (
+export const useFeedbacksQuery = (
   search: string,
   page: number,
   status: FeedbackProps["status"] | ""
@@ -28,4 +28,12 @@ export const useFeedbackQuery = (
   }, [data]);
 
   return { data: store, isLoading, nextPage: data?.nextPage || false };
+};
+
+export const useFeedbackQuery = (id: string) => {
+  const { data, isLoading } = useQuery<FeedbackProps>({
+    queryKey: ["feedback", id],
+    queryFn: () => api.get(`/feedback/${id}`).then((res) => res.data),
+  });
+  return { data: data || null, isLoading };
 };

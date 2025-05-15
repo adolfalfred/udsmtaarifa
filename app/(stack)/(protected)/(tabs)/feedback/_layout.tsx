@@ -15,10 +15,10 @@ export default function TabLayout() {
                 name="feedbacks"
                 options={{ title: 'Feedbacks', headerShown: false }}
             />
-            {/* <Stack.Screen
+            <Stack.Screen
                 name="[id]"
                 options={{ title: 'Feedback', headerShown: false }}
-            /> */}
+            />
         </Stack>
     );
 }

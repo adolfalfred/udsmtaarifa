@@ -24,8 +24,8 @@ export default function PostScreen() {
     const postFxn = async () => {
         try {
             const missingFields = [];
-            if (title.length === 0) missingFields.push("Feeedback Title")
-            if (description.length === 0) missingFields.push("Feeedback Description")
+            if (title.length === 0) missingFields.push("Feedback Title")
+            if (description.length === 0) missingFields.push("Feedback Description")
             if (missingFields.length > 0) {
                 const formattedFields =
                     missingFields.length > 1
@@ -37,19 +37,19 @@ export default function PostScreen() {
                 return
             }
             setLoading(true)
-            addToast('loading', "Posting feeedback...")
-            await api.post(`/feeedback`, { userId: user!.id, title, description, typeId });
-            addToast('success', "Feeedback posted successfully", true)
+            addToast('loading', "Posting feedback...")
+            await api.post(`/feedback`, { userId: user!.id, title, description, typeId });
+            addToast('success', "Feedback posted successfully", true)
             router.push('/(stack)/(protected)/(tabs)/feedback/feedbacks?refresh=true')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
                 console.log(error.response.status);
-                addToast('danger', error.response.data, true)
+                addToast('danger', error.response?.data || "An error occured!", true)
             } else if (error.request) {
                 console.log(error.request);
                 addToast('danger', "No response received from the server. Check your network.", true)
-            } else {
+            } else if (error?.message) {
                 console.log('Error', error.message);
                 addToast('danger', "An error occurred while setting up the request.", true)
             }
@@ -62,11 +62,11 @@ export default function PostScreen() {
         <>
             <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark pt-5 px-6">
                 <ScrollView className="flex-1">
-                    <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">Post Feeedback</Text>
+                    <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">Post Feedback</Text>
                     <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
                         <TextInput
                             className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Feeedback Title"
+                            placeholder="Feedback Title"
                             placeholderTextColor="#999"
                             value={title}
                             onChangeText={setTitle}
@@ -74,7 +74,7 @@ export default function PostScreen() {
                         />
                         <TextInput
                             className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Feeedback Description"
+                            placeholder="Feedback Description"
                             placeholderTextColor="#999"
                             value={description}
                             onChangeText={setDescription}
@@ -90,7 +90,7 @@ export default function PostScreen() {
                             textClassName="text-foreground-dark text-2xl"
                             disabled={loading}
                         >
-                            Post Feeedback
+                            Post Feedback
                         </Button>
                     </KeyboardAvoidingView>
                 </ScrollView>

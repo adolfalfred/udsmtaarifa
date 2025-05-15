@@ -1,7 +1,7 @@
 import { LegendList } from "@legendapp/list"
 import { useCallback, useEffect, useState } from 'react';
 import type { FeedbackProps } from '@/types/feedback';
-import { useFeedbackQuery } from '@/queries/useFeedbackQuery';
+import { useFeedbacksQuery } from '@/queries/useFeedbackQuery';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FeedbackComponent, FeedbackSkeleton } from '@/components/FeedbackComponent';
 import { TouchableOpacity, View, Text } from "react-native";
@@ -14,7 +14,7 @@ export default function Feedback() {
     const [refreshing, setRefreshing] = useState(false)
     const { refresh } = useLocalSearchParams();
 
-    const { data, isLoading, nextPage, } = useFeedbackQuery('', page, "")
+    const { data, isLoading, nextPage, } = useFeedbacksQuery('', page, "")
     const queryClient = useQueryClient();
 
     const handleLoadMore = () => {
@@ -36,7 +36,7 @@ export default function Feedback() {
     }, [handleRefresh, refresh]);
     const renderFeedback = ({ item }: { item: FeedbackProps }) => <FeedbackComponent item={item} />
     return (
-        <SafeAreaView className='relative flex-1 bg-background-light dark:bg-background-dark'>
+        <SafeAreaView className='relative flex-1 bg-background-light dark:bg-background-dark pt-20'>
             <LegendList
                 data={data}
                 renderItem={renderFeedback}
