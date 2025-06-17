@@ -1,13 +1,12 @@
-import { LegendList } from "@legendapp/list"
 import { useCallback, useEffect, useState } from 'react';
 import type { FeedbackProps } from '@/types/feedback';
 import { useFeedbacksQuery } from '@/queries/useFeedbackQuery';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { FeedbackComponent, FeedbackSkeleton } from '@/components/FeedbackComponent';
 import { TouchableOpacity, View, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, useLocalSearchParams } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { ScrollAwareLegendList } from "@/components/ScrollAwareView";
 
 export default function Feedback() {
     const [page, setPage] = useState(1)
@@ -34,14 +33,15 @@ export default function Feedback() {
     useEffect(() => {
         if (refresh === 'true') handleRefresh()
     }, [handleRefresh, refresh]);
+
     const renderFeedback = ({ item }: { item: FeedbackProps }) => <FeedbackComponent item={item} />
     return (
-        <SafeAreaView className='relative flex-1 bg-background-light dark:bg-background-dark pt-20'>
-            <LegendList
+        <>
+            <ScrollAwareLegendList
                 data={data}
                 renderItem={renderFeedback}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{ paddingBottom: 0 }}
+                contentContainerStyle={{ paddingTop: 100, paddingBottom: 100 }}
                 showsVerticalScrollIndicator={false}
                 refreshing={refreshing}
                 onRefresh={handleRefresh}
@@ -92,6 +92,6 @@ export default function Feedback() {
                     </TouchableOpacity>
                 </Link>
             </View>
-        </SafeAreaView>
+        </>
     )
 }

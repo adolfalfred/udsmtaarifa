@@ -1,8 +1,6 @@
-import { LegendList } from "@legendapp/list"
 import { useCallback, useEffect, useState } from 'react';
 import type { EventProps } from '@/types/event';
 import { useEventsQuery } from '@/queries/useEventsQuery';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { EventComponent, EventSkeleton } from '@/components/EventComponent';
 import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -11,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCategoryQuery } from "@/queries/useCategoriesQuery";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { colors } from "@/constants/Colors";
+import { ScrollAwareLegendList } from "@/components/ScrollAwareView";
 
 export default function HomeScreen() {
   const [page, setPage] = useState(1)
@@ -48,13 +47,13 @@ export default function HomeScreen() {
 
   const renderEvent = ({ item }: { item: EventProps }) => <EventComponent item={item} />
   return (
-    <SafeAreaView className='relative flex-1 bg-background-light dark:bg-background-dark'>
-      <LegendList
+    <>
+      <ScrollAwareLegendList
         key={category}
         data={data}
         renderItem={renderEvent}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingBottom: 0 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
         refreshing={refreshing}
         onRefresh={handleRefresh}
@@ -76,7 +75,7 @@ export default function HomeScreen() {
           )
         }}
         ListHeaderComponent={() => (
-          <ScrollView horizontal className="py-2 px-6 pt-20">
+          <ScrollView horizontal className="py-2 px-6 pt-28">
             <TouchableOpacity className="px-5 py-2 rounded-full mr-1"
               style={{ backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20` }}
               onPress={() => setCategory('')}
@@ -105,6 +104,6 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </Link>
       </View>
-    </SafeAreaView>
+    </>
   );
 }
