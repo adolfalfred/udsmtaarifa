@@ -15,7 +15,7 @@ export const usePostsQuery = (
     queryFn: () =>
       api
         .get(
-          `/post?s=${search}&limit=2&page=${page}&type=${type}&available=true`
+          `/post?s=${search}&limit=20&page=${page}&type=${type}&available=true`
         )
         .then((res) => res.data),
   });

@@ -3,11 +3,15 @@ import { Image } from 'expo-image';
 import type { PostProps } from '@/types/post';
 import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 const screenWidth = Dimensions.get('window').width;
 
 export function PostComponent({ item, page = false, schooling = false }: { item: PostProps, page?: boolean, schooling?: boolean }) {
     const [activeIndex, setActiveIndex] = useState(0);
+    const colorScheme = useColorScheme()
 
     const mediaArray = useMemo(() => {
         return item.media ? Object.values(item.media) : [];
@@ -66,7 +70,7 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                                     setActiveIndex(index);
                                 }}
                                 renderItem={({ item }) => (
-                                    <View className='overflow-hidden' style={{ width: screenWidth, height: maxImageHeight }}>
+                                    <View className='overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5' style={{ width: screenWidth, height: maxImageHeight }}>
                                         <Image
                                             source={item.url}
                                             contentFit="cover"
@@ -155,7 +159,7 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                                         </View>
                                     )}
                                     <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`} asChild>
-                                        <Pressable className='overflow-hidden' style={{ width: screenWidth, height: screenWidth }}>
+                                        <Pressable className='overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5' style={{ width: screenWidth, height: screenWidth }}>
                                             <Image
                                                 source={image.url}
                                                 contentFit="cover"
@@ -191,20 +195,27 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                     </View>
                 )}
                 <View className="px-4">
-                    {item?.title ?
-                        <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`}>
-                            <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
-                        </Link>
-                        : null}
+                    <View className='flex-row justify-between items-center gap-2'>
+                        <Pressable>
+                            <AntDesign name="hearto" size={24} color={colors.foreground[colorScheme]} />
+                        </Pressable>
+                    </View>
+                    <View className='flex-row justify-between gap-1'>
+                        {item?.title ?
+                            <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`}>
+                                <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
+                            </Link>
+                            : null}
+                        {item?.createdAt ?
+                            <Text className='shrink-0 text-foreground-light/60 dark:text-foreground-dark/80 text-xs'>{new Date(item.createdAt).toLocaleDateString()}</Text>
+                            : null}
+                    </View>
                     {item?.content ?
                         <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`}>
                             <Text className='text-foreground-light/60 dark:text-foreground-dark/80'>{item.content}</Text>
                         </Link>
                         : null}
                 </View>
-            </View>
-            <View className='w-full border-b border-t border-divider-light dark:border-divider-dark my-2' >
-                <Text className='text-foreground-light/60 dark:text-foreground-dark/60 text-xs px-4 py-1'>Posted on {new Date(item.createdAt).toLocaleDateString()}</Text>
             </View>
         </View>
 
