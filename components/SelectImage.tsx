@@ -62,7 +62,7 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
 
     return (
         <>
-            <TouchableOpacity className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 border-dashed dark:border-foreground-dark/60 rounded-xl" onPress={presentModal}>
+            <TouchableOpacity className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 border-dashed dark:border-foreground-dark/60 rounded-full" onPress={presentModal}>
                 <FontAwesome name="image" size={20} color="#aaa" className="mr-4" />
                 <View className="h-10 flex-col items-center justify-center">
                     <Text className="text-[#aaa] text-lg">

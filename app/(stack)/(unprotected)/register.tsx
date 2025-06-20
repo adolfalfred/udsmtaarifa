@@ -190,10 +190,13 @@ export default function Register() {
             <ParallaxScrollViewStack
                 headerImage={
                     <View className="flex-col items-center justify-center py-32 gap-4">
-                        <Image
+                        {photo ? (<Image
+                            source={{ uri: photo }}
+                            className="w-28 h-28"
+                        />) : <Image
                             source={require('@/assets/images/icon.png')}
                             className="w-28 h-28"
-                        />
+                        />}
                         <Text className="text-foreground-light dark:text-foreground-dark text-4xl">
                             {!verified ? 'Create Account!' : "Setup Account"}
                         </Text>
@@ -202,7 +205,7 @@ export default function Register() {
                 <KeyboardAvoidingView className="flex-col gap-8 bg-background-light dark:bg-background-dark">
                     {!verified ? (
                         <>
-                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                                 <FontAwesome6 name="user-circle" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
                                     placeholder="Registration Number"
@@ -215,7 +218,7 @@ export default function Register() {
                                     cursorColor={colors.primary[colorScheme]}
                                 />
                             </View>
-                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                                 <MaterialCommunityIcons name="phone" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
                                     placeholder="Phone Number (+255...)"
@@ -227,7 +230,7 @@ export default function Register() {
                                     cursorColor={colors.primary[colorScheme]}
                                 />
                             </View>
-                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                                 <MaterialCommunityIcons name="email" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
                                     placeholder="Email"
@@ -242,7 +245,7 @@ export default function Register() {
                             </View>
                             <Button
                                 onPress={async () => verifyFxn()}
-                                className="bg-primary-light dark:bg-primary-dark "
+                                className="bg-primary-light dark:bg-primary-dark rounded-full"
                                 textClassName="text-foreground-dark text-2xl"
                                 disabled={loading}
                             >
@@ -257,7 +260,7 @@ export default function Register() {
                         </>
                     ) : (
                         <>
-                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                                 <FontAwesome6 name="user-circle" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
                                     placeholder="Name"
@@ -285,7 +288,7 @@ export default function Register() {
                                 setCurrentYear={setCurrentStudyYear}
                                 totalYears={totalYears}
                             />
-                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                                 <MaterialIcons name="lock" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
                                     placeholder="Password"
@@ -308,7 +311,7 @@ export default function Register() {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                            <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                                 <MaterialIcons name="lock" size={20} color="#aaa" className="mr-5" />
                                 <TextInput
                                     placeholder="Repeat Password"
@@ -334,7 +337,7 @@ export default function Register() {
                             <SelectImage photo={photo} setImageId={setImage} />
                             <Button
                                 onPress={signupFxn}
-                                className="bg-primary-light dark:bg-primary-dark "
+                                className="bg-primary-light dark:bg-primary-dark rounded-full"
                                 textClassName="text-foreground-dark text-2xl"
                                 disabled={loading}
                             >

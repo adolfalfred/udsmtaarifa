@@ -67,7 +67,7 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
 
     return (
         <>
-            <TouchableOpacity className="my-3 flex-row gap-1 flex-wrap items-center py-5 px-4 border border-foreground-light/60 border-dashed dark:border-foreground-dark/60 rounded-xl" onPress={presentModal}>
+            <TouchableOpacity className="my-3 flex-row gap-1 flex-wrap items-center py-5 px-4 border border-foreground-light/60 border-dashed dark:border-foreground-dark/60 rounded-full" onPress={presentModal}>
                 {media?.length && media.length > 0 ? media.map((uri, index) => (
                     <View key={index} className='w-[32%] h-32 rounded overflow-hidden'>
                         <Image

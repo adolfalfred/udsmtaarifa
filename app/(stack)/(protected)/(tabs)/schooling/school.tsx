@@ -7,11 +7,13 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, useLocalSearchParams } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScrollAwareLegendList } from "@/components/ScrollAwareView";
+import { useHideState } from '@/lib/zustand/useHideState';
 
 export default function HomeScreen() {
   const [page, setPage] = useState(1)
   const [refreshing, setRefreshing] = useState(false)
   const { refresh } = useLocalSearchParams();
+  const { hide } = useHideState()
 
   const { data, isLoading, nextPage, } = usePostsQuery('', page, 'class')
   const queryClient = useQueryClient();
@@ -58,13 +60,15 @@ export default function HomeScreen() {
           )
         }}
       />
-      <View className="absolute bottom-24 right-5 z-50">
-        <Link href="/(stack)/(protected)/post?type=class" asChild>
-          <TouchableOpacity className="rounded-full bg-primary-light dark:bg-primary-dark p-4" style={{ elevation: 3 }}>
-            <MaterialIcons color="#ffffff" size={24} name="add" />
-          </TouchableOpacity>
-        </Link>
-      </View>
+      {!hide && (
+        <View className="absolute bottom-24 right-5 z-50">
+          <Link href="/(stack)/(protected)/post?type=class" asChild>
+            <TouchableOpacity className="rounded-full bg-primary-light dark:bg-primary-dark p-4" style={{ elevation: 3 }}>
+              <MaterialIcons color="#ffffff" size={24} name="add" />
+            </TouchableOpacity>
+          </Link>
+        </View>
+      )}
     </>
   );
 }

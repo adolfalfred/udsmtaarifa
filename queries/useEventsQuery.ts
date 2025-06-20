@@ -34,7 +34,11 @@ export const useEventsQuery = (
     }
   }, [data, page]);
 
-  return { data: store, isLoading, nextPage: data?.nextPage || false };
+  return {
+    data: store,
+    isLoading,
+    nextPage: (data?.nextPage as boolean) || false,
+  };
 };
 
 export const useEventQuery = (id: string) => {

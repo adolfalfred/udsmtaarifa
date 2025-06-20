@@ -28,7 +28,7 @@ export default function SelectUnits({
     return (
         <>
             <TouchableOpacity
-                className="my-3 flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-lg"
+                className="my-3 flex-row items-center w-full py-5 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full"
                 onPress={presentModal}>
                 <Text className="text-[#aaa] text-lg">
                     {units ? `${units.length} Units Selected` : "Select Related Units"}

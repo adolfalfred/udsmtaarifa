@@ -69,7 +69,7 @@ export default function Login() {
                 }
             >
                 <KeyboardAvoidingView className="flex-col gap-10 bg-background-light dark:bg-background-dark">
-                    <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                    <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                         <FontAwesome6 name="user-circle" size={20} color="#aaa" className="mr-5" />
                         <TextInput
                             placeholder="Registration Number"
@@ -83,7 +83,7 @@ export default function Login() {
                         />
                     </View>
                     <View>
-                        <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl">
+                        <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                             <MaterialIcons name="lock" size={20} color="#aaa" className="mr-5" />
                             <TextInput
                                 placeholder="Password"
@@ -112,7 +112,7 @@ export default function Login() {
                     </View>
                     <Button
                         onPress={loginFxn}
-                        className="bg-primary-light dark:bg-primary-dark "
+                        className="bg-primary-light dark:bg-primary-dark rounded-full"
                         textClassName="text-foreground-dark text-2xl"
                         disabled={loading}
                     >

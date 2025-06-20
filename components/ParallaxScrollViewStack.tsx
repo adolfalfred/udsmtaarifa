@@ -45,6 +45,7 @@ export default function ParallaxScrollViewStack({
         <View className='flex-1 bg-background-light dark:bg-background-dark'>
             <Animated.ScrollView
                 ref={scrollRef}
+                showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
                 scrollIndicatorInsets={{ bottom: 0 }}
                 contentContainerStyle={{ paddingBottom: 0 }}>
@@ -59,7 +60,7 @@ export default function ParallaxScrollViewStack({
                     ]}>
                     {headerImage}
                 </Animated.View>
-                <View className='flex-1 p-9 gap-4 overflow-hidden'>{children}</View>
+                <View className='flex-1 py-9 px-6 gap-4 overflow-hidden'>{children}</View>
             </Animated.ScrollView>
         </View>
     );

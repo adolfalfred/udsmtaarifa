@@ -10,12 +10,14 @@ import { useCategoryQuery } from "@/queries/useCategoriesQuery";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { colors } from "@/constants/Colors";
 import { ScrollAwareLegendList } from "@/components/ScrollAwareView";
+import { useHideState } from '@/lib/zustand/useHideState';
 
 export default function HomeScreen() {
   const [page, setPage] = useState(1)
   const [category, setCategory] = useState<'' | number>('')
   const [refreshing, setRefreshing] = useState(false)
   const { refresh } = useLocalSearchParams();
+  const { hide } = useHideState()
 
   const colorScheme = useColorScheme()
 
@@ -97,13 +99,15 @@ export default function HomeScreen() {
           </ScrollView>
         )}
       />
-      <View className="absolute bottom-28 right-5 z-50">
-        <Link href="/(stack)/(protected)/eventpost" asChild>
-          <TouchableOpacity className="rounded-full bg-primary-light dark:bg-primary-dark p-4" style={{ elevation: 3 }}>
-            <MaterialIcons color="#ffffff" size={24} name="add" />
-          </TouchableOpacity>
-        </Link>
-      </View>
+      {!hide && (
+        <View className="absolute bottom-28 right-5 z-50">
+          <Link href="/(stack)/(protected)/eventpost" asChild>
+            <TouchableOpacity className="rounded-full bg-primary-light dark:bg-primary-dark p-4" style={{ elevation: 3 }}>
+              <MaterialIcons color="#ffffff" size={24} name="add" />
+            </TouchableOpacity>
+          </Link>
+        </View>
+      )}
     </>
   );
 }

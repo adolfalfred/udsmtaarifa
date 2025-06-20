@@ -6,7 +6,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router, Tabs } from 'expo-router';
-import { Platform, TouchableOpacity } from 'react-native';
+import { Platform, TouchableOpacity, Image } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -14,20 +14,30 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.primary[colorScheme],
+        tabBarInactiveTintColor: `${colors.foreground[colorScheme]}a0`,
         headerShown: true,
         headerBackgroundContainerStyle: {
-          backgroundColor: `${colors.background[colorScheme]}d0`
+          backgroundColor: `${colors.background[colorScheme]}f0`
         },
         headerTransparent: true,
         animation: "shift",
-        headerTitleAlign: "center",
+        headerTitleAlign: 'center',
         headerTitleStyle: { textTransform: "uppercase" },
         headerRight: () => <DropdownMenu />,
-        headerLeft: ({ canGoBack }) => {
-          if (canGoBack) return <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons color={'#aaa'} size={24} name='chevron-left' />
-          </TouchableOpacity>
-          return null
+        headerLeft: () => {
+          if (router.canGoBack()) return (
+            <TouchableOpacity onPress={() => router.back()} className='mx-4 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>
+              <MaterialIcons color={colors.background[colorScheme]} size={18} name='arrow-back' />
+            </TouchableOpacity>
+          )
+          return (
+            <TouchableOpacity onPress={() => router.push('/')} className='mx-4'>
+              <Image
+                source={require('@/assets/images/icon.png')}
+                className="w-10 h-10"
+              />
+            </TouchableOpacity>
+          )
         },
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -53,28 +63,28 @@ export default function TabLayout() {
         name="feedback"
         options={{
           title: 'Feedback',
-          tabBarIcon: ({ color }) => <FontAwesome6 color={color} size={20} name='box-open' />,
+          tabBarIcon: ({ color }) => <FontAwesome6 color={color} size={18} name='box-open' />,
         }}
       />
       <Tabs.Screen
         name="events"
         options={{
           title: 'Events',
-          tabBarIcon: ({ color }) => <MaterialIcons color={color} size={24} name='event-note' />
+          tabBarIcon: ({ color }) => <MaterialIcons color={color} size={22} name='event-note' />
         }}
       />
       <Tabs.Screen
         name="messages"
         options={{
           title: 'Messages',
-          tabBarIcon: ({ color }) => <MaterialIcons color={color} size={24} name='message' />,
+          tabBarIcon: ({ color }) => <MaterialIcons color={color} size={22} name='message' />,
         }}
       />
       <Tabs.Screen
         name="schooling"
         options={{
           title: 'Schooling',
-          tabBarIcon: ({ color }) => <FontAwesome6 color={color} size={20} name='graduation-cap' />,
+          tabBarIcon: ({ color }) => <FontAwesome6 color={color} size={18} name='graduation-cap' />,
         }}
       />
     </Tabs>

@@ -63,7 +63,11 @@ const Toast = forwardRef<
                                             : `${colors.background[colorScheme]}20`,
                         }}
                     >
-                        <Text className="text-foreground-light dark:text-foreground-dark">{toastText}</Text>
+                        <Text
+                            className={`text-foreground-light dark:text-foreground-dark`}
+                            style={close ? { width: '90%' } : { width: '100%' }}>
+                            {toastText}
+                        </Text>
                         {close ? <TouchableOpacity onPress={() => setShowing(false)}>
                             <MaterialIcons size={16} name="close" color={colors.foreground[colorScheme]} />
                         </TouchableOpacity> : null}

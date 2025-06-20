@@ -29,7 +29,7 @@ export default function SelectCurrentYear({
     return (
         <>
             <TouchableOpacity
-                className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-xl"
+                className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full"
                 onPress={presentModal}>
                 <FontAwesome name="clock-o" size={22} color="#aaa" className="mr-4" />
                 <View className="h-10 flex-col items-center justify-center">

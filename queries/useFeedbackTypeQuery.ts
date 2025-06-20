@@ -26,5 +26,9 @@ export const useFeedbacktypesQuery = (search: string, page: number) => {
     }
   }, [data]);
 
-  return { data: store, isLoading, nextPage: data?.nextPage || false };
+  return {
+    data: store,
+    isLoading,
+    nextPage: (data?.nextPage as boolean) || false,
+  };
 };

@@ -1,7 +1,6 @@
 import {
     ActivityIndicator,
     StyleProp,
-    StyleSheet,
     Text,
     TextStyle,
     TouchableOpacity,
@@ -35,11 +34,10 @@ export default function Button({
     return (
         <TouchableOpacity
             style={[
-                styles.button,
                 disabled && { opacity: 0.6 },
                 style
             ]}
-            className={className}
+            className={`flex-row items-center justify-center py-4 px-6 ${className}`}
             onPress={onPress}
             disabled={disabled || loading}
             activeOpacity={0.8}
@@ -49,7 +47,7 @@ export default function Button({
             ) : (
                 <>
                     {icon}
-                    <Text style={[styles.buttonText, textStyle]} className={textClassName}>
+                    <Text style={[{ fontSize: 16 }, textStyle]} className={`${textClassName}`}>
                         {children}
                     </Text>
                 </>
@@ -57,17 +55,3 @@ export default function Button({
         </TouchableOpacity>
     );
 }
-
-const styles = StyleSheet.create({
-    button: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 8,
-    },
-    buttonText: {
-        fontSize: 16,
-    }
-});

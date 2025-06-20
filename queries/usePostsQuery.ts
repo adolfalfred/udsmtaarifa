@@ -15,7 +15,7 @@ export const usePostsQuery = (
     queryFn: () =>
       api
         .get(
-          `/post?s=${search}&limit=20&page=${page}&type=${type}&available=true`
+          `/post?s=${search}&limit=2&page=${page}&type=${type}&available=true`
         )
         .then((res) => res.data),
   });
@@ -32,7 +32,11 @@ export const usePostsQuery = (
     }
   }, [data]);
 
-  return { data: store, isLoading, nextPage: data?.nextPage || false };
+  return {
+    data: store,
+    isLoading,
+    nextPage: (data?.nextPage as boolean) || false,
+  };
 };
 
 export const usePostQuery = (id: string) => {

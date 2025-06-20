@@ -27,7 +27,11 @@ export const useFeedbacksQuery = (
     }
   }, [data]);
 
-  return { data: store, isLoading, nextPage: data?.nextPage || false };
+  return {
+    data: store,
+    isLoading,
+    nextPage: (data?.nextPage as boolean) || false,
+  };
 };
 
 export const useFeedbackQuery = (id: string) => {

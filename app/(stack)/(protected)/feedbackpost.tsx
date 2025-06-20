@@ -65,7 +65,7 @@ export default function PostScreen() {
                     <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">Post Feedback</Text>
                     <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
                         <TextInput
-                            className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                             placeholder="Feedback Title"
                             placeholderTextColor="#999"
                             value={title}
@@ -73,7 +73,7 @@ export default function PostScreen() {
                             autoFocus
                         />
                         <TextInput
-                            className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-[25px] my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                             placeholder="Feedback Description"
                             placeholderTextColor="#999"
                             value={description}
@@ -86,7 +86,7 @@ export default function PostScreen() {
                         <SelectFeedbackType type={typeId} setType={setTypeId} />
                         <Button
                             onPress={postFxn}
-                            className="bg-primary-light dark:bg-primary-dark w-full my-6"
+                            className="bg-primary-light dark:bg-primary-dark w-full my-4 rounded-full"
                             textClassName="text-foreground-dark text-2xl"
                             disabled={loading}
                         >
