@@ -3,7 +3,7 @@ import { zustandStorage } from "../mmkv";
 import { Platform } from "react-native";
 import { create } from "zustand";
 
-type UserProps = {
+export type UserProps = {
   email: string;
   id: string;
   image: string | null;

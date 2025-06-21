@@ -21,7 +21,7 @@ export default function SelectUnits({
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['50%', '100%'], []);
+    const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     const { data, isLoading } = useUnitsQuery("", 1)
 

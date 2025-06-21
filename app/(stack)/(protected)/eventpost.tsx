@@ -3,13 +3,16 @@ import SelectCategories from "@/components/SelectCategories";
 import Button from "@/components/ui/Button";
 import Toast, { ToastType } from "@/components/ui/Toast";
 import { useRef, useState } from "react";
-import { KeyboardAvoidingView, TextInput, Text, ScrollView, Pressable, Platform } from "react-native";
+import { KeyboardAvoidingView, TextInput, Text, ScrollView, Pressable, Platform, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as FileSystem from "expo-file-system";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import api from "@/lib/api";
 import { router, useLocalSearchParams } from "expo-router";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { useColorScheme } from "@/hooks/useColorScheme";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { colors } from "@/constants/Colors";
 
 export default function PostScreen() {
     const [title, setTitle] = useState('')
@@ -24,6 +27,7 @@ export default function PostScreen() {
     const { type } = useLocalSearchParams();
 
     const { user } = useSessionStore()
+    const colorScheme = useColorScheme()
 
     const toastRef = useRef<{ show: (params: { type: ToastType; text: string; shouldClose?: boolean }) => void }>(null);
     const addToast = (type: ToastType, text: string, shouldClose?: boolean) => {
@@ -131,7 +135,14 @@ export default function PostScreen() {
         <>
             <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark pt-5 px-6">
                 <ScrollView className="flex-1">
-                    <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">{type === 'class' ? `Post Class Event` : 'Post Event'}</Text>
+                    <View className="relative h-10">
+                        {router.canGoBack() && (
+                            <TouchableOpacity onPress={() => router.back()} className='absolute left-0 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>
+                                <MaterialIcons color={colors.background[colorScheme]} size={18} name='arrow-back' />
+                            </TouchableOpacity>
+                        )}
+                        <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">{type === 'class' ? `Post Class Event` : 'Post Event'}</Text>
+                    </View>
                     <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
                         <TextInput
                             className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"

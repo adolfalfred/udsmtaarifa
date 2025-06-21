@@ -51,7 +51,7 @@ export default function SelectProgramme({
         }
         bottomSheetModalRef.current?.close();
     }, [setProgrammeId, setTotalYears]);
-    const snapPoints = useMemo(() => ['50%', '100%'], []);
+    const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     const filtered = data.filter((item) =>
         item.name.toLowerCase().includes(query.toLowerCase())

@@ -23,7 +23,7 @@ export default function SelectCurrentYear({
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['50%', '100%'], []);
+    const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     if (totalYears === null) return;
     return (

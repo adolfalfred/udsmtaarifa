@@ -3,15 +3,13 @@ import { Image } from 'expo-image';
 import type { PostProps } from '@/types/post';
 import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import LikePost from './LikePost';
+import CommentPost from './CommentPost';
 
 const screenWidth = Dimensions.get('window').width;
 
 export function PostComponent({ item, page = false, schooling = false }: { item: PostProps, page?: boolean, schooling?: boolean }) {
     const [activeIndex, setActiveIndex] = useState(0);
-    const colorScheme = useColorScheme()
 
     const mediaArray = useMemo(() => {
         return item.media ? Object.values(item.media) : [];
@@ -195,10 +193,9 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                     </View>
                 )}
                 <View className="px-4">
-                    <View className='flex-row justify-between items-center gap-2'>
-                        <Pressable>
-                            <AntDesign name="hearto" size={24} color={colors.foreground[colorScheme]} />
-                        </Pressable>
+                    <View className='flex-row items-center gap-1'>
+                        <LikePost id={item.id} postLikes={0} postLikers={[]} />
+                        <CommentPost id={item.id} postComments={0} />
                     </View>
                     <View className='flex-row justify-between gap-1'>
                         {item?.title ?

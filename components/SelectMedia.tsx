@@ -18,7 +18,7 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['100%'], []);
+    const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     const pickImage = async () => {
         try {

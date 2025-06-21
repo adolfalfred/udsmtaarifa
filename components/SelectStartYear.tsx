@@ -21,7 +21,7 @@ export default function SelectStartYear({
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['50%', '100%'], []);
+    const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     return (
         <>
