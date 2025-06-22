@@ -15,6 +15,31 @@ export interface PostProps {
   title: string | null;
   content: string | null;
   availability: boolean;
+  likes: number;
+  comments: number;
+  postLikes: {
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    postId: string;
+    user: {
+      id: string;
+      name: string | null;
+      regNo: string | null;
+      email: string | null;
+      phone: string | null;
+      image: string | null;
+    };
+  }[];
+  postComments: {
+    userId: string;
+    id: string;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    postId: string;
+    commentId: string | null;
+  }[];
   postCategories: {
     categoryId: number;
     category: {

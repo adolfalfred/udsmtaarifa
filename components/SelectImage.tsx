@@ -18,8 +18,9 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
         bottomSheetModalRef.current?.present();
     }, []);
     const closeModal = useCallback(() => {
+        if (image) setImageId(image)
         bottomSheetModalRef.current?.close();
-    }, []);
+    }, [image, setImageId]);
     const snapPoints = useMemo(() => ['100%'], []);
 
     const pickImage = async () => {
@@ -131,11 +132,8 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                         </View>
                     </View>
                     <Button
-                        onPress={() => {
-                            if (image) setImageId(image)
-                            closeModal()
-                        }}
-                        className="bg-primary-light dark:bg-primary-dark "
+                        onPress={closeModal}
+                        className="bg-primary-light dark:bg-primary-dark rounded-full"
                         textClassName="text-foreground-dark text-2xl"
                     >Confirm</Button>
                 </BottomSheetView>

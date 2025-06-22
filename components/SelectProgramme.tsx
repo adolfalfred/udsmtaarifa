@@ -82,7 +82,7 @@ export default function SelectProgramme({
                 onDismiss={() => closeModal(null)}>
                 <BottomSheetView className='flex-1 h-[90vh] p-6 bg-background-light dark:bg-background-dark'>
                     <BottomSheetTextInput
-                        className="border border-[#aaa] p-3 rounded-md mb-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                        className="border border-[#aaa] px-3 py-5 rounded-full mb-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                         placeholder="Search..."
                         placeholderTextColor="#999"
                         value={query}

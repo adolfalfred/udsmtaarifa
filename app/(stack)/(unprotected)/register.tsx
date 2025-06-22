@@ -190,13 +190,18 @@ export default function Register() {
             <ParallaxScrollViewStack
                 headerImage={
                     <View className="flex-col items-center justify-center py-32 gap-4">
-                        {photo ? (<Image
-                            source={{ uri: photo }}
-                            className="w-28 h-28"
-                        />) : <Image
-                            source={require('@/assets/images/icon.png')}
-                            className="w-28 h-28"
-                        />}
+                        {image ? (<Image
+                            source={{ uri: image }}
+                            className="w-28 h-28 rounded-lg"
+                        />) : <>
+                            {photo ? (<Image
+                                source={{ uri: photo }}
+                                className="w-28 h-28 rounded-lg"
+                            />) : <Image
+                                source={require('@/assets/images/icon.png')}
+                                className="w-28 h-28"
+                            />}
+                        </>}
                         <Text className="text-foreground-light dark:text-foreground-dark text-4xl">
                             {!verified ? 'Create Account!' : "Setup Account"}
                         </Text>

@@ -1,4 +1,5 @@
 import api from "@/lib/api";
+import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import type { PostProps, PostTypesProps } from "@/types/post";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -8,6 +9,7 @@ export const usePostsQuery = (
   page: number,
   type: PostTypesProps
 ) => {
+  const { user } = useSessionStore();
   const [store, setStore] = useState<PostProps[]>([]);
 
   const { data, isLoading } = useQuery({
@@ -15,7 +17,7 @@ export const usePostsQuery = (
     queryFn: () =>
       api
         .get(
-          `/post?s=${search}&limit=20&page=${page}&type=${type}&available=true`
+          `/post?s=${search}&limit=20&page=${page}&type=${type}&userId=${user?.id}&available=true`
         )
         .then((res) => res.data),
   });

@@ -32,7 +32,7 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
 
     if (page)
         return (
-            <View className='w-full py-4'>
+            <View className='w-full pt-4 pb-52'>
                 <View className='w-full flex-row px-4 justify-between'>
                     <View className='gap-2 flex-row items-center'>
                         <View className='w-14 h-14 rounded-full overflow-hidden'>
@@ -106,8 +106,8 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                     </View>
                 </View>
             </View>
-
         )
+
     return (
         <View className='w-full py-4'>
             <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`} asChild>
@@ -194,8 +194,8 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                 )}
                 <View className="px-4">
                     <View className='flex-row items-center gap-1'>
-                        <LikePost id={item.id} postLikes={0} postLikers={[]} />
-                        <CommentPost id={item.id} postComments={0} />
+                        <LikePost id={item.id} postLikes={item.likes} postLikers={item.postLikes} />
+                        <CommentPost id={item.id} postComments={item.comments} />
                     </View>
                     <View className='flex-row justify-between gap-1'>
                         {item?.title ?
@@ -208,8 +208,16 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                             : null}
                     </View>
                     {item?.content ?
-                        <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`}>
-                            <Text className='text-foreground-light/60 dark:text-foreground-dark/80'>{item.content}</Text>
+                        <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`} asChild>
+                            <Pressable>
+                                <Text
+                                    numberOfLines={3}
+                                    ellipsizeMode="tail"
+                                    className="text-foreground-light/60 dark:text-foreground-dark/80"
+                                >
+                                    {item.content}
+                                </Text>
+                            </Pressable>
                         </Link>
                         : null}
                 </View>
