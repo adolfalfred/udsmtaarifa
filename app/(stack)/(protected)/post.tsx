@@ -92,8 +92,8 @@ export default function PostScreen() {
                 }
             });
             addToast('success', "News posted successfully", true)
-            if (type === 'class') router.push('/(stack)/(protected)/(tabs)/schooling/school?refresh=true')
-            else router.push('/(stack)/(protected)/(tabs)/news?refresh=true')
+            if (type === 'class') router.replace('/(stack)/(protected)/(tabs)/schooling/school?refresh=true')
+            else router.replace('/(stack)/(protected)/(tabs)/news?refresh=true')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);

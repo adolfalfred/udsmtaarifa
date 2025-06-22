@@ -98,7 +98,7 @@ const HeaderComponent = ({ category, setCategory }: { category: '' | number; set
     >
       <TouchableOpacity className="px-5 py-2"
         style={{
-          backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20`,
+          backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
           borderRadius: 9999,
           marginRight: 4
         }}
@@ -111,7 +111,7 @@ const HeaderComponent = ({ category, setCategory }: { category: '' | number; set
       {data.length > 0 ? data.map((item) => (
         <TouchableOpacity key={item.id} className="px-5 py-2"
           style={{
-            backgroundColor: category === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20`,
+            backgroundColor: category === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
             borderRadius: 9999,
             marginRight: 4
           }}
@@ -126,7 +126,7 @@ const HeaderComponent = ({ category, setCategory }: { category: '' | number; set
           {isLoading ? Array.from({ length: 9 }).map((_, i) => (
             <TouchableOpacity key={i} className="px-5 py-2 w-20"
               style={{
-                backgroundColor: `${colors.foreground[colorScheme]}20`,
+                backgroundColor: `${colors.foreground[colorScheme]}10`,
                 borderRadius: 9999,
                 marginRight: 4
               }} />

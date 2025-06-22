@@ -44,7 +44,7 @@ export default function PostScreen() {
             addToast('loading', "Posting feedback...")
             await api.post(`/feedback`, { userId: user!.id, title, description, typeId });
             addToast('success', "Feedback posted successfully", true)
-            router.push('/(stack)/(protected)/(tabs)/feedback/feedbacks?refresh=true')
+            router.replace('/(stack)/(protected)/(tabs)/feedback/feedbacks?refresh=true')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);

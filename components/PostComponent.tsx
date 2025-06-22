@@ -5,6 +5,7 @@ import { Link } from 'expo-router';
 import { useMemo, useState } from 'react';
 import LikePost from './LikePost';
 import CommentPost from './CommentPost';
+import { convertISOToReadable } from '@/lib/utils';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -100,9 +101,14 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                                 </View>)}
                         </View>
                     )}
-                    <View className='flex-row items-center gap-1 px-4'>
-                        <LikePost id={item.id} postLikes={item.likes} postLikers={item.postLikes} />
-                        <CommentPost id={item.id} postComments={item.comments} />
+                    <View className='flex-row items-center justify-between'>
+                        <View className='flex-row items-center gap-1 px-4'>
+                            <LikePost id={item.id} postLikes={item.likes} postLikers={item.postLikes} />
+                            <CommentPost id={item.id} postComments={item.comments} />
+                        </View>
+                        {item?.createdAt ?
+                            <Text className='shrink-0 text-foreground-light/60 dark:text-foreground-dark/80 text-xs'>{convertISOToReadable(item.createdAt)}</Text>
+                            : null}
                     </View>
                     <View className="px-4">
                         {item?.title ? <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text> : null}
@@ -197,20 +203,20 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                     </View>
                 )}
                 <View className="px-4">
-                    <View className='flex-row items-center gap-1'>
-                        <LikePost id={item.id} postLikes={item.likes} postLikers={item.postLikes} />
-                        <CommentPost id={item.id} postComments={item.comments} />
-                    </View>
-                    <View className='flex-row justify-between gap-1'>
-                        {item?.title ?
-                            <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`}>
-                                <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
-                            </Link>
-                            : null}
+                    <View className='flex-row items-center justify-between'>
+                        <View className='flex-row items-center gap-1'>
+                            <LikePost id={item.id} postLikes={item.likes} postLikers={item.postLikes} />
+                            <CommentPost id={item.id} postComments={item.comments} />
+                        </View>
                         {item?.createdAt ?
-                            <Text className='shrink-0 text-foreground-light/60 dark:text-foreground-dark/80 text-xs'>{new Date(item.createdAt).toLocaleDateString()}</Text>
+                            <Text className='shrink-0 text-foreground-light/60 dark:text-foreground-dark/80 text-xs'>{convertISOToReadable(item.createdAt)}</Text>
                             : null}
                     </View>
+                    {item?.title ?
+                        <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`}>
+                            <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
+                        </Link>
+                        : null}
                     {item?.content ?
                         <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`} asChild>
                             <Pressable>
@@ -231,15 +237,19 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
     )
 }
 
-export const PostSkeleton = ({ count }: { count: number }) => {
+export const PostSkeleton = ({ count, page }: { count: number; page?: true }) => {
     return (
         <>
-            {Array.from({ length: count }).map((_, i) => (
-                <View
-                    key={i}
-                    className='w-full py-4'
-                >
-                    <View className='w-full h-96 bg-foreground-light/5 dark:bg-foreground-dark/5' />
+            {Array.from({ length: page ? 1 : count }).map((_, i) => (
+                <View key={i} className='w-full py-4' >
+                    <View className='gap-2 flex-row items-center mb-2 px-4'>
+                        <View className='w-14 h-14 rounded-full overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5' />
+                        <View>
+                            <View className='bg-foreground-light/5 dark:bg-foreground-dark/5 w-24 h-3' />
+                            <View className='bg-foreground-light/5 dark:bg-foreground-dark/5 w-32 h-3 mt-1' />
+                        </View>
+                    </View>
+                    <View className='w-full h-80 bg-foreground-light/5 dark:bg-foreground-dark/5' />
                 </View>
             ))}
         </>

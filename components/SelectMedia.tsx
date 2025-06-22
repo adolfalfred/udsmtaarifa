@@ -1,4 +1,4 @@
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { View, Text, TouchableOpacity, Alert, StatusBar } from 'react-native'
 import { useCallback, useMemo, useRef } from 'react'
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -92,10 +92,15 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
                 stackBehavior='replace'
                 backgroundStyle={{ backgroundColor: colors.background[colorScheme] }}
                 handleIndicatorStyle={{ backgroundColor: colors.foreground[colorScheme] }}
-                backdropComponent={() => <View className='bg-black/40 flex-1 absolute inset-0'></View>}
                 topInset={StatusBar.currentHeight || 0}
                 snapPoints={snapPoints}
                 onDismiss={closeModal}
+                backdropComponent={(props) => <BottomSheetBackdrop
+                    {...props}
+                    appearsOnIndex={0}
+                    disappearsOnIndex={-1}
+                    pressBehavior="close"
+                />}
             >
                 <BottomSheetScrollView className='flex-1 p-6 bg-background-light dark:bg-background-dark'>
                     {media?.length && media.length > 0 ? (

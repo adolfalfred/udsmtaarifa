@@ -4,7 +4,7 @@ import { View, Text, Pressable, StatusBar, TextInput } from 'react-native'
 import { Image } from 'expo-image';
 import { colors } from '@/constants/Colors'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { BottomSheetFlatList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useCommentsQuery } from '@/queries/useCommentsQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import Button from './ui/Button';
@@ -14,7 +14,6 @@ import { useSessionStore } from '@/lib/zustand/useSessionStore';
 export default function CommentPost({ id, postComments }: { id: string; postComments: number }) {
     const colorScheme = useColorScheme()
 
-    const [comments, setComments] = useState(postComments)
     const [refreshing, setRefreshing] = useState(false)
     const [page, setPage] = useState(1)
 
@@ -54,75 +53,81 @@ export default function CommentPost({ id, postComments }: { id: string; postComm
                     color={`${colors.foreground[colorScheme]}e0`}
                 />
                 <Text className='text-foreground-light/60 dark:text-foreground-dark text-sm'>
-                    {comments.toLocaleString('en-US')}
+                    {postComments.toLocaleString('en-US')}
                 </Text>
             </Pressable>
             <BottomSheetModal
                 ref={bottomSheetModalRef}
-                name='SelectCategories'
+                name='PostComments'
                 stackBehavior='replace'
+                enableContentPanningGesture={false}
                 backgroundStyle={{ backgroundColor: colors.background[colorScheme] }}
                 handleIndicatorStyle={{ backgroundColor: colors.foreground[colorScheme] }}
-                backdropComponent={() => <View className='bg-black/40 flex-1 absolute inset-0'></View>}
                 topInset={StatusBar.currentHeight || 0}
                 snapPoints={snapPoints}
                 onDismiss={closeModal}
+                backdropComponent={(props) => <BottomSheetBackdrop
+                    {...props}
+                    appearsOnIndex={0}
+                    disappearsOnIndex={-1}
+                    pressBehavior="close"
+                />}
             >
-                <BottomSheetView className='flex-1 p-6 bg-background-light dark:bg-background-dark'>
-                    <View className="flex-1 pb-24">
-                        <BottomSheetFlatList
-                            data={data}
-                            keyExtractor={(item) => `${item.id}`}
-                            showsVerticalScrollIndicator={false}
-                            refreshing={refreshing}
-                            onEndReached={handleLoadMore}
-                            onEndReachedThreshold={0.2}
-                            renderItem={({ item }) => (
-                                <View className='flex flex-col gap-0.5 mb-4'>
-                                    <View className='gap-2 flex-row items-center'>
-                                        <View className='w-8 h-8 rounded-full overflow-hidden'>
-                                            <Image
-                                                style={{
-                                                    flex: 1,
-                                                    width: '100%',
-                                                    backgroundColor: '#0553',
-                                                    borderRadius: '100%'
-                                                }}
-                                                source={item?.user.image}
-                                                contentFit="cover"
-                                                transition={1000}
-                                            />
-                                        </View>
-                                        <View>
-                                            <Text className='text-foreground-light dark:text-foreground-dark text-xs'>{item.user.name}</Text>
-                                            <Text className='text-[#aaa] text-xs'>{item.user.email}</Text>
-                                        </View>
+                <BottomSheetView className='flex-1 py-6 bg-background-light dark:bg-background-dark'>
+                    <BottomSheetFlatList
+                        data={data}
+                        keyExtractor={(item) => `${item.id}`}
+                        showsVerticalScrollIndicator={false}
+                        refreshing={refreshing}
+                        onEndReached={handleLoadMore}
+                        contentContainerStyle={{ paddingBottom: 100 }}
+                        onEndReachedThreshold={0.2}
+                        renderItem={({ item }) => (
+                            <View className='flex flex-col gap-0.5 mb-4 px-4'>
+                                <View className='gap-2 flex-row items-center'>
+                                    <View className='w-8 h-8 rounded-full overflow-hidden'>
+                                        <Image
+                                            style={{
+                                                flex: 1,
+                                                width: '100%',
+                                                backgroundColor: '#0553',
+                                                borderRadius: '100%'
+                                            }}
+                                            source={item?.user.image}
+                                            contentFit="cover"
+                                            transition={1000}
+                                        />
                                     </View>
-                                    <Text className='text-foreground-light dark:text-foreground-dark ml-10'>{item.content}</Text>
+                                    <View>
+                                        <Text className='text-foreground-light dark:text-foreground-dark text-xs'>{item.user.name}</Text>
+                                        <Text className='text-[#aaa] text-xs'>{item.user.email}</Text>
+                                    </View>
                                 </View>
-                            )}
-                            ListEmptyComponent={() => {
-                                if (isLoading) return (
-                                    <>
-                                        <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
-                                        <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
-                                    </>
-                                )
-                                return <Text className="text-black dark:text-white text-center mt-10">No comments yet!</Text>
-                            }}
-                        />
-                    </View>
-                    <ChatInput postId={id} handleRefresh={handleRefresh} setComments={setComments} />
+                                <Text className='text-foreground-light dark:text-foreground-dark ml-10'>{item.content}</Text>
+                            </View>
+                        )}
+                        ListEmptyComponent={() => {
+                            if (isLoading) return (
+                                <>
+                                    <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
+                                    <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
+                                </>
+                            )
+                            return <Text className="text-black dark:text-white text-center mt-10">No comments yet!</Text>
+                        }}
+                    />
+                    <ChatInput postId={id} handleRefresh={handleRefresh} />
                 </BottomSheetView>
             </BottomSheetModal>
         </>
     )
 }
 
-const ChatInput = ({ postId, handleRefresh, setComments }: { setComments: React.Dispatch<React.SetStateAction<number>>; postId: string; handleRefresh: () => void }) => {
+const ChatInput = ({ postId, handleRefresh }: { postId: string; handleRefresh: () => void }) => {
     const [content, setContent] = useState('')
     const [loading, setLoading] = useState(false)
     const { user } = useSessionStore()
+    const queryClient = useQueryClient()
 
     const postFxn = async () => {
         if (content.length === 0 || !user?.id) return
@@ -140,7 +145,10 @@ const ChatInput = ({ postId, handleRefresh, setComments }: { setComments: React.
             if (res) {
                 setContent("")
                 handleRefresh()
-                setComments(prev => prev + 1)
+                await queryClient.invalidateQueries({
+                    refetchType: "active",
+                    queryKey: ["post"],
+                });
             }
         } catch (err) {
             console.log(err)
@@ -153,7 +161,7 @@ const ChatInput = ({ postId, handleRefresh, setComments }: { setComments: React.
     return (
         <View className="absolute bottom-0 left-0 right-0 px-4 pb-4 bg-background-light dark:bg-background-dark flex-row gap-1 items-end justify-between">
             <TextInput
-                className="w-11/12 shrink border border-[#aaa] px-3 py-4 rounded-[24px] text-black dark:text-white bg-background-light dark:bg-background-dark"
+                className={`w-11/12 shrink border border-[#aaa] px-3 py-4 rounded-[24px] text-black dark:text-white bg-background-light dark:bg-background-dark ${loading ? 'opacity-50' : 'opacity-100'}`}
                 placeholder="Comment..."
                 placeholderTextColor="#999"
                 value={content}
@@ -164,8 +172,7 @@ const ChatInput = ({ postId, handleRefresh, setComments }: { setComments: React.
                 editable={!loading}
             />
             <Button
-                className={
-                    `w-2/12 shrink-0 rounded-full ${loading ? 'opacity-50' : 'bg-primary-light dark:bg-primary-dark'}`}
+                className={`w-2/12 shrink-0 rounded-full bg-primary-light dark:bg-primary-dark ${loading ? 'opacity-50' : 'opacity-100'}`}
                 onPress={postFxn}
                 disabled={loading}
             >

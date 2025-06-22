@@ -1,4 +1,4 @@
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { View, Text, TouchableOpacity, Alert, Image, StatusBar } from 'react-native'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
@@ -81,10 +81,16 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                 stackBehavior='replace'
                 backgroundStyle={{ backgroundColor: colors.background[colorScheme] }}
                 handleIndicatorStyle={{ backgroundColor: colors.foreground[colorScheme] }}
-                backdropComponent={() => <View className='bg-black/40 flex-1 absolute inset-0'></View>}
                 topInset={StatusBar.currentHeight || 0}
                 snapPoints={snapPoints}
-                onDismiss={closeModal}>
+                onDismiss={closeModal}
+                backdropComponent={(props) => <BottomSheetBackdrop
+                    {...props}
+                    appearsOnIndex={0}
+                    disappearsOnIndex={-1}
+                    pressBehavior="close"
+                />}
+            >
                 <BottomSheetView className='flex-1 h-[90vh] p-6 bg-background-light dark:bg-background-dark'>
                     <View className='rounded-2xl overflow-hidden mb-6 relative self-center items-center justify-center'>
                         {image ? (

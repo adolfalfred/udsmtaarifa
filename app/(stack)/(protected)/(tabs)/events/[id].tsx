@@ -9,7 +9,7 @@ export default function PostDetailScreen() {
 
     return (
         <ScrollAwareView className="flex-1 pt-24">
-            {data ? <EventComponent item={data} page /> : <EventSkeleton count={1} />}
+            {data ? <EventComponent item={data} page /> : <EventSkeleton count={1} page />}
         </ScrollAwareView>
     )
 }

@@ -1,4 +1,4 @@
-import { BottomSheetFlatList, BottomSheetModal, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
@@ -75,11 +75,17 @@ export default function SelectProgramme({
                 stackBehavior='replace'
                 backgroundStyle={{ backgroundColor: colors.background[colorScheme] }}
                 handleIndicatorStyle={{ backgroundColor: colors.foreground[colorScheme] }}
-                backdropComponent={() => <View className='bg-black/40 flex-1 absolute inset-0'></View>}
                 topInset={StatusBar.currentHeight || 0}
                 keyboardBehavior="extend"
                 snapPoints={snapPoints}
-                onDismiss={() => closeModal(null)}>
+                onDismiss={() => closeModal(null)}
+                backdropComponent={(props) => <BottomSheetBackdrop
+                    {...props}
+                    appearsOnIndex={0}
+                    disappearsOnIndex={-1}
+                    pressBehavior="close"
+                />}
+            >
                 <BottomSheetView className='flex-1 h-[90vh] p-6 bg-background-light dark:bg-background-dark'>
                     <BottomSheetTextInput
                         className="border border-[#aaa] px-3 py-5 rounded-full mb-3 text-black dark:text-white bg-background-light dark:bg-background-dark"

@@ -51,7 +51,9 @@ export default function HomeScreen() {
         ListFooterComponent={nextPage ? <PostSkeleton count={1} /> : null}
         recycleItems
         ListEmptyComponent={() => {
-          if (isLoading) return <PostSkeleton count={10} />
+          if (isLoading) return <View className='pt-[100px]'>
+            <PostSkeleton count={10} />
+          </View>
           return (
             <View className="items-center justify-center h-96">
               <Text className='text-foreground-light dark:text-foreground-dark'>No news available</Text>
