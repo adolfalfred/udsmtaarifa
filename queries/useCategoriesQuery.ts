@@ -10,7 +10,7 @@ export const useCategoryQuery = (search: string, page: number) => {
     queryKey: ["category", { search, page }],
     queryFn: () =>
       api
-        .get(`/category?s=${search}&limit=100&page=${page}`)
+        .get(`/category?s=${search}&limit=1000&page=${page}`)
         .then((res) => res.data),
   });
 
@@ -23,7 +23,7 @@ export const useCategoryQuery = (search: string, page: number) => {
         });
         return Array.from(map.values()).sort(
           (a, b) =>
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       });
     }

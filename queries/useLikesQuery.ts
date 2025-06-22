@@ -23,7 +23,7 @@ export const useLikesQuery = (search: string, page: number, post: string) => {
         });
         return Array.from(map.values()).sort(
           (a, b) =>
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       });
     }

@@ -65,6 +65,7 @@ export function ScrollAwareLegendList<T>(props: LegendListProps<T>) {
     return (
         <LegendList
             onScroll={handleScroll}
+            showsVerticalScrollIndicator={false}
             {...props}
         />
     );
@@ -121,6 +122,7 @@ export function ScrollAwareView(props: ScrollViewProps) {
     return (
         <ScrollView
             onScroll={handleScroll}
+            showsVerticalScrollIndicator={false}
             {...props}
         >
             {props.children}

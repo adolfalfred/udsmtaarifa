@@ -9,6 +9,7 @@ import { BottomSheetFlatList, BottomSheetModal, BottomSheetView } from '@gorhom/
 import api from '@/lib/api';
 import { useLikesQuery } from '@/queries/useLikesQuery';
 import type { LikeProps } from '@/types/like';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function LikePost({ id, postLikes, postLikers }: { id: string; postLikes: number, postLikers: LikeProps[] }) {
     const { user } = useSessionStore()
@@ -20,6 +21,8 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
     const [page, setPage] = useState(1)
 
     const { data, isLoading, nextPage } = useLikesQuery('', page, id)
+    const queryClient = useQueryClient();
+
     const handleLoadMore = () => {
         if (nextPage) setPage(prev => prev + 1)
     }
@@ -44,7 +47,7 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
             } else {
                 setLikes(prevLikes => prevLikes + 1);
                 setLikers(prev => [...prev, { createdAt: new Date(), postId: id, updatedAt: new Date(), userId: user.id, user }!]);
-                await api.post(`/post/like`, {
+                const res = await api.post(`/post/like`, {
                     postId: id,
                     userId: user.id
                 }, {
@@ -52,6 +55,12 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
                         'Content-Type': 'application/json',
                     }
                 });
+                if (res) {
+                    await queryClient.invalidateQueries({
+                        refetchType: "active",
+                        queryKey: ["news"],
+                    });
+                }
             }
         } catch (err) {
             setLikes(postLikes);
@@ -65,7 +74,7 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
     return (
         <>
             <View className='flex-row items-center gap-2 min-w-20 shrink-0'>
-                <Pressable onPress={likeFxn}>
+                <Pressable onPress={likeFxn} className='mt-2'>
                     <FontAwesome
                         className='mb-1.5'
                         size={22}
@@ -98,7 +107,7 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
                         onEndReached={handleLoadMore}
                         onEndReachedThreshold={0.2}
                         renderItem={({ item }) => (
-                            <View className='gap-2 flex-row items-center'>
+                            <View className='gap-2 flex-row items-center mb-2'>
                                 <View className='w-14 h-14 rounded-full overflow-hidden'>
                                     <Image
                                         style={{

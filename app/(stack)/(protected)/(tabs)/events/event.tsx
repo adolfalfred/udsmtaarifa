@@ -19,9 +19,6 @@ export default function HomeScreen() {
   const { refresh } = useLocalSearchParams();
   const { hide } = useHideState()
 
-  const colorScheme = useColorScheme()
-
-  const { data: categories } = useCategoryQuery('', page)
   const { data, isLoading, nextPage, } = useEventsQuery('', page, category)
   const queryClient = useQueryClient();
 
@@ -51,23 +48,22 @@ export default function HomeScreen() {
   return (
     <>
       <ScrollAwareLegendList
-        key={category}
         data={data}
         renderItem={renderEvent}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
         refreshing={refreshing}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.2}
+        ListHeaderComponent={() => <HeaderComponent category={category} setCategory={setCategory} />}
         ListFooterComponent={nextPage ? <EventSkeleton count={1} /> : null}
         recycleItems
         ListEmptyComponent={() => {
           if (isLoading)
             return (
               <View className="items-center justify-center">
-                <EventSkeleton count={1} />
+                <EventSkeleton count={10} />
               </View>
             )
           return (
@@ -76,28 +72,6 @@ export default function HomeScreen() {
             </View>
           )
         }}
-        ListHeaderComponent={() => (
-          <ScrollView horizontal className="py-2 px-6 pt-28">
-            <TouchableOpacity className="px-5 py-2 rounded-full mr-1"
-              style={{ backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20` }}
-              onPress={() => setCategory('')}
-            >
-              <Text className="text-foreground-light dark:text-foreground-dark">
-                All
-              </Text>
-            </TouchableOpacity>
-            {categories.map((item) => (
-              <TouchableOpacity key={item.id} className="px-5 py-2 rounded-full mr-1"
-                style={{ backgroundColor: category === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20` }}
-                onPress={() => setCategory(item.id)}
-              >
-                <Text className="text-foreground-light dark:text-foreground-dark">
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
       />
       {!hide && (
         <View className="absolute bottom-28 right-5 z-50">
@@ -110,4 +84,57 @@ export default function HomeScreen() {
       )}
     </>
   );
+}
+
+const HeaderComponent = ({ category, setCategory }: { category: '' | number; setCategory: (e: '' | number) => void; }) => {
+  const colorScheme = useColorScheme()
+  const { data, isLoading } = useCategoryQuery('', 1)
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      stickyHeaderIndices={[0]}
+      className="py-2 px-4 pt-28"
+    >
+      <TouchableOpacity className="px-5 py-2"
+        style={{
+          backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20`,
+          borderRadius: 9999,
+          marginRight: 4
+        }}
+        onPress={() => setCategory('')}
+      >
+        <Text className="text-foreground-light dark:text-foreground-dark">
+          All
+        </Text>
+      </TouchableOpacity>
+      {data.length > 0 ? data.map((item) => (
+        <TouchableOpacity key={item.id} className="px-5 py-2"
+          style={{
+            backgroundColor: category === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20`,
+            borderRadius: 9999,
+            marginRight: 4
+          }}
+          onPress={() => setCategory(item.id)}
+        >
+          <Text className="text-foreground-light dark:text-foreground-dark">
+            {item.name}
+          </Text>
+        </TouchableOpacity>
+      )) : (
+        <>
+          {isLoading ? Array.from({ length: 9 }).map((_, i) => (
+            <TouchableOpacity key={i} className="px-5 py-2 w-20"
+              style={{
+                backgroundColor: `${colors.foreground[colorScheme]}20`,
+                borderRadius: 9999,
+                marginRight: 4
+              }} />
+          )) : (
+            <></>
+          )}
+        </>
+      )}
+    </ScrollView>
+  )
 }

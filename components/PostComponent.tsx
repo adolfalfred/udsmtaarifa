@@ -100,6 +100,10 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                                 </View>)}
                         </View>
                     )}
+                    <View className='flex-row items-center gap-1 px-4'>
+                        <LikePost id={item.id} postLikes={item.likes} postLikers={item.postLikes} />
+                        <CommentPost id={item.id} postComments={item.comments} />
+                    </View>
                     <View className="px-4">
                         {item?.title ? <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text> : null}
                         {item?.content ? <Text className='text-foreground-light/60 dark:text-foreground-dark/80'>{item.content}</Text> : null}

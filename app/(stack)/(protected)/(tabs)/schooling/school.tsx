@@ -44,7 +44,6 @@ export default function HomeScreen() {
         renderItem={renderPost}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingTop: 100, paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
         refreshing={refreshing}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}

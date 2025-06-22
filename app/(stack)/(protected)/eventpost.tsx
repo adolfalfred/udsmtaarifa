@@ -145,7 +145,7 @@ export default function PostScreen() {
                     </View>
                     <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
                         <TextInput
-                            className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                             placeholder="Event Title"
                             placeholderTextColor="#999"
                             value={title}
@@ -153,7 +153,7 @@ export default function PostScreen() {
                             autoFocus
                         />
                         <TextInput
-                            className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-[26px] my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                             placeholder="Event Description"
                             placeholderTextColor="#999"
                             value={content}
@@ -163,7 +163,7 @@ export default function PostScreen() {
                             textAlignVertical="top"
                         />
                         <TextInput
-                            className="border border-[#aaa] p-3 rounded-md my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
                             placeholder="Location"
                             placeholderTextColor="#999"
                             value={location}
@@ -173,7 +173,7 @@ export default function PostScreen() {
 
                         <Pressable
                             onPress={() => setShowDatePicker(true)}
-                            className="border border-[#aaa] p-3 rounded-md my-3 bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
                         >
                             <Text className="text-black dark:text-white">
                                 {date.toDateString()}
@@ -181,7 +181,7 @@ export default function PostScreen() {
                         </Pressable>
                         {/* <Pressable
                             onPress={() => setShowStartPicker(true)}
-                            className="border border-[#aaa] p-3 rounded-md my-3 bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
                         >
                             <Text className="text-black dark:text-white">
                                 {startTime.toDateString()}
@@ -189,7 +189,7 @@ export default function PostScreen() {
                         </Pressable>
                         <Pressable
                             onPress={() => setShowEndPicker(true)}
-                            className="border border-[#aaa] p-3 rounded-md my-3 bg-background-light dark:bg-background-dark"
+                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
                         >
                             <Text className="text-black dark:text-white">
                                 {endTime.toDateString()}
@@ -201,7 +201,7 @@ export default function PostScreen() {
                         <SelectCategories categories={categories} setCategories={setCategories} />
                         <Button
                             onPress={postFxn}
-                            className="bg-primary-light dark:bg-primary-dark w-full my-6"
+                            className="bg-primary-light dark:bg-primary-dark w-full my-6 rounded-full"
                             textClassName="text-foreground-dark text-2xl"
                             disabled={loading}
                         >
