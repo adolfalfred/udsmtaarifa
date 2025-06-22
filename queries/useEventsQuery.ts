@@ -29,7 +29,10 @@ export const useEventsQuery = (
         [...prev, ...data.data].forEach((item) => {
           map.set(item.id, item);
         });
-        return Array.from(map.values());
+        return Array.from(map.values()).sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
       });
     }
   }, [data, page]);

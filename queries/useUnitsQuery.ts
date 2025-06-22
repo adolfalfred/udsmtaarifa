@@ -17,8 +17,14 @@ export const useUnitsQuery = (search: string, page: number) => {
   useEffect(() => {
     if (data) {
       setStore((prev) => {
-        const set = new Set([...prev, ...data?.data]);
-        return Array.from(set);
+        const map = new Map();
+        [...prev, ...data.data].forEach((item) => {
+          map.set(item.id, item);
+        });
+        return Array.from(map.values()).sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
       });
     }
   }, [data]);
