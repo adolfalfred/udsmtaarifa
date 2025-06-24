@@ -18,12 +18,12 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['65%', '100%'], []);
+    const snapPoints = useMemo(() => ['100%'], []);
 
-    const pickImage = async () => {
+    const pickMedia = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ['images', 'livePhotos'],
+                mediaTypes: ['images', 'livePhotos', 'videos'],
                 aspect: [1, 1],
                 quality: 0.8,
                 allowsMultipleSelection: true
@@ -128,7 +128,7 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
                             </TouchableOpacity>
                         </>
                     ) : (
-                        <View className='w-80 h-80 mx-auto rounded-2xl border-2 border-dashed border-primary-light/50 dark:border-primary-dark/50 items-center justify-center'>
+                        <View className='w-80 h-80 mx-auto rounded-2xl border border-dashed border-primary-light/50 dark:border-primary-dark/50 items-center justify-center'>
                             <MaterialIcons name='image' size={48} color={colors.primary[colorScheme]} />
                             <Text className='text-foreground-light dark:text-foreground-dark mt-4'>
                                 No image selected
@@ -140,11 +140,11 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
                             Select a Photo for your Account
                         </Text>
 
-                        <View className='flex-row items-center mt-5'>
+                        <View className='flex-row items-center'>
                             <Button
                                 icon={<MaterialIcons name='upload' size={20} color="white" />}
-                                onPress={pickImage}
-                                className='border-2 border-primary-light dark:border-primary-dark rounded-l-full rounded-r-sm bg-primary-light dark:bg-primary-dark'
+                                onPress={pickMedia}
+                                className='h-14 border border-primary-light dark:border-primary-dark rounded-l-full rounded-r-sm bg-primary-light dark:bg-primary-dark'
                                 textClassName='text-foreground-dark'
                             >
                                 Gallery
@@ -152,7 +152,7 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
                             <Button
                                 icon={<MaterialIcons name='camera' size={20} color={colors.primary[colorScheme]} />}
                                 onPress={takePhoto}
-                                className='border-2 border-primary-light dark:border-primary-dark rounded-r-full rounded-l-sm bg-transparent'
+                                className='h-14 border border-primary-light dark:border-primary-dark rounded-r-full rounded-l-sm bg-transparent'
                                 textClassName='text-primary-light dark:text-primary-dark'
                             >
                                 Camera

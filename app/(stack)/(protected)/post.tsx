@@ -92,13 +92,15 @@ export default function PostScreen() {
                 }
             });
             addToast('success', "News posted successfully", true)
-            if (type === 'class') router.replace('/(stack)/(protected)/(tabs)/schooling/school?refresh=true')
-            else router.replace('/(stack)/(protected)/(tabs)/news?refresh=true')
+            router.back()
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
                 console.log(error.response.status);
-                addToast('danger', error.response.data, true)
+                if (typeof error.response.data === 'string') addToast('danger', error.response.data, true);
+                else if (error.response.data?.error && error.response.data.error?.message && typeof error.response.data.error.message === 'string')
+                    addToast('danger', error.response.data.error.message, true)
+                else addToast('danger', 'An unexpected error occurred', true);
             } else if (error.request) {
                 console.log(error.request);
                 addToast('danger', "No response received from the server. Check your network.", true)
@@ -114,7 +116,7 @@ export default function PostScreen() {
     return (
         <>
             <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark pt-5 px-6">
-                <ScrollView className="flex-1">
+                <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                     <View className="relative h-10">
                         {router.canGoBack() && (
                             <TouchableOpacity onPress={() => router.back()} className='absolute left-0 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>

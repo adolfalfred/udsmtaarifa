@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { colors } from '@/constants/Colors';
 import { useUnitsQuery } from '@/queries/useUnitsQuery';
+import Button from './ui/Button';
 
 export default function SelectUnits({
     units,
@@ -21,7 +22,7 @@ export default function SelectUnits({
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['65%', '100%'], []);
+    const snapPoints = useMemo(() => ['100%'], []);
 
     const { data, isLoading } = useUnitsQuery("", 1)
 
@@ -79,6 +80,13 @@ export default function SelectUnits({
                             return <Text className="text-black dark:text-white">No units found!</Text>
                         }}
                     />
+                    <Button
+                        onPress={closeModal}
+                        className="bg-primary-light dark:bg-primary-dark rounded-full"
+                        textClassName="text-foreground-dark text-2xl"
+                    >
+                        Confirm
+                    </Button>
                 </BottomSheetView>
             </BottomSheetModal>
         </>
