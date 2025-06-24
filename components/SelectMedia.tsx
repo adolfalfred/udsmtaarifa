@@ -75,7 +75,6 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
                                 flex: 1,
                                 width: '100%',
                                 backgroundColor: '#0553',
-                                borderRadius: '100%'
                             }}
                             source={uri}
                             contentFit="contain"
@@ -112,7 +111,6 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
                                             flex: 1,
                                             width: '100%',
                                             backgroundColor: '#0553',
-                                            borderRadius: '100%'
                                         }}
                                         source={item}
                                         contentFit="cover"

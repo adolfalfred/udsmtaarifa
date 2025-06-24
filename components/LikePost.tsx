@@ -5,21 +5,24 @@ import { View, Text, Pressable, StatusBar } from 'react-native'
 import { Image } from 'expo-image';
 import { colors } from '@/constants/Colors'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet'
 import api from '@/lib/api';
 import { useLikesQuery } from '@/queries/useLikesQuery';
 import type { LikeProps } from '@/types/like';
 import { useQueryClient } from '@tanstack/react-query';
 
+const keyExtractor = (item: LikeProps) => `${item.user.id}`
+
 export default function LikePost({ id, postLikes, postLikers }: { id: string; postLikes: number, postLikers: LikeProps[] }) {
     const { user } = useSessionStore()
     const colorScheme = useColorScheme()
+    const queryClient = useQueryClient();
 
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
 
     const { data, isLoading, nextPage } = useLikesQuery('', page, id)
-    const queryClient = useQueryClient();
+    const likes = useMemo(() => [...new Map([...data, ...postLikers].map(item => [item.user.id, item])).values()], [data, postLikers]);
 
     const handleLoadMore = () => {
         if (nextPage) setPage(prev => prev + 1)
@@ -115,46 +118,49 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
                     pressBehavior="close"
                 />}
             >
-                <BottomSheetView className='flex-1 p-6 bg-background-light dark:bg-background-dark'>
-                    <BottomSheetFlatList
-                        data={[...new Map([...data, ...postLikers].map(item => [item.user.id, item])).values()]}
-                        keyExtractor={(item) => `${item.user.id}`}
-                        showsVerticalScrollIndicator={false}
-                        onEndReached={handleLoadMore}
-                        onEndReachedThreshold={0.2}
-                        renderItem={({ item }) => (
-                            <View className='gap-2 flex-row items-center mb-2'>
-                                <View className='w-14 h-14 rounded-full overflow-hidden'>
-                                    <Image
-                                        style={{
-                                            flex: 1,
-                                            width: '100%',
-                                            backgroundColor: '#0553',
-                                            borderRadius: '100%'
-                                        }}
-                                        source={item?.user.image}
-                                        contentFit="cover"
-                                        transition={1000}
-                                    />
-                                </View>
-                                <View>
-                                    <Text className='text-foreground-light dark:text-foreground-dark'>{item.user.name}</Text>
-                                    <Text className='text-[#aaa]'>{item.user.email}</Text>
-                                </View>
-                            </View>
-                        )}
-                        ListEmptyComponent={() => {
-                            if (isLoading) return (
-                                <>
-                                    <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
-                                    <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
-                                </>
-                            )
-                            return <Text className="text-black dark:text-white text-center mt-10">No likes yet!</Text>
-                        }}
-                    />
-                </BottomSheetView>
+                <BottomSheetFlatList
+                    data={likes}
+                    keyExtractor={keyExtractor}
+                    showsVerticalScrollIndicator={false}
+                    onEndReached={handleLoadMore}
+                    contentContainerStyle={{ paddingBottom: 20, paddingTop: 12 }}
+                    onEndReachedThreshold={0.2}
+                    renderItem={({ item }) => <LikeComp item={item} />}
+                    ListEmptyComponent={() => {
+                        if (isLoading) return (
+                            <>
+                                <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
+                                <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
+                            </>
+                        )
+                        return <Text className="text-black dark:text-white text-center mt-10">No likes yet!</Text>
+                    }}
+                />
             </BottomSheetModal>
         </>
+    )
+}
+
+
+const LikeComp = ({ item }: { item: LikeProps }) => {
+    return (
+        <View className='gap-2 flex-row items-center mb-4 px-4'>
+            <View className='w-14 h-14 rounded-full overflow-hidden'>
+                <Image
+                    style={{
+                        flex: 1,
+                        width: '100%',
+                        backgroundColor: '#0553',
+                        borderRadius: '100%'
+                    }}
+                    source={item?.user.image}
+                    contentFit="cover"
+                />
+            </View>
+            <View>
+                <Text className='text-foreground-light dark:text-foreground-dark'>{item.user.name}</Text>
+                <Text className='text-[#aaa]'>{item.user.email}</Text>
+            </View>
+        </View>
     )
 }

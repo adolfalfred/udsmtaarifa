@@ -206,8 +206,8 @@ export function EventComponent({ item, page = false }: { item: EventProps, page?
 export const EventSkeleton = ({ count, page }: { count: number, page?: true }) => {
     if (page) return (
         <View className='w-full py-1.5'>
-            <View className='h-32' />
-            <View className='w-full h-40 bg-foreground-light/5 dark:bg-foreground-dark/5' />
+            <View className='h-44' />
+            <View className='w-full h-96 bg-foreground-light/5 dark:bg-foreground-dark/5' />
         </View>
     )
     return (

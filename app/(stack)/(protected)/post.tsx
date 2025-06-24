@@ -13,6 +13,10 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
+export const unstable_settings = {
+    presentation: 'transparentModal', // <--- this allows layering
+};
+
 export default function PostScreen() {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
