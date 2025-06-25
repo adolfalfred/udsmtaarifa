@@ -9,7 +9,7 @@ export default function PostDetailScreen() {
 
     return (
         <ScrollAwareView className="flex-1">
-            {data ? <FeedbackComponent item={data} page /> : <FeedbackSkeleton count={1} />}
+            {data ? <FeedbackComponent item={data} page /> : <FeedbackSkeleton count={1} page />}
         </ScrollAwareView>
     )
 }

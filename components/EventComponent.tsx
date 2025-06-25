@@ -36,7 +36,7 @@ export function EventComponent({ item, page = false }: { item: EventProps, page?
     if (!page)
         return (
             <Link href={`/(stack)/(protected)/(tabs)/events/${item.id}`} asChild>
-                <Pressable className='flex flex-row overflow-hidden h-36 w-full px-2 my-1.5'>
+                <Pressable className='flex flex-row overflow-hidden h-36 w-full px-3 my-1.5'>
                     <View
                         className='flex-grow p-3 w-1/2 bg-foreground-light/5 dark:bg-foreground-dark/5'
                         style={{
@@ -218,7 +218,7 @@ export const EventSkeleton = ({ count, page }: { count: number, page?: true }) =
             {Array.from({ length: count }).map((_, i) => (
                 <View
                     key={i}
-                    className='w-full px-2 py-1.5'
+                    className='w-full px-3 py-1.5'
                 >
                     <View className='w-full h-36 rounded-2xl bg-foreground-light/5 dark:bg-foreground-dark/5' />
                 </View>
