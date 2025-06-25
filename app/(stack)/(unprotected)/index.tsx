@@ -62,13 +62,13 @@ export default function Login() {
                     <View className="flex-col items-center justify-center py-32 gap-4">
                         <Image
                             source={require('@/assets/images/icon.png')}
-                            className="w-28 h-28"
+                            className="w-36 h-36"
                         />
-                        <Text className="text-foreground-light dark:text-foreground-dark text-4xl">Welcome Back!</Text>
+                        <Text className="text-foreground-light dark:text-foreground-dark text-3xl">Welcome Back!</Text>
                     </View>
                 }
             >
-                <KeyboardAvoidingView className="flex-col gap-10 bg-background-light dark:bg-background-dark">
+                <KeyboardAvoidingView className="px-6 flex-col gap-10 bg-background-light dark:bg-background-dark">
                     <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">
                         <FontAwesome6 name="user-circle" size={20} color="#aaa" className="mr-5" />
                         <TextInput

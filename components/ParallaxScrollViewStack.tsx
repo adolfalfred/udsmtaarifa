@@ -60,7 +60,7 @@ export default function ParallaxScrollViewStack({
                     ]}>
                     {headerImage}
                 </Animated.View>
-                <View className='flex-1 py-9 px-6 gap-4 overflow-hidden'>{children}</View>
+                <View className='flex-1 py-9 gap-4 overflow-hidden'>{children}</View>
             </Animated.ScrollView>
         </View>
     );

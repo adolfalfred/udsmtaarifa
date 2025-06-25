@@ -43,7 +43,7 @@ export default function HomeScreen() {
         data={data}
         renderItem={renderPost}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingTop: 100, paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
         refreshing={refreshing}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}

@@ -1,20 +1,25 @@
-import api from "@/lib/api";
+import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import type { FeedbackProps } from "@/types/feedback";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export const useFeedbacksQuery = (
   search: string,
   page: number,
-  status: FeedbackProps["status"] | ""
+  status: FeedbackProps["status"] | "",
+  type: string
 ) => {
+  const { user } = useSessionStore();
   const [store, setStore] = useState<FeedbackProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["feedback", { search, page, status }],
+    queryKey: ["feedback", { search, page, status, type }],
     queryFn: () =>
       api
-        .get(`/feedback?s=${search}&limit=20&page=${page}&status=${status}`)
+        .get(
+          `/feedback?s=${search}&limit=20&page=${page}&user=${user?.id}&status=${status}&type=${type}`
+        )
         .then((res) => res.data),
   });
 

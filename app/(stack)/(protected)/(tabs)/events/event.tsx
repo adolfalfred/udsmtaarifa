@@ -11,15 +11,16 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { colors } from "@/constants/Colors";
 import { ScrollAwareLegendList } from "@/components/ScrollAwareView";
 import { useHideState } from '@/lib/zustand/useHideState';
+import type { CategoryProps } from '@/types/category';
 
 export default function HomeScreen() {
   const [page, setPage] = useState(1)
-  const [category, setCategory] = useState<'' | number>('')
+  const [category, setCategory] = useState<null | CategoryProps>(null)
   const [refreshing, setRefreshing] = useState(false)
   const { refresh } = useLocalSearchParams();
   const { hide } = useHideState()
 
-  const { data, isLoading, nextPage, } = useEventsQuery('', page, category)
+  const { data, isLoading, nextPage, } = useEventsQuery('', page, category !== null ? category.id : '')
   const queryClient = useQueryClient();
 
   const handleLoadMore = () => {
@@ -68,7 +69,9 @@ export default function HomeScreen() {
             )
           return (
             <View className="items-center justify-center h-96">
-              <Text className='text-foreground-light dark:text-foreground-dark'>No events available</Text>
+              <Text className='text-foreground-light dark:text-foreground-dark capitalize'>
+                {category ? `No ${category.name} events available right now` : 'No events available right now'}
+              </Text>
             </View>
           )
         }}
@@ -86,7 +89,7 @@ export default function HomeScreen() {
   );
 }
 
-const HeaderComponent = ({ category, setCategory }: { category: '' | number; setCategory: (e: '' | number) => void; }) => {
+const HeaderComponent = ({ category, setCategory }: { category: null | CategoryProps; setCategory: (e: null | CategoryProps) => void; }) => {
   const colorScheme = useColorScheme()
   const { data, isLoading } = useCategoryQuery('', 1)
   return (
@@ -94,16 +97,16 @@ const HeaderComponent = ({ category, setCategory }: { category: '' | number; set
       horizontal
       showsHorizontalScrollIndicator={false}
       stickyHeaderIndices={[0]}
-      className="py-2 pt-28"
+      className="py-2"
     >
       <TouchableOpacity className="px-5 py-2"
         style={{
-          backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
+          backgroundColor: category === null ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
           borderRadius: 9999,
           marginRight: 4,
           marginLeft: 14
         }}
-        onPress={() => setCategory('')}
+        onPress={() => setCategory(null)}
       >
         <Text className="text-foreground-light dark:text-foreground-dark">
           All
@@ -112,11 +115,11 @@ const HeaderComponent = ({ category, setCategory }: { category: '' | number; set
       {data.length > 0 ? data.map((item) => (
         <TouchableOpacity key={item.id} className="px-5 py-2"
           style={{
-            backgroundColor: category === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
+            backgroundColor: category && category.id === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
             borderRadius: 9999,
             marginRight: 4
           }}
-          onPress={() => setCategory(item.id)}
+          onPress={() => setCategory(item)}
         >
           <Text className="text-foreground-light dark:text-foreground-dark">
             {item.name}

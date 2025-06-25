@@ -44,8 +44,8 @@ export function FeedbackComponent({ item, page = false }: { item: FeedbackProps,
                             : null}
                     </View>
                     <View className='flex-row items-center justify-between gap-3'>
-                        {item?.type
-                            ? <Text className='text-sm text-foreground-light dark:text-foreground-dark py-1'>{item.type.name}</Text>
+                        {item?.typeId
+                            ? <Text className='text-sm text-success-light dark:text-success-dark py-1'>{item.typeId}</Text>
                             : null}
                         {item?.status
                             ? <Text className='text-sm py-1 capitalize font-semibold'

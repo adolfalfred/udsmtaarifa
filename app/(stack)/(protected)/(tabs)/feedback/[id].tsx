@@ -8,7 +8,7 @@ export default function PostDetailScreen() {
     const { data } = useFeedbackQuery(id);
 
     return (
-        <ScrollAwareView className="flex-1 pt-24">
+        <ScrollAwareView className="flex-1">
             {data ? <FeedbackComponent item={data} page /> : <FeedbackSkeleton count={1} />}
         </ScrollAwareView>
     )

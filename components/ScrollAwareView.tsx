@@ -7,9 +7,9 @@ import {
 } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LegendList, type LegendListProps } from '@legendapp/list';
+import { useHideState } from '@/lib/zustand/useHideState';
 import { useNavigation } from 'expo-router';
 import { useRef, useEffect } from 'react';
-import { useHideState } from '@/lib/zustand/useHideState';
 
 export function ScrollAwareLegendList<T>(props: LegendListProps<T>) {
     const scrollY = useRef(0);

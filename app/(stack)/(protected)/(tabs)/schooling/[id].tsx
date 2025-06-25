@@ -8,7 +8,7 @@ export default function PostDetailScreen() {
     const { data } = usePostQuery(id);
 
     return (
-        <ScrollAwareView className="flex-1 pt-24">
+        <ScrollAwareView className="flex-1">
             {data ? <PostComponent item={data} page schooling /> : <PostSkeleton count={1} />}
         </ScrollAwareView>
     )

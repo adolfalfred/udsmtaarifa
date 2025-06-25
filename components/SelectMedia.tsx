@@ -77,7 +77,7 @@ export default function SelectMedia({ media, setMedia, noVideo = false }: { medi
                             style={{
                                 flex: 1,
                                 width: '100%',
-                                backgroundColor: '#0553',
+                                backgroundColor: `${colors.foreground[colorScheme]}10`,
                             }}
                             source={uri}
                             contentFit="contain"
@@ -113,7 +113,7 @@ export default function SelectMedia({ media, setMedia, noVideo = false }: { medi
                                         style={{
                                             flex: 1,
                                             width: '100%',
-                                            backgroundColor: '#0553',
+                                            backgroundColor: `${colors.foreground[colorScheme]}10`,
                                         }}
                                         source={item}
                                         contentFit="cover"

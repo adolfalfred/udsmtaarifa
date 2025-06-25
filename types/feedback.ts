@@ -16,7 +16,4 @@ export interface FeedbackProps {
     phone: string | null;
     image: string | null;
   };
-  type: {
-    name: string;
-  };
 }

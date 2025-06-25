@@ -1,8 +1,7 @@
-import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { router, Stack } from 'expo-router';
-import { TouchableOpacity, Image } from 'react-native';
+import BackButton from '@/components/BackButton';
+import { colors } from '@/constants/Colors';
+import { Stack } from 'expo-router';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -13,29 +12,22 @@ export default function TabLayout() {
                 headerTitleAlign: 'center',
                 headerStyle: { backgroundColor: `${colors.background[colorScheme]}f0` },
                 contentStyle: { backgroundColor: colors.background[colorScheme] },
-                headerLeft: () => {
-                    if (router.canGoBack()) return (
-                        <TouchableOpacity onPress={() => router.back()} className='ml-1 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>
-                            <MaterialIcons color={colors.background[colorScheme]} size={18} name='arrow-back' />
-                        </TouchableOpacity>
-                    )
-                    return (
-                        <TouchableOpacity onPress={() => router.push('/')} className='mx-4'>
-                            <Image
-                                source={require('@/assets/images/icon.png')}
-                                className="w-10 h-10"
-                            />
-                        </TouchableOpacity>
-                    )
-                },
+                headerShadowVisible: false,
+                headerLeft: (props) => <BackButton {...props} />,
             }}
         >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
+                name="profile"
+                options={{
+                    title: "Profile"
+                }}
+            />
+            <Stack.Screen
                 name="post"
                 options={{
                     animation: 'slide_from_bottom',
-                    title: "Post News"
+                    title: "Post News",
                 }}
             />
             <Stack.Screen

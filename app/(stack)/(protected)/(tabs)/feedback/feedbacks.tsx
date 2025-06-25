@@ -15,7 +15,7 @@ export default function Feedback() {
     const { refresh } = useLocalSearchParams();
     const { hide } = useHideState()
 
-    const { data, isLoading, nextPage, } = useFeedbacksQuery('', page, "")
+    const { data, isLoading, nextPage, } = useFeedbacksQuery('', page, "", "")
     const queryClient = useQueryClient();
 
     const handleLoadMore = () => {
@@ -43,7 +43,7 @@ export default function Feedback() {
                 data={data}
                 renderItem={renderFeedback}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{ paddingTop: 100, paddingBottom: 100 }}
+                contentContainerStyle={{ paddingBottom: 100 }}
                 refreshing={refreshing}
                 onRefresh={handleRefresh}
                 onEndReached={handleLoadMore}
@@ -51,12 +51,7 @@ export default function Feedback() {
                 ListFooterComponent={nextPage ? <FeedbackSkeleton count={1} /> : null}
                 recycleItems
                 ListEmptyComponent={() => {
-                    if (isLoading)
-                        return (
-                            <View className="items-center justify-center">
-                                <FeedbackSkeleton count={1} />
-                            </View>
-                        )
+                    if (isLoading) return <FeedbackSkeleton count={10} />
                     return (
                         <View className="items-center justify-center h-96">
                             <Text className='text-foreground-light dark:text-foreground-dark'>No feedback available</Text>

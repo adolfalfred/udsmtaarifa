@@ -1,10 +1,10 @@
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import { View, Text, Pressable, StatusBar } from 'react-native'
 import { Image } from 'expo-image';
 import { colors } from '@/constants/Colors'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { useCommentsQuery } from '@/queries/useCommentsQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import Button from './ui/Button';
@@ -180,6 +180,7 @@ const ChatInput = ({ postId, handleRefresh }: { postId: string; handleRefresh: (
 }
 
 const CommentComp = ({ item }: { item: CommentProps }) => {
+    const colorScheme = useColorScheme()
     return (
         <View className='flex flex-col gap-0.5 mb-4 px-6'>
             <View className='gap-2 flex-row items-center'>
@@ -188,7 +189,7 @@ const CommentComp = ({ item }: { item: CommentProps }) => {
                         style={{
                             flex: 1,
                             width: '100%',
-                            backgroundColor: '#0553',
+                            backgroundColor: `${colors.foreground[colorScheme]}10`,
                             borderRadius: '100%'
                         }}
                         source={item?.user?.image || null}

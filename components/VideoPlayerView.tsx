@@ -29,8 +29,6 @@ export default function VidePlayerView({ media, maxMediaHeight, screenWidth }: {
                 player={player}
                 style={StyleSheet.absoluteFill}
                 allowsFullscreen
-                allowsPictureInPicture
-                startsPictureInPictureAutomatically
             />
         </View>
     )

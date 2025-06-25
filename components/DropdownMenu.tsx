@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { Image } from 'expo-image';
+import type { NativeStackHeaderRightProps } from '@react-navigation/native-stack';
 import { Text, TouchableOpacity, View, Modal, Pressable } from 'react-native';
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { colors } from '@/constants/Colors';
 import { signOut } from '@/lib/auth';
+import { useState } from 'react';
 
-export default function DropdownMenu() {
+export default function DropdownMenu(props: NativeStackHeaderRightProps) {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
-    const { user, setIsLoggedIn, setUser } = useSessionStore()
+    const { setIsLoggedIn, setUser } = useSessionStore()
+    const colorScheme = useColorScheme()
 
     const logoutFxn = () => {
         setUser(null)
@@ -16,22 +20,13 @@ export default function DropdownMenu() {
 
     return (
         <>
-            <TouchableOpacity
+            <Pressable
                 onPress={() => setDropdownVisible(true)}
-                className="h-10 w-10 rounded-full overflow-hidden mr-4"
+                {...props}
+                className='rounded-full bg-foreground-light/5 dark:bg-foreground-dark/5 h-10 w-10 flex-col items-center justify-center'
             >
-                <Image
-                    style={{
-                        flex: 1,
-                        width: '100%',
-                        backgroundColor: '#0553',
-                        borderRadius: '100%'
-                    }}
-                    source={user?.image}
-                    contentFit="cover"
-                    transition={1000}
-                />
-            </TouchableOpacity>
+                <FontAwesome6 size={18} name='ellipsis-vertical' color={`${colors.foreground[colorScheme]}d0`} />
+            </Pressable>
 
             <Modal
                 transparent
@@ -43,8 +38,7 @@ export default function DropdownMenu() {
                     onPress={() => setDropdownVisible(false)}
                     className="flex-1"
                 >
-                    <View className="absolute top-14 right-4 bg-active-light dark:bg-active-dark rounded-lg w-40 p-1" style={{ elevation: 5 }}>
-
+                    <View className="absolute top-16 right-2 bg-active-light dark:bg-active-dark rounded-lg w-40 p-1" style={{ elevation: 5 }}>
                         <TouchableOpacity
                             onPress={logoutFxn}
                             className="p-3"

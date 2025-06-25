@@ -43,7 +43,7 @@ export default function HomeScreen() {
         data={data}
         renderItem={renderPost}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingTop: 100, paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
         refreshing={refreshing}
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
@@ -51,9 +51,7 @@ export default function HomeScreen() {
         ListFooterComponent={nextPage ? <PostSkeleton count={1} /> : null}
         recycleItems
         ListEmptyComponent={() => {
-          if (isLoading) return <View className='pt-[100px]'>
-            <PostSkeleton count={10} />
-          </View>
+          if (isLoading) return <PostSkeleton count={10} />
           return (
             <View className="items-center justify-center h-96">
               <Text className='text-foreground-light dark:text-foreground-dark'>No news available</Text>

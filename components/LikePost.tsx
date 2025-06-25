@@ -150,6 +150,7 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
 
 
 const LikeComp = ({ item }: { item: LikeProps }) => {
+    const colorScheme = useColorScheme()
     return (
         <View className='gap-2 flex-row items-center mb-4 px-4'>
             <View className='w-14 h-14 rounded-full overflow-hidden'>
@@ -157,7 +158,7 @@ const LikeComp = ({ item }: { item: LikeProps }) => {
                     style={{
                         flex: 1,
                         width: '100%',
-                        backgroundColor: '#0553',
+                        backgroundColor: `${colors.foreground[colorScheme]}10`,
                         borderRadius: '100%'
                     }}
                     source={item?.user.image}

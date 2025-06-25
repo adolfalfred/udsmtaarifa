@@ -167,7 +167,10 @@ export default function Register() {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
                 console.log(error.response.status);
-                addToast('danger', error.response.data, true)
+                if (typeof error.response.data === 'string') addToast('danger', error.response.data, true);
+                else if (error.response.data?.error && error.response.data.error?.message && typeof error.response.data.error.message === 'string')
+                    addToast('danger', error.response.data.error.message, true)
+                else addToast('danger', 'An unexpected error occurred', true);
             } else if (error.request) {
                 console.log(error.request);
                 addToast('danger', "No response received from the server. Check your network.", true)
@@ -192,22 +195,22 @@ export default function Register() {
                     <View className="flex-col items-center justify-center py-32 gap-4">
                         {image ? (<Image
                             source={{ uri: image }}
-                            className="w-28 h-28 rounded-lg"
+                            className="w-36 h-36 rounded-lg"
                         />) : <>
                             {photo ? (<Image
                                 source={{ uri: photo }}
-                                className="w-28 h-28 rounded-lg"
+                                className="w-36 h-36 rounded-lg"
                             />) : <Image
                                 source={require('@/assets/images/icon.png')}
-                                className="w-28 h-28"
+                                className="w-36 h-36"
                             />}
                         </>}
-                        <Text className="text-foreground-light dark:text-foreground-dark text-4xl">
+                        <Text className="text-foreground-light dark:text-foreground-dark text-3xl">
                             {!verified ? 'Create Account!' : "Setup Account"}
                         </Text>
                     </View>
                 }>
-                <KeyboardAvoidingView className="flex-col gap-8 bg-background-light dark:bg-background-dark">
+                <KeyboardAvoidingView className="px-6 flex-col gap-8 bg-background-light dark:bg-background-dark">
                     {!verified ? (
                         <>
                             <View className="flex-row items-center w-full py-3 px-4 border border-foreground-light/60 dark:border-foreground-dark/60 rounded-full">

@@ -1,14 +1,18 @@
-import { View, Text, Pressable } from 'react-native'
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { View, Text, Pressable } from 'react-native';
 import { convertISOToReadable } from '@/lib/utils';
 import type { PostProps } from '@/types/post';
-import CommentPost from './CommentPost';
+import { colors } from '@/constants/Colors';
 import MediaSlider from './MediaSlider';
+import CommentPost from './CommentPost';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import LikePost from './LikePost';
 import { useMemo } from 'react';
 
 export function PostComponent({ item, page = false, schooling = false }: { item: PostProps, page?: boolean, schooling?: boolean }) {
+    const colorScheme = useColorScheme()
+
     const mediaArray = useMemo(() => {
         return item.media ? Object.values(item.media) : [];
     }, [item.media]);
@@ -23,7 +27,7 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                                 style={{
                                     flex: 1,
                                     width: '100%',
-                                    backgroundColor: '#0553',
+                                    backgroundColor: `${colors.foreground[colorScheme]}10`,
                                     borderRadius: '100%'
                                 }}
                                 source={item.user.image}
@@ -65,7 +69,7 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                             style={{
                                 flex: 1,
                                 width: '100%',
-                                backgroundColor: '#0553',
+                                backgroundColor: `${colors.foreground[colorScheme]}10`,
                                 borderRadius: '100%'
                             }}
                             source={item.user.image}

@@ -8,7 +8,7 @@ export default function PostDetailScreen() {
     const { data } = useEventQuery(id);
 
     return (
-        <ScrollAwareView className="flex-1 pt-24">
+        <ScrollAwareView className="flex-1">
             {data ? <EventComponent item={data} page /> : <EventSkeleton count={1} page />}
         </ScrollAwareView>
     )

@@ -1,12 +1,13 @@
-import DropdownMenu from '@/components/DropdownMenu';
-import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
-import { colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { router, Tabs } from 'expo-router';
-import { Platform, TouchableOpacity, Image } from 'react-native';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import ProfileButton from '@/components/ProfileButton';
+import { HapticTab } from '@/components/HapticTab';
+import BackButton from '@/components/BackButton';
+import { colors } from '@/constants/Colors';
+import { Platform } from 'react-native';
+import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -19,26 +20,20 @@ export default function TabLayout() {
         headerBackgroundContainerStyle: {
           backgroundColor: `${colors.background[colorScheme]}f0`
         },
-        headerTransparent: true,
+        headerStyle: {
+          backgroundColor: `${colors.background[colorScheme]}f0`,
+          borderBottomWidth: 1,
+          borderColor: `${colors.foreground[colorScheme]}10`
+        },
+        // headerTransparent: true,
         animation: "shift",
         headerTitleAlign: 'center',
+        headerShadowVisible: false,
         headerTitleStyle: { textTransform: "uppercase" },
-        headerRight: () => <DropdownMenu />,
-        headerLeft: () => {
-          if (router.canGoBack()) return (
-            <TouchableOpacity onPress={() => router.back()} className='mx-4 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>
-              <MaterialIcons color={colors.background[colorScheme]} size={18} name='arrow-back' />
-            </TouchableOpacity>
-          )
-          return (
-            <TouchableOpacity onPress={() => router.push('/')} className='mx-4'>
-              <Image
-                source={require('@/assets/images/icon.png')}
-                className="w-10 h-10"
-              />
-            </TouchableOpacity>
-          )
-        },
+        headerRight: (props) => <ProfileButton {...props} />,
+        headerRightContainerStyle: { paddingHorizontal: 16, borderRadius: 9999, overflow: 'hidden' },
+        headerLeft: (props) => <BackButton {...props} />,
+        headerLeftContainerStyle: { paddingHorizontal: 16 },
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({

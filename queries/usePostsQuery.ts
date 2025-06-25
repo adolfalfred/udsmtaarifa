@@ -1,8 +1,8 @@
-import api from "@/lib/api";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import type { PostProps, PostTypesProps } from "@/types/post";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export const usePostsQuery = (
   search: string,
