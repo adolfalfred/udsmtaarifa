@@ -41,28 +41,35 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
         if (loading || !user?.id) return
         try {
             setLoading(true)
-            if (postLikers.some(liker => liker.user.id === user.id)) {
-                const res = await api.delete(`/post/like?user=${user.id}&post=${id}`);
-                if (res)
+            if (postLikers.some(liker => liker.user.id === user.id))
+                await api.delete(`/post/like?user=${user.id}&post=${id}`).then(async () => {
                     await queryClient.invalidateQueries({
                         refetchType: "active",
                         queryKey: ["post"],
                     });
-            } else {
-                const res = await api.post(`/post/like`, {
+                    await queryClient.invalidateQueries({
+                        refetchType: "active",
+                        queryKey: ["like"],
+                    })
+                })
+            else
+                await api.post(`/post/like`, {
                     postId: id,
                     userId: user.id
                 }, {
                     headers: {
                         'Content-Type': 'application/json',
                     }
-                });
-                if (res)
+                }).then(async () => {
                     await queryClient.invalidateQueries({
                         refetchType: "active",
                         queryKey: ["post"],
                     });
-            }
+                    await queryClient.invalidateQueries({
+                        refetchType: "active",
+                        queryKey: ["like"],
+                    })
+                })
         } catch (err) {
             console.log(err)
         } finally {
