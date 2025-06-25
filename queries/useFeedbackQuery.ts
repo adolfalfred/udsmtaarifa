@@ -7,24 +7,26 @@ import api from "@/lib/api";
 export const useFeedbacksQuery = (
   search: string,
   page: number,
-  status: FeedbackProps["status"] | "",
-  type: string
+  type: string,
+  status: FeedbackProps["status"] | ""
 ) => {
   const { user } = useSessionStore();
   const [store, setStore] = useState<FeedbackProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["feedback", { search, page, status, type }],
+    queryKey: ["feedback", { search, page, type, status }],
     queryFn: () =>
       api
         .get(
-          `/feedback?s=${search}&limit=20&page=${page}&user=${user?.id}&status=${status}&type=${type}`
+          `/feedback?s=${search}&limit=20&page=${page}&user=${user?.id}&type=${type}&status=${status}`
         )
         .then((res) => res.data),
   });
 
   useEffect(() => {
-    if (data) {
+    if (page === 1) {
+      setStore(data?.data ?? []);
+    } else if (data) {
       setStore((prev) => {
         const map = new Map();
         [...prev, ...data.data].forEach((item) => {
@@ -36,7 +38,7 @@ export const useFeedbacksQuery = (
         );
       });
     }
-  }, [data]);
+  }, [data, page]);
 
   return {
     data: store,

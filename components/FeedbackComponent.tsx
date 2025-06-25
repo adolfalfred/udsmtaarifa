@@ -70,6 +70,9 @@ export function FeedbackComponent({ item, page = false }: { item: FeedbackProps,
     return (
         <View className='w-full py-4'>
             <View className='px-4'>
+                {item?.id
+                    ? <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>FeedBackId: {item.id.slice(0, 8)}</Text>
+                    : null}
                 {item?.title
                     ? <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
                     : null}
@@ -119,6 +122,7 @@ export const FeedbackSkeleton = ({ count, page }: { count: number, page?: true }
     if (page) return (
         <View className='w-full py-1.5'>
             <View className='mx-4 mt-4 gap-1'>
+                <View className='h-6 w-48 rounded mb-0.5 bg-foreground-light/5 dark:bg-foreground-dark/5' />
                 <View className='h-6 w-80 rounded mb-0.5 bg-foreground-light/5 dark:bg-foreground-dark/5' />
                 {Array.from({ length: 9 }).map((_, i) => <View key={i} className='h-5 w-[500px] rounded-md bg-foreground-light/5 dark:bg-foreground-dark/5' />)}
                 <View className='h-5 w-80 rounded-md bg-foreground-light/5 dark:bg-foreground-dark/5' />

@@ -20,7 +20,7 @@ export default function HomeScreen() {
   const { refresh } = useLocalSearchParams();
   const { hide } = useHideState()
 
-  const { data, isLoading, nextPage, } = useEventsQuery('', page, category !== null ? category.id : '')
+  const { data, isLoading, nextPage, } = useEventsQuery('', page, category?.id || '')
   const queryClient = useQueryClient();
 
   const handleLoadMore = () => {
@@ -61,12 +61,7 @@ export default function HomeScreen() {
         ListFooterComponent={nextPage ? <EventSkeleton count={1} /> : null}
         recycleItems
         ListEmptyComponent={() => {
-          if (isLoading)
-            return (
-              <View className="items-center justify-center">
-                <EventSkeleton count={10} />
-              </View>
-            )
+          if (isLoading) return <EventSkeleton count={10} />
           return (
             <View className="items-center justify-center h-96">
               <Text className='text-foreground-light dark:text-foreground-dark capitalize'>

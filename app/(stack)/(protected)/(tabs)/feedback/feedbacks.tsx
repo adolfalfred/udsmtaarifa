@@ -2,20 +2,24 @@ import { useCallback, useEffect, useState } from 'react';
 import type { FeedbackProps } from '@/types/feedback';
 import { useFeedbacksQuery } from '@/queries/useFeedbackQuery';
 import { FeedbackComponent, FeedbackSkeleton } from '@/components/FeedbackComponent';
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text, ScrollView } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, useLocalSearchParams } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScrollAwareLegendList } from "@/components/ScrollAwareView";
 import { useHideState } from '@/lib/zustand/useHideState';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useFeedbacktypesQuery } from '@/queries/useFeedbackTypeQuery';
+import { colors } from '@/constants/Colors';
 
 export default function Feedback() {
     const [page, setPage] = useState(1)
+    const [type, setType] = useState<string>('')
     const [refreshing, setRefreshing] = useState(false)
     const { refresh } = useLocalSearchParams();
     const { hide } = useHideState()
 
-    const { data, isLoading, nextPage, } = useFeedbacksQuery('', page, "", "")
+    const { data, isLoading, nextPage, } = useFeedbacksQuery('', page, type, "")
     const queryClient = useQueryClient();
 
     const handleLoadMore = () => {
@@ -36,6 +40,10 @@ export default function Feedback() {
         if (refresh === 'true') handleRefresh()
     }, [handleRefresh, refresh]);
 
+    useEffect(() => {
+        setPage(1);
+    }, [type]);
+
     const renderFeedback = ({ item }: { item: FeedbackProps }) => <FeedbackComponent item={item} />
     return (
         <>
@@ -48,38 +56,19 @@ export default function Feedback() {
                 onRefresh={handleRefresh}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.2}
+                ListHeaderComponent={() => <HeaderComponent type={type} setType={setType} />}
                 ListFooterComponent={nextPage ? <FeedbackSkeleton count={1} /> : null}
                 recycleItems
                 ListEmptyComponent={() => {
                     if (isLoading) return <FeedbackSkeleton count={10} />
                     return (
                         <View className="items-center justify-center h-96">
-                            <Text className='text-foreground-light dark:text-foreground-dark'>No feedback available</Text>
+                            <Text className='text-foreground-light dark:text-foreground-dark'>
+                                {`No ${type} feedback available`}
+                            </Text>
                         </View>
                     )
                 }}
-            // ListHeaderComponent={() => (
-            //     <ScrollView horizontal className="py-2 px-6 pt-20">
-            //         <TouchableOpacity className="px-5 py-2 rounded-full mr-1"
-            //             style={{ backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20` }}
-            //             onPress={() => setCategory('')}
-            //         >
-            //             <Text className="text-foreground-light dark:text-foreground-dark">
-            //                 All
-            //             </Text>
-            //         </TouchableOpacity>
-            //         {categories.map((item) => (
-            //             <TouchableOpacity key={item.id} className="px-5 py-2 rounded-full mr-1"
-            //                 style={{ backgroundColor: category === item.id ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}20` }}
-            //                 onPress={() => setCategory(item.id)}
-            //             >
-            //                 <Text className="text-foreground-light dark:text-foreground-dark">
-            //                     {item.name}
-            //                 </Text>
-            //             </TouchableOpacity>
-            //         ))}
-            //     </ScrollView>
-            // )}
             />
             {!hide && (
                 <View className="absolute bottom-28 right-5 z-50">
@@ -91,5 +80,59 @@ export default function Feedback() {
                 </View>
             )}
         </>
+    )
+}
+
+const HeaderComponent = ({ type, setType }: { type: string; setType: (e: string) => void; }) => {
+    const colorScheme = useColorScheme()
+    const { data, isLoading } = useFeedbacktypesQuery('', 1)
+    return (
+        <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            stickyHeaderIndices={[0]}
+            className="py-2"
+        >
+            <TouchableOpacity className="px-5 py-2"
+                style={{
+                    backgroundColor: type === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
+                    borderRadius: 9999,
+                    marginRight: 4,
+                    marginLeft: 14
+                }}
+                onPress={() => setType('')}
+            >
+                <Text className="text-foreground-light dark:text-foreground-dark">
+                    All
+                </Text>
+            </TouchableOpacity>
+            {data.length > 0 ? data.map((item) => (
+                <TouchableOpacity key={item.name} className="px-5 py-2"
+                    style={{
+                        backgroundColor: type && type === item.name ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
+                        borderRadius: 9999,
+                        marginRight: 4
+                    }}
+                    onPress={() => setType(item.name)}
+                >
+                    <Text className="text-foreground-light dark:text-foreground-dark">
+                        {item.name}
+                    </Text>
+                </TouchableOpacity>
+            )) : (
+                <>
+                    {isLoading ? Array.from({ length: 9 }).map((_, i) => (
+                        <TouchableOpacity key={i} className="px-5 py-2 w-20"
+                            style={{
+                                backgroundColor: `${colors.foreground[colorScheme]}10`,
+                                borderRadius: 9999,
+                                marginRight: 4
+                            }} />
+                    )) : (
+                        <></>
+                    )}
+                </>
+            )}
+        </ScrollView>
     )
 }

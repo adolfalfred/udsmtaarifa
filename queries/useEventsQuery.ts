@@ -1,7 +1,7 @@
-import api from "@/lib/api";
-import type { EventProps } from "@/types/event";
 import { useQuery } from "@tanstack/react-query";
+import type { EventProps } from "@/types/event";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export const useEventsQuery = (
   search: string,
