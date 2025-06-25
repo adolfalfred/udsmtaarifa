@@ -94,13 +94,14 @@ const HeaderComponent = ({ category, setCategory }: { category: '' | number; set
       horizontal
       showsHorizontalScrollIndicator={false}
       stickyHeaderIndices={[0]}
-      className="py-2 px-4 pt-28"
+      className="py-2 pt-28"
     >
       <TouchableOpacity className="px-5 py-2"
         style={{
           backgroundColor: category === '' ? `${colors.primary[colorScheme]}80` : `${colors.foreground[colorScheme]}10`,
           borderRadius: 9999,
-          marginRight: 4
+          marginRight: 4,
+          marginLeft: 14
         }}
         onPress={() => setCategory('')}
       >

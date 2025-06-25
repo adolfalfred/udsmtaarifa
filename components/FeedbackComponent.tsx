@@ -9,39 +9,57 @@ export function FeedbackComponent({ item, page = false }: { item: FeedbackProps,
     // if (!page)
     return (
         <Link href={`/(stack)/(protected)/(tabs)/feedback/${item.id}`} asChild>
-            <Pressable className='w-full px-6 py-4'>
-                <View className='flex flex-row gap-2 border-none justify-between bg-content2-light dark:bg-content1-dark rounded-xl overflow-hidden'
-                    style={{ elevation: 0.5 }}
+            <Pressable className='overflow-hidden h-36 w-full px-2 my-1.5'>
+                <View
+                    className='flex-col rounded-2xl h-full w-full border p-3 bg-foreground-light/5 dark:bg-foreground-dark/5'
+                    style={{ borderColor: `${colors.foreground[colorScheme]}20` }}
                 >
-                    <View className='p-3'>
+                    <View className='flex-grow'>
                         {item?.id
-                            ? <Text className='text-xl text-foreground-light dark:text-foreground-dark py-1 font-semibold'>FeedBackId: {item.id.slice(0, 8)}</Text>
+                            ? <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                className='text-lg text-foreground-light dark:text-foreground-dark py-1'
+                            >
+                                FeedBackId: {item.id.slice(0, 8)}
+                            </Text>
                             : null}
                         {item?.title
-                            ? <Text className='text-lg text-foreground-light dark:text-foreground-dark py-1'>{item.title}</Text>
+                            ? <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                className='text-lg text-foreground-light dark:text-foreground-dark py-1'
+                            >
+                                {item.title}
+                            </Text>
                             : null}
                         {item?.description
-                            ? <Text className='text-foreground-light/60 dark:text-foreground-dark/80'>{item.description}</Text>
+                            ? <Text
+                                numberOfLines={2}
+                                ellipsizeMode="tail"
+                                className='text-foreground-light/60 dark:text-foreground-dark/80 truncate text-xs'
+                            >
+                                {item.description}
+                            </Text>
                             : null}
-                        <View className='flex-row items-center justify-between gap-3'>
-                            {item?.type
-                                ? <Text className='text-xl text-foreground-light dark:text-foreground-dark py-1'>{item.type.name}</Text>
-                                : null}
-                            {item?.status
-                                ? <Text className='text-lg py-1 capitalize font-semibold'
-                                    style={{
-                                        color: item.status === 'submitted'
-                                            ? colors.primary[colorScheme]
-                                            : item.status === 'pending'
-                                                ? colors.warning[colorScheme]
-                                                : colors.success[colorScheme]
-                                    }}
-                                >
-                                    {item.status}
-                                </Text>
-                                : null}
-
-                        </View>
+                    </View>
+                    <View className='flex-row items-center justify-between gap-3'>
+                        {item?.type
+                            ? <Text className='text-sm text-foreground-light dark:text-foreground-dark py-1'>{item.type.name}</Text>
+                            : null}
+                        {item?.status
+                            ? <Text className='text-sm py-1 capitalize font-semibold'
+                                style={{
+                                    color: item.status === 'submitted'
+                                        ? colors.primary[colorScheme]
+                                        : item.status === 'pending'
+                                            ? colors.warning[colorScheme]
+                                            : colors.success[colorScheme]
+                                }}
+                            >
+                                {item.status}
+                            </Text>
+                            : null}
                     </View>
                 </View>
             </Pressable>

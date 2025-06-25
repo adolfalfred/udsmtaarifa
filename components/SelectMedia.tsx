@@ -7,8 +7,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import * as ImagePicker from 'expo-image-picker';
 import Button from './ui/Button';
 import { Image } from "expo-image"
+import { type MediaType } from 'expo-image-picker';
 
-export default function SelectMedia({ media, setMedia }: { media: string[]; setMedia: (setImageId: string[]) => void }) {
+export default function SelectMedia({ media, setMedia, noVideo = false }: { media: string[]; setMedia: (setImageId: string[]) => void; noVideo?: boolean }) {
     const colorScheme = useColorScheme()
 
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -21,9 +22,11 @@ export default function SelectMedia({ media, setMedia }: { media: string[]; setM
     const snapPoints = useMemo(() => ['100%'], []);
 
     const pickMedia = async () => {
+        let mediaTypes: MediaType | MediaType[] = ['images', 'livePhotos']
+        if (!noVideo) mediaTypes.push('videos')
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ['images', 'livePhotos', 'videos'],
+                mediaTypes,
                 aspect: [1, 1],
                 quality: 0.8,
                 allowsMultipleSelection: true

@@ -6,13 +6,14 @@ import { View, Text, TouchableOpacity } from "react-native";
 
 export type ToastType = 'danger' | 'warning' | 'success' | "loading";
 
-type ToastProps = object
+type ToastProps = {
+    position?: 'up' | 'down';
+};
 
 const Toast = forwardRef<
     { show: (params: { type: ToastType; text: string, shouldClose?: boolean }) => void },
     ToastProps
-// eslint-disable-next-line no-empty-pattern
->(({ }, ref) => {
+>(({ position = 'down' }, ref) => {
     const colorScheme = useColorScheme();
 
     const [close, setClose] = useState(false);
@@ -38,7 +39,7 @@ const Toast = forwardRef<
         <>
             {showing && (
                 <View
-                    className="absolute z-50 top-14 w-[90%] border rounded-xl overflow-hidden self-center bg-background-light dark:bg-background-dark"
+                    className={`absolute z-50 ${position === 'up' ? 'top-0' : 'top-14'} w-[90%] border rounded-xl overflow-hidden self-center bg-background-light dark:bg-background-dark`}
                     style={{
                         borderColor:
                             toastType === 'success'

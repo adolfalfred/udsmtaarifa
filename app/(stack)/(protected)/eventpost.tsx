@@ -3,16 +3,13 @@ import SelectCategories from "@/components/SelectCategories";
 import Button from "@/components/ui/Button";
 import Toast, { ToastType } from "@/components/ui/Toast";
 import { useRef, useState } from "react";
-import { KeyboardAvoidingView, TextInput, Text, ScrollView, Pressable, Platform, View, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAvoidingView, TextInput, Text, ScrollView, Pressable, Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import api from "@/lib/api";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useColorScheme } from "@/hooks/useColorScheme";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { colors } from "@/constants/Colors";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function PostScreen() {
     const [title, setTitle] = useState('')
@@ -24,10 +21,8 @@ export default function PostScreen() {
     const [media, setMedia] = useState<string[]>([])
     const [categories, setCategories] = useState<number[]>([])
     const [loading, setLoading] = useState(false)
-    const { type } = useLocalSearchParams();
-
     const { user } = useSessionStore()
-    const colorScheme = useColorScheme()
+    const queryClient = useQueryClient()
 
     const toastRef = useRef<{ show: (params: { type: ToastType; text: string; shouldClose?: boolean }) => void }>(null);
     const addToast = (type: ToastType, text: string, shouldClose?: boolean) => {
@@ -111,9 +106,13 @@ export default function PostScreen() {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
-            });
+            }).then(async () => await queryClient.invalidateQueries({
+                refetchType: "active",
+                queryKey: ["event"],
+            }));
             addToast('success', "Event posted successfully", true)
-            router.back()
+            if (router.canGoBack()) router.back()
+            else router.replace('/(stack)/(protected)/(tabs)/events')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -136,53 +135,44 @@ export default function PostScreen() {
 
     return (
         <>
-            <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark pt-5 px-6">
-                <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-                    <View className="relative h-10">
-                        {router.canGoBack() && (
-                            <TouchableOpacity onPress={() => router.back()} className='absolute left-0 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>
-                                <MaterialIcons color={colors.background[colorScheme]} size={18} name='arrow-back' />
-                            </TouchableOpacity>
-                        )}
-                        <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">{type === 'class' ? `Post Class Event` : 'Post Event'}</Text>
-                    </View>
-                    <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
-                        <TextInput
-                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Event Title"
-                            placeholderTextColor="#999"
-                            value={title}
-                            onChangeText={setTitle}
-                            autoFocus
-                        />
-                        <TextInput
-                            className="border border-[#aaa] px-3 py-5 rounded-[26px] my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Event Description"
-                            placeholderTextColor="#999"
-                            value={content}
-                            onChangeText={setContent}
-                            multiline
-                            numberOfLines={20}
-                            textAlignVertical="top"
-                        />
-                        <TextInput
-                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Location"
-                            placeholderTextColor="#999"
-                            value={location}
-                            onChangeText={setLocation}
-                            autoFocus
-                        />
+            <ScrollView className="px-6" showsVerticalScrollIndicator={false}>
+                <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
+                    <TextInput
+                        className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                        placeholder="Event Title"
+                        placeholderTextColor="#999"
+                        value={title}
+                        onChangeText={setTitle}
+                        autoFocus
+                    />
+                    <TextInput
+                        className="border border-[#aaa] px-3 py-5 rounded-[26px] my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                        placeholder="Event Description"
+                        placeholderTextColor="#999"
+                        value={content}
+                        onChangeText={setContent}
+                        multiline
+                        numberOfLines={20}
+                        textAlignVertical="top"
+                    />
+                    <TextInput
+                        className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                        placeholder="Location"
+                        placeholderTextColor="#999"
+                        value={location}
+                        onChangeText={setLocation}
+                        autoFocus
+                    />
 
-                        <Pressable
-                            onPress={() => setShowDatePicker(true)}
-                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
-                        >
-                            <Text className="text-black dark:text-white">
-                                {date.toDateString()}
-                            </Text>
-                        </Pressable>
-                        {/* <Pressable
+                    <Pressable
+                        onPress={() => setShowDatePicker(true)}
+                        className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
+                    >
+                        <Text className="text-black dark:text-white">
+                            {date.toDateString()}
+                        </Text>
+                    </Pressable>
+                    {/* <Pressable
                             onPress={() => setShowStartPicker(true)}
                             className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
                         >
@@ -200,19 +190,18 @@ export default function PostScreen() {
                         </Pressable> */}
 
 
-                        <SelectMedia media={media} setMedia={setMedia} />
-                        <SelectCategories categories={categories} setCategories={setCategories} />
-                        <Button
-                            onPress={postFxn}
-                            className="bg-primary-light dark:bg-primary-dark w-full my-6 rounded-full"
-                            textClassName="text-foreground-dark text-2xl"
-                            disabled={loading}
-                        >
-                            Post Event
-                        </Button>
-                    </KeyboardAvoidingView>
-                </ScrollView>
-            </SafeAreaView>
+                    <SelectMedia media={media} setMedia={setMedia} noVideo />
+                    <SelectCategories categories={categories} setCategories={setCategories} />
+                    <Button
+                        onPress={postFxn}
+                        className="bg-primary-light dark:bg-primary-dark w-full my-6 rounded-full"
+                        textClassName="text-foreground-dark text-2xl"
+                        disabled={loading}
+                    >
+                        Post Event
+                    </Button>
+                </KeyboardAvoidingView>
+            </ScrollView>
             {showDatePicker && (
                 <DateTimePicker
                     value={date}

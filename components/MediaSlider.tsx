@@ -1,7 +1,9 @@
-import { View, Text, Dimensions, FlatList, StyleSheet, Pressable } from 'react-native';
-import { type ExternalPathString, Link, type RelativePathString } from 'expo-router';
+import { type ExternalPathString, type RelativePathString } from 'expo-router';
+import { View, Text, Dimensions, FlatList } from 'react-native';
+import ImagePlayerView from './ImagePlayerView';
+import VideoPlayerView from './VideoPlayerView';
 import { useMemo, useState } from 'react';
-import { Image } from 'expo-image';
+import { isVideo } from '@/lib/utils';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -16,13 +18,13 @@ export default function MediaSlider({ mediaArray, href }: {
     }[]
 }) {
     const [activeIndex, setActiveIndex] = useState(0);
-    const maxImageHeight = useMemo(() => {
+    const maxMediaHeight = useMemo(() => {
         return Math.max(
             ...mediaArray.map(img =>
-                img.height && img.width ? (img.height / img.width) * screenWidth : 720
+                img.height && img.width ? (img.height / img.width) * screenWidth : href ? screenWidth : 720
             )
         );
-    }, [mediaArray]);
+    }, [mediaArray, href]);
 
     const maxDots = 5;
     const half = Math.floor(maxDots / 2);
@@ -43,7 +45,7 @@ export default function MediaSlider({ mediaArray, href }: {
                     const index = Math.round(e.nativeEvent.contentOffset.x / screenWidth);
                     setActiveIndex(index);
                 }}
-                renderItem={({ item: image, index }) => (
+                renderItem={({ item, index }) => (
                     <>
                         {mediaArray.length > 1 && (
                             <View
@@ -52,44 +54,19 @@ export default function MediaSlider({ mediaArray, href }: {
                                 <Text className='text-foreground-dark dark:text-foreground-dark text-xs font-semibold'>{index + 1}/{mediaArray.length}</Text>
                             </View>
                         )}
-                        {href ? (
-                            <Link href={href} asChild>
-                                <Pressable
-                                    className='overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5'
-                                    style={{ width: screenWidth, height: screenWidth }}>
-                                    <Image
-                                        source={image.url}
-                                        contentFit="cover"
-                                        style={StyleSheet.absoluteFill}
-                                        blurRadius={20}
-                                        transition={500}
-                                    />
-                                    <Image
-                                        source={image.url}
-                                        contentFit="contain"
-                                        style={{ width: '100%', height: '100%' }}
-                                        transition={500}
-                                    />
-                                </Pressable>
-                            </Link>
+                        {isVideo(item.url) ? (
+                            <VideoPlayerView
+                                maxMediaHeight={maxMediaHeight}
+                                screenWidth={screenWidth}
+                                media={item}
+                            />
                         ) : (
-                            <View
-                                className='overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5'
-                                style={{ width: screenWidth, height: maxImageHeight }}>
-                                <Image
-                                    source={image.url}
-                                    contentFit="cover"
-                                    style={StyleSheet.absoluteFill}
-                                    blurRadius={20}
-                                    transition={500}
-                                />
-                                <Image
-                                    source={image.url}
-                                    contentFit="contain"
-                                    style={{ width: '100%', height: '100%' }}
-                                    transition={500}
-                                />
-                            </View>
+                            <ImagePlayerView
+                                maxMediaHeight={maxMediaHeight}
+                                screenWidth={screenWidth}
+                                media={item}
+                                href={href}
+                            />
                         )}
                     </>
                 )}

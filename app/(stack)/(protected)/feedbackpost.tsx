@@ -1,24 +1,20 @@
 import Button from "@/components/ui/Button";
 import Toast, { ToastType } from "@/components/ui/Toast";
 import { useRef, useState } from "react";
-import { KeyboardAvoidingView, TextInput, Text, ScrollView, View, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAvoidingView, TextInput, ScrollView } from "react-native";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import api from "@/lib/api";
 import { router } from "expo-router";
 import SelectFeedbackType from "@/components/SelectFeedbackType";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function PostScreen() {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [typeId, setTypeId] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
-
     const { user } = useSessionStore()
-    const colorScheme = useColorScheme()
+    const queryClient = useQueryClient()
 
     const toastRef = useRef<{ show: (params: { type: ToastType; text: string; shouldClose?: boolean }) => void }>(null);
     const addToast = (type: ToastType, text: string, shouldClose?: boolean) => {
@@ -42,9 +38,14 @@ export default function PostScreen() {
             }
             setLoading(true)
             addToast('loading', "Posting feedback...")
-            await api.post(`/feedback`, { userId: user!.id, title, description, typeId });
+            await api.post(`/feedback`, { userId: user!.id, title, description, typeId })
+                .then(async () => await queryClient.invalidateQueries({
+                    refetchType: "active",
+                    queryKey: ["feedback"],
+                }));
             addToast('success', "Feedback posted successfully", true)
-            router.back()
+            if (router.canGoBack()) router.back()
+            else router.replace('/(stack)/(protected)/(tabs)/feedback')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -67,49 +68,39 @@ export default function PostScreen() {
 
     return (
         <>
-            <SafeAreaView className="flex-1 bg-background-light dark:bg-background-dark pt-5 px-6">
-                <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-                    <View className="relative h-10">
-                        {router.canGoBack() && (
-                            <TouchableOpacity onPress={() => router.back()} className='absolute left-0 p-1.5 rounded-full bg-foreground-light/50 dark:bg-foreground-dark/60'>
-                                <MaterialIcons color={colors.background[colorScheme]} size={18} name='arrow-back' />
-                            </TouchableOpacity>
-                        )}
-                        <Text className="text-foreground-light dark:text-foreground-dark text-2xl font-bold text-center">Post Feedback</Text>
-                    </View>
-                    <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
-                        <TextInput
-                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Feedback Title"
-                            placeholderTextColor="#999"
-                            value={title}
-                            onChangeText={setTitle}
-                            autoFocus
-                        />
-                        <TextInput
-                            className="border border-[#aaa] px-3 py-5 rounded-[25px] my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
-                            placeholder="Feedback Description"
-                            placeholderTextColor="#999"
-                            value={description}
-                            onChangeText={setDescription}
-                            multiline
-                            numberOfLines={20}
-                            textAlignVertical="top"
-                        />
+            <ScrollView className="px-6" showsVerticalScrollIndicator={false}>
+                <KeyboardAvoidingView className="bg-background-light dark:bg-background-dark">
+                    <TextInput
+                        className="border border-[#aaa] px-3 py-5 rounded-full my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                        placeholder="Feedback Title"
+                        placeholderTextColor="#999"
+                        value={title}
+                        onChangeText={setTitle}
+                        autoFocus
+                    />
+                    <TextInput
+                        className="border border-[#aaa] px-3 py-5 rounded-[25px] my-3 text-black dark:text-white bg-background-light dark:bg-background-dark"
+                        placeholder="Feedback Description"
+                        placeholderTextColor="#999"
+                        value={description}
+                        onChangeText={setDescription}
+                        multiline
+                        numberOfLines={20}
+                        textAlignVertical="top"
+                    />
 
-                        <SelectFeedbackType type={typeId} setType={setTypeId} />
-                        <Button
-                            onPress={postFxn}
-                            className="bg-primary-light dark:bg-primary-dark w-full my-4 rounded-full"
-                            textClassName="text-foreground-dark text-2xl"
-                            disabled={loading}
-                        >
-                            Post Feedback
-                        </Button>
-                    </KeyboardAvoidingView>
-                </ScrollView>
-            </SafeAreaView>
-            <Toast ref={toastRef} />
+                    <SelectFeedbackType type={typeId} setType={setTypeId} />
+                    <Button
+                        onPress={postFxn}
+                        className="bg-primary-light dark:bg-primary-dark w-full my-4 rounded-full"
+                        textClassName="text-foreground-dark text-2xl"
+                        disabled={loading}
+                    >
+                        Post Feedback
+                    </Button>
+                </KeyboardAvoidingView>
+            </ScrollView>
+            <Toast ref={toastRef} position="up" />
         </>
     )
 }

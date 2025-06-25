@@ -18,3 +18,7 @@ export function convertISOToReadable(
   const formatOptions = { ...defaultOptions, ...options };
   return date.toLocaleString(locale, formatOptions);
 }
+
+export function isVideo(url: string) {
+  return /\.(mp4|mov|webm|m4v)$/i.test(url);
+}

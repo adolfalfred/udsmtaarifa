@@ -58,30 +58,27 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
 
     return (
         <View className='w-full py-4'>
-            <Link href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`} asChild>
-                <Pressable className='w-full flex-row justify-between px-4'>
-                    <View className='gap-2 flex-row items-center'>
-                        <View className='w-14 h-14 rounded-full overflow-hidden'>
-                            <Image
-                                style={{
-                                    flex: 1,
-                                    width: '100%',
-                                    backgroundColor: '#0553',
-                                    borderRadius: '100%'
-                                }}
-                                source={item.user.image}
-                                contentFit="cover"
-                                transition={1000}
-                            />
-                        </View>
-                        <View>
-                            <Text className='text-foreground-light dark:text-foreground-dark'>{item.user.name}</Text>
-                            <Text className='text-[#aaa]'>{item.user.email}</Text>
-                        </View>
+            <View className='w-full flex-row justify-between px-4'>
+                <View className='gap-2 flex-row items-center'>
+                    <View className='w-14 h-14 rounded-full overflow-hidden'>
+                        <Image
+                            style={{
+                                flex: 1,
+                                width: '100%',
+                                backgroundColor: '#0553',
+                                borderRadius: '100%'
+                            }}
+                            source={item.user.image}
+                            contentFit="cover"
+                            transition={1000}
+                        />
                     </View>
-
-                </Pressable>
-            </Link>
+                    <View>
+                        <Text className='text-foreground-light dark:text-foreground-dark'>{item.user.name}</Text>
+                        <Text className='text-[#aaa]'>{item.user.email}</Text>
+                    </View>
+                </View>
+            </View>
             <View>
                 {mediaArray.length > 0 && <MediaSlider mediaArray={mediaArray} href={schooling ? `/(stack)/(protected)/(tabs)/schooling/${item.id}` : `/(stack)/(protected)/(tabs)/news/${item.id}`} />}
                 <View className="px-4">
@@ -115,7 +112,6 @@ export function PostComponent({ item, page = false, schooling = false }: { item:
                 </View>
             </View>
         </View>
-
     )
 }
 
