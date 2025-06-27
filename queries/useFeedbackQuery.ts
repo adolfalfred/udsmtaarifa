@@ -37,7 +37,7 @@ export const useFeedbacksQuery = (
         );
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, type, status]);
+  }, [data]);
 
   return {
     data: store,

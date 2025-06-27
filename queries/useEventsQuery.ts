@@ -34,7 +34,7 @@ export const useEventsQuery = (
         );
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, category]);
+  }, [data]);
 
   return {
     data: store,

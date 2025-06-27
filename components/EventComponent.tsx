@@ -98,7 +98,7 @@ export function EventComponent({ item, page = false }: { item: EventProps, page?
 
                     {mediaArray.length > 0 ? (
                         <View
-                            className='w-36 h-36 shrink-0 overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5'
+                            className='w-36 h-36 shrink-0 overflow-hidden bg-foreground-light/10 dark:bg-foreground-dark/10'
                             style={{
                                 borderTopRightRadius: 16,
                                 borderBottomRightRadius: 16,

@@ -47,7 +47,6 @@ export default function CommentPost({ id, postComments }: { id: string; postComm
         bottomSheetModalRef.current?.close();
     }, []);
     const snapPoints = useMemo(() => ['65%'], []);
-    // const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     return (
         <>

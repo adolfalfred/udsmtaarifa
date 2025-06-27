@@ -52,7 +52,7 @@ export const useCommentsQuery = (
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, post]);
+  }, [data]);
 
   return {
     data: store,

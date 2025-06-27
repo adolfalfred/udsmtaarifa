@@ -36,7 +36,6 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
         bottomSheetModalRef.current?.close();
     }, []);
     const snapPoints = useMemo(() => ['65%'], []);
-    // const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     const likeFxn = async () => {
         if (loading || !user?.id) return

@@ -1,12 +1,13 @@
 import type { NativeStackHeaderRightProps } from '@react-navigation/native-stack';
 import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
+import { Fragment, useLayoutEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useUserQuery } from '@/queries/useUserQuery';
 import DropdownMenu from "@/components/DropdownMenu";
-import { Fragment, useLayoutEffect, useState } from "react";
 import { Link, useNavigation } from "expo-router";
+import UserPosts from '@/components/UserPosts';
 import { colors } from '@/constants/Colors';
 import { Image } from "expo-image";
 
@@ -77,21 +78,12 @@ export default function ProfileScreen() {
                     </View>
                     {page === 'info' ? (
                         <>
-                            {isLoading ? <View className='m-4 h-52 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4' />
+                            {/* Personal nformation */}
+                            {isLoading ? <View className='mx-4 mt-4 mb-2 h-[206px] rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4' />
                                 : (
-                                    <View className='m-4 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4 gap-1'>
-                                        {data?.userRoles && Array.isArray(data.userRoles) && data.userRoles.length > 0 ? (
-                                            <>
-                                                {data.userRoles.map(({ role, roleId }) => (
-                                                    <View key={roleId} className='flex-row'>
-                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Role</Text>
-                                                        <View className='w-3/4'>
-                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{role.name}</Text>
-                                                        </View>
-                                                    </View>
-                                                ))}
-                                            </>
-                                        ) : null}
+                                    <View className='mx-4 mt-4 mb-2 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4 gap-1'>
+                                        <Text className='text-foreground-light dark:text-foreground-dark mb-2 text-center font-semibold'>Academic Information</Text>
+
                                         {data?.programme && Array.isArray(data.programme) && data.programme.length > 0 ? (
                                             <>
                                                 {data.programme.map(({ programmeId, currentStudyYear, programme, startYear }) => (
@@ -131,21 +123,13 @@ export default function ProfileScreen() {
                                                 ))}
                                             </>
                                         ) : null}
-                                        {data?.leadingUnits && Array.isArray(data.leadingUnits) && data.leadingUnits.length > 0 ? (
-                                            <>
-                                                {data.leadingUnits.map(({ unitId, unit }) => (
-                                                    <View key={unitId} className='flex-row'>
-                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Leading Unit</Text>
-                                                        <View className='w-3/4'>
-                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.name}</Text>
-                                                            {unit?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.description}</Text> : null}
-                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.name}</Text>
-                                                            {unit.unitType?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.description}</Text> : null}
-                                                        </View>
-                                                    </View>
-                                                ))}
-                                            </>
-                                        ) : null}
+                                    </View>
+                                )}
+
+                            {/* Subscribed Units nformation */}
+                            {isLoading ? <View className='mx-4 my-2  h-52 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4' />
+                                : (
+                                    <View className='mx-4 my-2 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4 gap-1'>
                                         {data?.subscribedUnits && Array.isArray(data.subscribedUnits) && data.subscribedUnits.length > 0 ? (
                                             <>
                                                 {data.subscribedUnits.map(({ unitId, unit }) => (
@@ -160,7 +144,18 @@ export default function ProfileScreen() {
                                                     </View>
                                                 ))}
                                             </>
-                                        ) : null}
+                                        ) : (
+                                            <View className='justify-center items-center'>
+                                                <Text className='text-center text-foreground-light dark:text-foreground-dark'>Subscribe</Text>
+                                            </View>
+                                        )}
+                                    </View>
+                                )}
+
+                            {/* Leading Units nformation */}
+                            {isLoading ? <View className='m-4 h-52 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4' />
+                                : (
+                                    <View className='m-4 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4 gap-1'>
                                         {data?.leadingUnits && Array.isArray(data.leadingUnits) && data.leadingUnits.length > 0 ? (
                                             <>
                                                 {data.leadingUnits.map(({ unitId, unit }) => (
@@ -177,13 +172,30 @@ export default function ProfileScreen() {
                                             </>
                                         ) : null}
                                     </View>
+                                )}
 
-                                    // Start Subscribing to units here
+                            {/* User Roles */}
+                            {isLoading ? <View className='m-4 h-52 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4' />
+                                : (
+                                    <View className='m-4 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4 gap-1'>
+                                        {data?.userRoles && Array.isArray(data.userRoles) && data.userRoles.length > 0 ? (
+                                            <>
+                                                {data.userRoles.map(({ role, roleId }) => (
+                                                    <View key={roleId} className='flex-row'>
+                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Role</Text>
+                                                        <View className='w-3/4'>
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{role.name}</Text>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </>
+                                        ) : null}
+                                    </View>
                                 )}
                         </>
                     ) : null}
                     {page === 'posts' ? (
-                        <View></View>
+                        <UserPosts />
                     ) : null}
                 </View>
             </ParallaxScrollViewStack>

@@ -51,7 +51,7 @@ export const useLikesQuery = (search: string, page: number, post: string) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, post]);
+  }, [data]);
 
   return {
     data: store,

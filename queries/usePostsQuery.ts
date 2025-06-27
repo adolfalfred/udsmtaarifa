@@ -7,17 +7,18 @@ import api from "@/lib/api";
 export const usePostsQuery = (
   search: string,
   page: number,
-  type: PostTypesProps
+  type: PostTypesProps | "",
+  userId?: true
 ) => {
   const { user } = useSessionStore();
   const [store, setStore] = useState<PostProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["post", { search, page, type }],
+    queryKey: ["post", { search, page, type, userId: userId ?? false }],
     queryFn: () =>
       api
         .get(
-          `/post?s=${search}&limit=20&page=${page}&type=${type}&userId=${user?.id}&available=true`
+          `/post?s=${search}&limit=20&page=${page}&type=${type}&userId=${user?.id}&user=${userId ? user?.id : ""}&available=true`
         )
         .then((res) => res.data),
   });
@@ -36,7 +37,7 @@ export const usePostsQuery = (
         );
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, type]);
+  }, [data]);
 
   return {
     data: store,
