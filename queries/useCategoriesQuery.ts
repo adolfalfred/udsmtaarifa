@@ -1,7 +1,7 @@
-import api from "@/lib/api";
 import type { CategoryProps } from "@/types/category";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export const useCategoryQuery = (search: string, page: number) => {
   const [store, setStore] = useState<CategoryProps[]>([]);
@@ -15,7 +15,7 @@ export const useCategoryQuery = (search: string, page: number) => {
   });
 
   useEffect(() => {
-    if (data) {
+    if (data)
       setStore((prev) => {
         const map = new Map();
         [...prev, ...data.data].forEach((item) => {
@@ -26,7 +26,6 @@ export const useCategoryQuery = (search: string, page: number) => {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       });
-    }
   }, [data]);
 
   return {

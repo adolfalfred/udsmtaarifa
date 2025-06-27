@@ -24,9 +24,8 @@ export const useFeedbacksQuery = (
   });
 
   useEffect(() => {
-    if (page === 1) {
-      setStore(data?.data ?? []);
-    } else if (data) {
+    if (page === 1) setStore(data?.data ?? []);
+    else if (data)
       setStore((prev) => {
         const map = new Map();
         [...prev, ...data.data].forEach((item) => {
@@ -37,8 +36,8 @@ export const useFeedbacksQuery = (
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       });
-    }
-  }, [data, page]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, type, status]);
 
   return {
     data: store,

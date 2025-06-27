@@ -1,6 +1,7 @@
 export interface LikeProps {
   createdAt: Date;
   updatedAt: Date;
+  postId: string;
   user: {
     id: string;
     name: string | null;

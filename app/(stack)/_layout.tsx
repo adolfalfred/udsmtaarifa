@@ -1,11 +1,19 @@
-import { colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useQueryClient } from '@tanstack/react-query';
+import { colors } from '@/constants/Colors';
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
     const { isLoggedIn } = useSessionStore();
+    const queryClient = useQueryClient()
+
+    useEffect(() => {
+        queryClient.clear();
+    }, [isLoggedIn, queryClient]);
+
     return (
         <Stack
             screenOptions={{

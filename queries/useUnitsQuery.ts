@@ -1,7 +1,7 @@
-import api from "@/lib/api";
-import type { UnitProps } from "@/types/unit";
 import { useQuery } from "@tanstack/react-query";
+import type { UnitProps } from "@/types/unit";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export const useUnitsQuery = (search: string, page: number) => {
   const [store, setStore] = useState<UnitProps[]>([]);

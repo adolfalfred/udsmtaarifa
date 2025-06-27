@@ -22,6 +22,8 @@ SplashScreen.setOptions({
   fade: true
 })
 
+const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } })
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -29,8 +31,6 @@ export default function RootLayout() {
   const { setColorScheme } = useScheme();
   const colorScheme = useColorScheme();
   const { theme } = useThemeStore();
-
-  const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } })
 
   useEffect(() => {
     if (error) throw error;

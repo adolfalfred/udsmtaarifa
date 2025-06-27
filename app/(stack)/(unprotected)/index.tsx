@@ -11,12 +11,10 @@ import { Image, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } 
 import Toast, { type ToastType } from "@/components/ui/Toast";
 import { signIn } from "@/lib/auth";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function Login() {
     const colorScheme = useColorScheme()
     const { setIsLoggedIn, setUser } = useSessionStore()
-    const queryClient = useQueryClient()
 
     const [loading, setLoading] = useState(false);
     const [regNo, setRegNo] = useState('');
@@ -34,7 +32,6 @@ export default function Login() {
             addToast('loading', "Logging in...")
             const auth = await signIn(regNo, password)
             if (auth) {
-                queryClient.refetchQueries({ type: 'all' });
                 setIsLoggedIn(true)
                 setUser(auth)
                 addToast('success', "Welcome!", true)

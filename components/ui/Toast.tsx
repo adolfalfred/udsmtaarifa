@@ -39,7 +39,7 @@ const Toast = forwardRef<
         <>
             {showing && (
                 <View
-                    className={`absolute z-50 ${position === 'up' ? 'top-0' : 'top-14'} w-[90%] border rounded-xl overflow-hidden self-center bg-background-light dark:bg-background-dark`}
+                    className={`absolute z-50 ${position === 'up' ? 'top-0' : 'top-14'} w-[90%] border rounded-[28px] overflow-hidden self-center bg-background-light dark:bg-background-dark`}
                     style={{
                         borderColor:
                             toastType === 'success'
@@ -52,7 +52,7 @@ const Toast = forwardRef<
                     }}
                 >
                     <View
-                        className="rounded-xl flex-row items-center justify-between gap-1 w-full h-full p-3"
+                        className="rounded-xl flex-row items-center justify-between gap-1 w-full h-full px-3 py-4"
                         style={{
                             backgroundColor:
                                 toastType === 'success'

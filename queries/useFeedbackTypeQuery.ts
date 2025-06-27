@@ -1,7 +1,7 @@
-import api from "@/lib/api";
 import type { FeedbackTypesProps } from "@/types/feedbackTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 export const useFeedbacktypesQuery = (search: string, page: number) => {
   const [store, setStore] = useState<FeedbackTypesProps[]>([]);
@@ -15,7 +15,7 @@ export const useFeedbacktypesQuery = (search: string, page: number) => {
   });
 
   useEffect(() => {
-    if (data) {
+    if (data)
       setStore((prev) => {
         const map = new Map();
         [...prev, ...data.data].forEach((item) => {
@@ -23,7 +23,6 @@ export const useFeedbacktypesQuery = (search: string, page: number) => {
         });
         return Array.from(map.values());
       });
-    }
   }, [data]);
 
   return {

@@ -1,4 +1,4 @@
-import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetHandle, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import { View, Text, Pressable, StatusBar } from 'react-native'
@@ -13,7 +13,7 @@ import { useSessionStore } from '@/lib/zustand/useSessionStore';
 import type { CommentProps } from '@/types/comment';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-const keyExtractor = (item: CommentProps) => `${item.id}`
+const keyExtractor = (item: CommentProps) => item.id
 
 export default function CommentPost({ id, postComments }: { id: string; postComments: number }) {
     const colorScheme = useColorScheme()
@@ -22,7 +22,7 @@ export default function CommentPost({ id, postComments }: { id: string; postComm
     const [refreshing, setRefreshing] = useState(false)
     const [page, setPage] = useState(1)
 
-    const { data, isLoading, nextPage } = useCommentsQuery('', page, id, '')
+    const { data, isLoading, nextPage } = useCommentsQuery('', page, id)
     const comments = useMemo(() => data, [data]);
 
     const handleLoadMore = () => {
@@ -46,7 +46,8 @@ export default function CommentPost({ id, postComments }: { id: string; postComm
     const closeModal = useCallback(() => {
         bottomSheetModalRef.current?.close();
     }, []);
-    const snapPoints = useMemo(() => ['65%', '100%'], []);
+    const snapPoints = useMemo(() => ['65%'], []);
+    // const snapPoints = useMemo(() => ['65%', '100%'], []);
 
     return (
         <>
@@ -70,12 +71,20 @@ export default function CommentPost({ id, postComments }: { id: string; postComm
                 topInset={StatusBar.currentHeight || 0}
                 snapPoints={snapPoints}
                 onDismiss={closeModal}
+                enableDynamicSizing={false}
                 backdropComponent={(props) => <BottomSheetBackdrop
                     {...props}
                     appearsOnIndex={0}
                     disappearsOnIndex={-1}
                     pressBehavior="close"
                 />}
+                handleComponent={(props) => (
+                    <BottomSheetHandle
+                        {...props}
+                    >
+                        <Text className='mt-4 w-full text-center text-foreground-light/60 dark:text-foreground-dark/60'>Comments</Text>
+                    </BottomSheetHandle>
+                )}
                 footerComponent={(props) => (
                     <BottomSheetFooter
                         {...props}
@@ -99,17 +108,17 @@ export default function CommentPost({ id, postComments }: { id: string; postComm
                     showsVerticalScrollIndicator={false}
                     refreshing={refreshing}
                     onEndReached={handleLoadMore}
-                    contentContainerStyle={{ paddingBottom: 75, paddingTop: 12 }}
+                    contentContainerStyle={{ paddingBottom: 75, paddingTop: 2 }}
                     onEndReachedThreshold={0.2}
                     renderItem={({ item }) => <CommentComp item={item} />}
                     ListEmptyComponent={() => {
-                        if (isLoading) return (
-                            <>
-                                <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
-                                <View className='w-full bg-foreground-light/20 dark:bg-foreground-dark/20 h-5 rounded'></View>
-                            </>
-                        )
-                        return <Text className="text-black dark:text-white text-center mt-10">No comments yet!</Text>
+                        if (isLoading) return <ItemSkeleton count={10} />
+                        return <Text className="text-foreground-light dark:text-foreground-dark text-center mt-44">No comments yet!</Text>
+                    }}
+                    ListFooterComponent={() => {
+                        if (isLoading) return <ItemSkeleton count={1} />
+                        if (comments.length > 0 && !isLoading) return <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-sm text-center mt-5 mb-6">No more comments</Text>
+                        return <></>
                     }}
                 />
             </BottomSheetModal>
@@ -203,5 +212,29 @@ const CommentComp = ({ item }: { item: CommentProps }) => {
             </View>
             <Text className='text-foreground-light dark:text-foreground-dark ml-12'>{item.content}</Text>
         </View>
+    )
+}
+
+const ItemSkeleton = ({ count }: { count: number; }) => {
+    return (
+        <>
+            {Array.from({ length: count }).map((_, i) => (
+                <View key={i} className='flex flex-col gap-0.5 mb-4 px-6'>
+                    <View className='gap-2 flex-row items-center'>
+                        <View className='w-10 h-10 rounded-full overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5' />
+                        <View className='flex-col gap-1'>
+                            <View className='h-3 w-24 rounded bg-foreground-light/5 dark:bg-foreground-dark/5' />
+                            <View className='h-3 w-40 rounded bg-foreground-light/5 dark:bg-foreground-dark/5' />
+                        </View>
+                    </View>
+                    <View className='flex-col gap-1'>
+                        <View className='h-3 bg-foreground-light/5 dark:bg-foreground-dark/5 ml-12' />
+                        <View className='h-3 bg-foreground-light/5 dark:bg-foreground-dark/5 ml-12' />
+                        <View className='h-3 bg-foreground-light/5 dark:bg-foreground-dark/5 ml-12' />
+                        <View className='h-3 w-20 bg-foreground-light/5 dark:bg-foreground-dark/5 ml-12' />
+                    </View>
+                </View>
+            ))}
+        </>
     )
 }
