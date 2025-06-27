@@ -1,15 +1,22 @@
 import type { NativeStackHeaderRightProps } from '@react-navigation/native-stack';
 import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
+import { View, Text, TouchableOpacity } from "react-native";
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useUserQuery } from '@/queries/useUserQuery';
 import DropdownMenu from "@/components/DropdownMenu";
-import { useNavigation } from "expo-router";
-import { View, Text } from "react-native";
-import { useLayoutEffect } from "react";
+import { Fragment, useLayoutEffect, useState } from "react";
+import { Link, useNavigation } from "expo-router";
+import { colors } from '@/constants/Colors';
 import { Image } from "expo-image";
 
 export default function ProfileScreen() {
     const { user } = useSessionStore()
     const navigation = useNavigation();
+    const colorScheme = useColorScheme()
+    const [page, setPage] = useState<'info' | 'posts'>('info')
+
+    const { data, isLoading } = useUserQuery(user!.id)
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -21,7 +28,7 @@ export default function ProfileScreen() {
         <>
             <ParallaxScrollViewStack
                 headerImage={
-                    <View className="flex-col items-center justify-center py-5 gap-2">
+                    <View className="flex-col items-center justify-center gap-2">
                         <View className="h-36 w-36 rounded-full overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5">
                             <Image
                                 style={{
@@ -39,10 +46,146 @@ export default function ProfileScreen() {
                             <Text className="text-foreground-light dark:text-foreground-dark text-lg text-center">{user?.regNo}</Text>
                             <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-sm text-center">{user?.phone}</Text>
                         </View>
+                        <Link href={'/+not-found'} asChild>
+                            <TouchableOpacity className='py-2.5 px-4 w-36 mt-1 items-center justify-center rounded-lg bg-primary-light/90 dark:bg-primary-dark/60'>
+                                <Text className='text-foreground-dark text-sm'>Edit Profile</Text>
+                            </TouchableOpacity>
+                        </Link>
                     </View>
                 }
             >
-                <View className="h-[1000px] rounded-2xl"></View>
+                <View className="bg-background-light dark:bg-background-dark">
+                    <View className="flex-row justify-between px-4">
+                        <TouchableOpacity
+                            onPress={() => setPage('info')}
+                            className='py-2 w-[49.5%] bg-foreground-light rounded-lg items-center justify-center'
+                            style={{ backgroundColor: page === 'info' ? colorScheme === 'dark' ? `${colors.primary[colorScheme]}90` : `${colors.primary[colorScheme]}f0` : `${colors.foreground[colorScheme]}10` }}
+                        >
+                            <Text className={`${page === 'info' ? 'text-foreground-dark' : 'text-foreground-light'} dark:text-foreground-dark`}>
+                                Details
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setPage('posts')}
+                            className='py-2 w-[49.5%] bg-foreground-light rounded-lg items-center justify-center'
+                            style={{ backgroundColor: page === 'posts' ? colorScheme === 'dark' ? `${colors.primary[colorScheme]}90` : `${colors.primary[colorScheme]}f0` : `${colors.foreground[colorScheme]}10` }}
+                        >
+                            <Text className={`${page === 'posts' ? 'text-foreground-dark' : 'text-foreground-light'} dark:text-foreground-dark`}>
+                                Your Posts
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    {page === 'info' ? (
+                        <>
+                            {isLoading ? <View className='m-4 h-52 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4' />
+                                : (
+                                    <View className='m-4 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5 p-4 gap-1'>
+                                        {data?.userRoles && Array.isArray(data.userRoles) && data.userRoles.length > 0 ? (
+                                            <>
+                                                {data.userRoles.map(({ role, roleId }) => (
+                                                    <View key={roleId} className='flex-row'>
+                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Role</Text>
+                                                        <View className='w-3/4'>
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{role.name}</Text>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </>
+                                        ) : null}
+                                        {data?.programme && Array.isArray(data.programme) && data.programme.length > 0 ? (
+                                            <>
+                                                {data.programme.map(({ programmeId, currentStudyYear, programme, startYear }) => (
+                                                    <Fragment key={programmeId}>
+                                                        <View className='flex-row'>
+                                                            <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Programme</Text>
+                                                            <View className='w-3/4'>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{programme.name}</Text>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{programme.code}</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View className='flex-row'>
+                                                            <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Study Year</Text>
+                                                            <View className='w-3/4'>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{currentStudyYear} / {programme.years}</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View className='flex-row'>
+                                                            <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Start Year</Text>
+                                                            <Text className='w-3/4 text-foreground-light/70 dark:text-foreground-dark/60'>{startYear}</Text>
+                                                        </View>
+                                                        <View className='flex-row'>
+                                                            <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>College</Text>
+                                                            <View className='w-3/4'>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{programme.department.college.name}</Text>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{programme.department.college.code}</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View className='flex-row'>
+                                                            <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Department</Text>
+                                                            <View className='w-3/4'>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{programme.department.name}</Text>
+                                                                <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{programme.department.code}</Text>
+                                                            </View>
+                                                        </View>
+                                                    </Fragment>
+                                                ))}
+                                            </>
+                                        ) : null}
+                                        {data?.leadingUnits && Array.isArray(data.leadingUnits) && data.leadingUnits.length > 0 ? (
+                                            <>
+                                                {data.leadingUnits.map(({ unitId, unit }) => (
+                                                    <View key={unitId} className='flex-row'>
+                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Leading Unit</Text>
+                                                        <View className='w-3/4'>
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.name}</Text>
+                                                            {unit?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.description}</Text> : null}
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.name}</Text>
+                                                            {unit.unitType?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.description}</Text> : null}
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </>
+                                        ) : null}
+                                        {data?.subscribedUnits && Array.isArray(data.subscribedUnits) && data.subscribedUnits.length > 0 ? (
+                                            <>
+                                                {data.subscribedUnits.map(({ unitId, unit }) => (
+                                                    <View key={unitId} className='flex-row'>
+                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Involved Unit</Text>
+                                                        <View className='w-3/4'>
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.name}</Text>
+                                                            {unit?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.description}</Text> : null}
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.name}</Text>
+                                                            {unit.unitType?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.description}</Text> : null}
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </>
+                                        ) : null}
+                                        {data?.leadingUnits && Array.isArray(data.leadingUnits) && data.leadingUnits.length > 0 ? (
+                                            <>
+                                                {data.leadingUnits.map(({ unitId, unit }) => (
+                                                    <View key={unitId} className='flex-row'>
+                                                        <Text className='w-1/4 text-foreground-light dark:text-foreground-dark font-semibold'>Admin Unit</Text>
+                                                        <View className='w-3/4'>
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.name}</Text>
+                                                            {unit?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.description}</Text> : null}
+                                                            <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.name}</Text>
+                                                            {unit.unitType?.description ? <Text className='text-foreground-light/70 dark:text-foreground-dark/60'>{unit.unitType.description}</Text> : null}
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </>
+                                        ) : null}
+                                    </View>
+
+                                    // Start Subscribing to units here
+                                )}
+                        </>
+                    ) : null}
+                    {page === 'posts' ? (
+                        <View></View>
+                    ) : null}
+                </View>
             </ParallaxScrollViewStack>
         </>
     )

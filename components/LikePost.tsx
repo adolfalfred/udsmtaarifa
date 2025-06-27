@@ -80,7 +80,7 @@ export default function LikePost({ id, postLikes, postLikers }: { id: string; po
     return (
         <>
             <View className='flex-row items-center gap-2 min-w-20 shrink-0'>
-                <Pressable onPress={likeFxn} className='mt-1.5'>
+                <Pressable onPress={likeFxn} disabled={loading} className='mt-1.5'>
                     <FontAwesome
                         className='mb-1.5'
                         size={22}

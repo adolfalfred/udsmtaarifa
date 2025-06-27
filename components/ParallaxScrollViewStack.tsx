@@ -35,7 +35,7 @@ export default function ParallaxScrollViewStack({
                     ),
                 },
                 {
-                    scale: interpolate(scrollOffset.value, [-HEADER_HEIGHT, 0, HEADER_HEIGHT], [2, 1, 1]),
+                    scale: interpolate(scrollOffset.value, [-HEADER_HEIGHT, 0, HEADER_HEIGHT], [1.5, 1, 0.5]),
                 },
             ],
         };

@@ -20,7 +20,7 @@ export default function HomeScreen() {
   const { refresh } = useLocalSearchParams();
   const { hide } = useHideState()
 
-  const { data, isLoading, nextPage, } = useEventsQuery('', page, category?.id || '')
+  const { data, isLoading, nextPage } = useEventsQuery('', page, category?.id || '')
   const queryClient = useQueryClient();
 
   const handleLoadMore = () => {

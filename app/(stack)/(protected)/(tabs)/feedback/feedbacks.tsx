@@ -19,7 +19,7 @@ export default function Feedback() {
     const { refresh } = useLocalSearchParams();
     const { hide } = useHideState()
 
-    const { data, isLoading, nextPage, } = useFeedbacksQuery('', page, type, "")
+    const { data, isLoading, nextPage } = useFeedbacksQuery('', page, type, "")
     const queryClient = useQueryClient();
 
     const handleLoadMore = () => {

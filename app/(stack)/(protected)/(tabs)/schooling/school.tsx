@@ -15,7 +15,7 @@ export default function HomeScreen() {
   const { refresh } = useLocalSearchParams();
   const { hide } = useHideState()
 
-  const { data, isLoading, nextPage, } = usePostsQuery('', page, 'class')
+  const { data, isLoading, nextPage } = usePostsQuery('', page, 'class')
   const queryClient = useQueryClient();
 
   const handleLoadMore = () => {

@@ -12,7 +12,7 @@ import { Image, KeyboardAvoidingView, Pressable, Text, TextInput, TouchableOpaci
 import axios from "axios"
 import Toast, { type ToastType } from "@/components/ui/Toast";
 import SelectProgramme from "@/components/SelectProgramme";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import SelectImage from "@/components/SelectImage";
 import * as FileSystem from "expo-file-system";
 import SelectStartYear from "@/components/SelectStartYear";
@@ -23,6 +23,7 @@ import { useSessionStore } from "@/lib/zustand/useSessionStore";
 export default function Register() {
     const colorScheme = useColorScheme()
     const { setIsLoggedIn, setUser } = useSessionStore()
+    const queryClient = useQueryClient()
 
     const [regNo, setRegNo] = useState('');
     const [name, setName] = useState('');
@@ -158,6 +159,7 @@ export default function Register() {
             console.log(res?.data)
             const auth = await signIn(regNo, password)
             if (auth) {
+                queryClient.refetchQueries({ type: 'all' });
                 setIsLoggedIn(true)
                 setUser(auth)
                 addToast('success', "Welcome!", true)

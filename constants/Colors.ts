@@ -57,6 +57,6 @@ export const colors = {
   },
   active: {
     light: "#ecedee",
-    dark: "#191819",
+    dark: "#151515",
   },
 };
