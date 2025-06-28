@@ -1,5 +1,5 @@
-import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { colors } from '@/constants/Colors';
 import { Stack } from 'expo-router';
 
 export default function TabLayout() {

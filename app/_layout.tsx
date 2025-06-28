@@ -27,10 +27,10 @@ SplashScreen.setOptions({
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldPlaySound: true,
+    shouldPlaySound: false,
     shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
+    shouldShowBanner: false,
+    shouldShowList: false,
   }),
 });
 
@@ -51,11 +51,13 @@ export default function RootLayout() {
       .catch((error: any) => setExpoPushToken(`${error}`));
     const notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log("🔔 Notification Received: App is running!", notification);
+      console.log(JSON.stringify(notification.request.content, null, 2))
       setNotification(notification);
     });
     const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      setNotification(response.notification);
       console.log("🔔 Notification Response: User interacts with the notification!");
-      console.log(response);
+      console.log(JSON.stringify(response.notification.request.content, null, 2))
     });
 
     return () => {

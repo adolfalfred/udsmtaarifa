@@ -17,7 +17,13 @@ export default function TabLayout() {
             }}
         >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="notifications" options={{ headerShown: false }} />
+            <Stack.Screen
+                name="notifications"
+                options={{
+                    animation: 'fade_from_bottom',
+                    title: "Notifications"
+                }}
+            />
             <Stack.Screen
                 name="profile"
                 options={{
@@ -27,21 +33,21 @@ export default function TabLayout() {
             <Stack.Screen
                 name="post"
                 options={{
-                    animation: 'slide_from_bottom',
+                    animation: 'fade_from_bottom',
                     title: "Post News",
                 }}
             />
             <Stack.Screen
                 name="eventpost"
                 options={{
-                    animation: 'slide_from_bottom',
+                    animation: 'fade_from_bottom',
                     title: "Post Event"
                 }}
             />
             <Stack.Screen
                 name="feedbackpost"
                 options={{
-                    animation: 'slide_from_bottom',
+                    animation: 'fade_from_bottom',
                     title: "Post Feedback"
                 }}
             />

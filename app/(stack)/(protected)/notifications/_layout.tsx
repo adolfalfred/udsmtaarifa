@@ -1,6 +1,5 @@
-import BackButton from '@/components/BackButton';
-import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { colors } from '@/constants/Colors';
 import { Stack } from 'expo-router';
 
 export default function TabLayout() {
@@ -8,21 +7,17 @@ export default function TabLayout() {
     return (
         <Stack
             screenOptions={{
-                headerShown: true,
-                headerTitleAlign: 'center',
-                headerStyle: { backgroundColor: `${colors.background[colorScheme]}f0` },
+                headerShown: false,
                 contentStyle: { backgroundColor: colors.background[colorScheme] },
-                headerShadowVisible: false,
-                headerLeft: (props) => <BackButton {...props} />,
             }}
         >
             <Stack.Screen
                 name="notification"
-                options={{ title: 'Notifications' }}
+                options={{ title: 'Notifications', headerShown: false }}
             />
             <Stack.Screen
                 name="[id]"
-                options={{ title: 'Notification' }}
+                options={{ title: 'Notification', headerShown: false }}
             />
         </Stack>
     );
