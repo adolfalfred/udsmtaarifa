@@ -1,18 +1,21 @@
-import FallOutUI from '@/components/FallOutUI';
-import { colors } from '@/constants/Colors';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useThemeStore } from '@/lib/zustand/useThemeStore';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useExpoNotificationState } from '@/lib/zustand/useNotificationStore';
+import { registerForPushNotificationsAsync } from '@/lib/expo-notifications';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useThemeStore } from '@/lib/zustand/useThemeStore';
+import { useColorScheme as useScheme } from "nativewind";
+import { useColorScheme } from '@/hooks/useColorScheme';
+import * as Notifications from "expo-notifications";
+import * as SplashScreen from 'expo-splash-screen';
+import FallOutUI from '@/components/FallOutUI';
+import { refreshSession } from '@/lib/auth';
+import { StatusBar } from 'expo-status-bar';
+import { colors } from '@/constants/Colors';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useColorScheme as useScheme } from "nativewind";
 import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { refreshSession } from '@/lib/auth';
 import 'react-native-reanimated';
 import "../global.css";
 
@@ -21,6 +24,15 @@ SplashScreen.setOptions({
   duration: 400,
   fade: true
 })
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 1000 * 60 * 60 } } })
 
@@ -31,6 +43,27 @@ export default function RootLayout() {
   const { setColorScheme } = useScheme();
   const colorScheme = useColorScheme();
   const { theme } = useThemeStore();
+  const { setExpoPushToken, setNotification } = useExpoNotificationState()
+
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then(token => setExpoPushToken(token ?? ''))
+      .catch((error: any) => setExpoPushToken(`${error}`));
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log("🔔 Notification Received: App is running!", notification);
+      setNotification(notification);
+    });
+    const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log("🔔 Notification Response: User interacts with the notification!");
+      console.log(response);
+    });
+
+    return () => {
+      notificationListener.remove();
+      responseListener.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (error) throw error;

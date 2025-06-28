@@ -4,7 +4,7 @@
     "slug": "udsmtaarifa",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/ios-dark.png",
     "scheme": "udsmtaarifa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -26,7 +26,8 @@
       "softwareKeyboardLayoutMode": "pan",
       "edgeToEdgeEnabled": true,
       "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.adolfalfred.udsmtaarifa"
+      "package": "com.adolfalfred.udsmtaarifa",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",

@@ -17,6 +17,7 @@ export default function TabLayout() {
             }}
         >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="notifications" options={{ headerShown: false }} />
             <Stack.Screen
                 name="profile"
                 options={{
