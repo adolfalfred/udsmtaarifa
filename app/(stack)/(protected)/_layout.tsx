@@ -31,6 +31,13 @@ export default function TabLayout() {
                 }}
             />
             <Stack.Screen
+                name="editprofile"
+                options={{
+                    animation: 'fade_from_bottom',
+                    title: "Edit Profile"
+                }}
+            />
+            <Stack.Screen
                 name="post"
                 options={{
                     animation: 'fade_from_bottom',
