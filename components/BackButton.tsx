@@ -25,7 +25,7 @@ export default function BackButton(props: HeaderBackButtonProps & { canGoBack?: 
         >
             <Image
                 source={require('@/assets/images/icon.png')}
-                className="w-11 h-11"
+                className="w-10 h-10"
             />
         </Pressable>
     )

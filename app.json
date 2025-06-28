@@ -4,7 +4,7 @@
     "slug": "udsmtaarifa",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ios-dark.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "udsmtaarifa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -67,7 +67,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/splash-icon-dark.png",
+          "icon": "./assets/images/icon.png",
           "color": "#0D0F14"
         }
       ],
