@@ -64,6 +64,13 @@
           "supportsPictureInPicture": true
         }
       ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/splash-icon-dark.png",
+          "color": "#0D0F14"
+        }
+      ],
       "expo-web-browser"
     ],
     "experiments": {

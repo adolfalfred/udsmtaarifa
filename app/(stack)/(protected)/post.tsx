@@ -92,7 +92,7 @@ export default function PostScreen() {
             }));
             addToast('success', "News posted successfully", true)
             if (router.canGoBack()) router.back()
-            else if (type === 'class') router.replace('/(stack)/(protected)/(tabs)/schooling')
+            else if (type === 'class') router.replace('/(stack)/(protected)/(tabs)/schooling/school')
             else router.replace('/(stack)/(protected)/(tabs)/news')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {

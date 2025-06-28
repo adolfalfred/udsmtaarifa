@@ -112,7 +112,7 @@ export default function PostScreen() {
             }));
             addToast('success', "Event posted successfully", true)
             if (router.canGoBack()) router.back()
-            else router.replace('/(stack)/(protected)/(tabs)/events')
+            else router.replace('/(stack)/(protected)/(tabs)/events/event')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);

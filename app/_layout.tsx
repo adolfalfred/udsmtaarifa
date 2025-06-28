@@ -1,3 +1,4 @@
+import { type ExternalPathString, type RelativePathString, Stack, useRouter } from 'expo-router';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useExpoNotificationState } from '@/lib/zustand/useNotificationStore';
 import { registerForPushNotificationsAsync } from '@/lib/expo-notifications';
@@ -14,7 +15,6 @@ import { refreshSession } from '@/lib/auth';
 import { StatusBar } from 'expo-status-bar';
 import { colors } from '@/constants/Colors';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import "../global.css";
@@ -44,6 +44,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { theme } = useThemeStore();
   const { setExpoPushToken, setNotification } = useExpoNotificationState()
+  const router = useRouter()
 
   useEffect(() => {
     registerForPushNotificationsAsync()
@@ -56,8 +57,10 @@ export default function RootLayout() {
     });
     const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
       setNotification(response.notification);
+      const url = response.notification.request.content.data?.url;
       console.log("🔔 Notification Response: User interacts with the notification!");
       console.log(JSON.stringify(response.notification.request.content, null, 2))
+      if (url) router.push(url as RelativePathString | ExternalPathString);
     });
 
     return () => {

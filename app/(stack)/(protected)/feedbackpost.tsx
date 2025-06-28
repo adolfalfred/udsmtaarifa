@@ -45,7 +45,7 @@ export default function PostScreen() {
                 }));
             addToast('success', "Feedback posted successfully", true)
             if (router.canGoBack()) router.back()
-            else router.replace('/(stack)/(protected)/(tabs)/feedback')
+            else router.replace('/(stack)/(protected)/(tabs)/feedback/feedbacks')
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
