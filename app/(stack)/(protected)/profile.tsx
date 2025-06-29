@@ -12,7 +12,7 @@ import { colors } from '@/constants/Colors';
 import { Image } from "expo-image";
 
 export default function ProfileScreen() {
-    const { user } = useSessionStore()
+    const { user, setUser } = useSessionStore()
     const navigation = useNavigation();
     const colorScheme = useColorScheme()
     const [page, setPage] = useState<'info' | 'posts'>('info')
@@ -23,7 +23,17 @@ export default function ProfileScreen() {
         navigation.setOptions({
             headerRight: (props: NativeStackHeaderRightProps) => <DropdownMenu {...props} />
         });
-    }, [navigation]);
+        if (data)
+            setUser({
+                id: data!.id,
+                email: data.email,
+                image: data.image,
+                name: data.name,
+                phone: data.phone,
+                regNo: data.regNo,
+            })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigation, data]);
 
     return (
         <ParallaxScrollViewStack

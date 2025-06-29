@@ -1,9 +1,9 @@
 export interface UserProps {
   id: string;
   name: string | null;
-  regNo: string | null;
-  email: string | null;
-  phone: string | null;
+  regNo: string;
+  email: string;
+  phone: string;
   emailVerified: Date | null;
   image: string | null;
   userRoles: {
