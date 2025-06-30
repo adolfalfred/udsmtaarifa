@@ -15,10 +15,11 @@ export default function DropdownMenu(props: NativeStackHeaderRightProps) {
     const colorScheme = useColorScheme()
     const { theme, setTheme } = useThemeStore()
 
-    const logoutFxn = () => {
-        setUser(null)
-        setIsLoggedIn(false)
-        signOut()
+    const logoutFxn = async () => {
+        await signOut().then(() => {
+            setUser(null)
+            setIsLoggedIn(false)
+        })
     }
 
     return (

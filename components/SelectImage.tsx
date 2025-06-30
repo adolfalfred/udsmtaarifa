@@ -71,8 +71,8 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                     </Text>
                 </View>
                 {image
-                    ? <Image source={{ uri: image }} className="w-10 h-10 ml-auto" />
-                    : <>{photo ? <Image source={{ uri: photo }} className="w-10 h-10 ml-auto" /> : null}</>
+                    ? <Image source={{ uri: `${image}?t=${Date.now()}` }} className="w-10 h-10 ml-auto" />
+                    : <>{photo ? <Image source={{ uri: `${photo}?t=${Date.now()}` }} className="w-10 h-10 ml-auto" /> : null}</>
                 }
             </TouchableOpacity>
             <BottomSheetModal
@@ -95,7 +95,7 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                     <View className='rounded-2xl overflow-hidden mb-6 relative self-center items-center justify-center'>
                         {image ? (
                             <>
-                                <Image source={{ uri: image }} className='w-80 h-80 rounded-2xl' />
+                                <Image source={{ uri: `${image}?t=${Date.now()}` }} className='w-80 h-80 rounded-2xl' />
                                 <TouchableOpacity
                                     className='absolute top-3 right-3 bg-black/60 rounded-full w-8 h-8 items-center justify-center'
                                     onPress={() => setImage(null)}
@@ -104,7 +104,7 @@ export default function SelectImage({ photo, setImageId }: { photo: string | nul
                                 </TouchableOpacity>
                             </>
                         ) : <>
-                            {photo ? <Image source={{ uri: photo }} className='w-80 h-80 rounded-2xl' />
+                            {photo ? <Image source={{ uri: `${photo}?t=${Date.now()}` }} className='w-80 h-80 rounded-2xl' />
                                 : <View className='w-80 h-80 rounded-2xl border-2 border-dashed border-primary-light/50 dark:border-primary-dark/50 items-center justify-center'>
                                     <MaterialIcons name='image' size={48} color={colors.primary[colorScheme]} />
                                     <Text className='text-foreground-light dark:text-foreground-dark mt-4'>

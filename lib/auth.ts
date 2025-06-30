@@ -1,6 +1,7 @@
-import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import * as FileSystem from "expo-file-system";
 import { setAuthCookie } from "./api";
+import axios from "axios";
 
 export const signIn = async (regNo: string, password: string) => {
   try {
@@ -31,8 +32,11 @@ export const signIn = async (regNo: string, password: string) => {
 };
 
 export const signOut = async () => {
-  await SecureStore.deleteItemAsync("userToken");
   setAuthCookie(undefined);
+  await SecureStore.deleteItemAsync("userToken");
+  await FileSystem.deleteAsync(FileSystem.cacheDirectory!, {
+    idempotent: true,
+  });
 };
 
 export const refreshSession = () => {

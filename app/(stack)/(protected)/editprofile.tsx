@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, TextInput, View, Text, TouchableOpacity, Image } from "react-native";
+import { KeyboardAvoidingView, TextInput, View, Text, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +18,7 @@ import { colors } from "@/constants/Colors";
 import Button from "@/components/ui/Button";
 import { useRef, useState } from "react";
 import { router } from "expo-router";
+import { Image } from "expo-image";
 import api from "@/lib/api";
 
 export default function EditProfileScreen() {
@@ -110,8 +111,10 @@ export default function EditProfileScreen() {
             addToast('success', "Account updated successfully", true)
             console.log(res?.data)
             queryClient.clear();
-            if (router.canGoBack()) router.back()
-            else router.replace('/(stack)/(protected)/(tabs)/news')
+            await FileSystem.deleteAsync(FileSystem.cacheDirectory!, { idempotent: true }).then(() => {
+                if (router.canGoBack()) router.back()
+                else router.replace('/(stack)/(protected)/(tabs)/news')
+            })
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -142,17 +145,35 @@ export default function EditProfileScreen() {
             <ParallaxScrollViewStack
                 headerImage={
                     <View className="flex-col items-center justify-center gap-4">
-                        {image ? (<Image
-                            source={{ uri: image, cache: "reload" }}
-                            className="w-36 h-36 rounded-lg"
-                        />) : <>
-                            {user?.image ? (<Image
-                                source={{ uri: user.image, cache: 'reload' }}
-                                className="w-36 h-36 rounded-lg"
-                            />) : <View className="w-36 h-36 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5">
-                                <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-xs italic">No Image</Text>
-                            </View>}
-                        </>}
+                        <View className="h-36 w-36 rounded-lg overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5">
+                            {image ? (
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: '100%',
+                                        borderRadius: '100%'
+                                    }}
+                                    source={{ uri: image }}
+                                    cachePolicy='none'
+                                    contentFit="cover"
+                                />
+                            ) : <>
+                                {user?.image ? (
+                                    <Image
+                                        style={{
+                                            flex: 1,
+                                            width: '100%',
+                                            borderRadius: '100%'
+                                        }}
+                                        source={{ uri: user.image }}
+                                        cachePolicy='none'
+                                        contentFit="cover"
+                                    />
+                                ) :
+                                    <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-xs italic">No Image</Text>
+                                }
+                            </>}
+                        </View>
                     </View>
                 }>
                 <KeyboardAvoidingView className="px-6 pb-6 flex-col gap-8 bg-background-light dark:bg-background-dark">
