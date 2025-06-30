@@ -1,20 +1,22 @@
-import Button from "@/components/ui/Button";
-import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
-import { colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Link } from "expo-router";
-import { useRef, useState } from "react";
 import { Image, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Toast, { type ToastType } from "@/components/ui/Toast";
-import { signIn } from "@/lib/auth";
+import { useExpoNotificationState } from "@/lib/zustand/useNotificationStore";
+import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
+import Toast, { type ToastType } from "@/components/ui/Toast";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { colors } from "@/constants/Colors";
+import Button from "@/components/ui/Button";
+import { useRef, useState } from "react";
+import { signIn } from "@/lib/auth";
+import { Link } from "expo-router";
 
 export default function Login() {
     const colorScheme = useColorScheme()
     const { setIsLoggedIn, setUser } = useSessionStore()
+    const { expoPushToken } = useExpoNotificationState()
 
     const [loading, setLoading] = useState(false);
     const [regNo, setRegNo] = useState('');
@@ -30,14 +32,13 @@ export default function Login() {
         try {
             setLoading(true)
             addToast('loading', "Logging in...")
-            const auth = await signIn(regNo, password)
-            if (auth) {
+            const auth = await signIn(regNo, password, expoPushToken.length > 0 ? expoPushToken : undefined)
+            if (auth && typeof auth !== 'string') {
                 setIsLoggedIn(true)
                 setUser(auth)
                 addToast('success', "Welcome!", true)
                 return;
-            }
-            addToast('danger', "Invalid credentials.", true)
+            } else addToast('danger', auth, true)
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);

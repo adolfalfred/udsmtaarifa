@@ -6,6 +6,7 @@ export interface UserProps {
   phone: string;
   emailVerified: Date | null;
   image: string | null;
+  notificationIds: string[];
   userRoles: {
     roleId: string;
     role: {

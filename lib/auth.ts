@@ -1,13 +1,18 @@
+import type { UserProps } from "./zustand/useSessionStore";
 import * as SecureStore from "expo-secure-store";
 import * as FileSystem from "expo-file-system";
-import { setAuthCookie } from "./api";
+import api, { setAuthCookie } from "./api";
 import axios from "axios";
 
-export const signIn = async (regNo: string, password: string) => {
+export const signIn = async (
+  regNo: string,
+  password: string,
+  notificationId?: string
+): Promise<UserProps | string> => {
   try {
     const response = await axios.post(
       `${process.env.EXPO_PUBLIC_DB_SERVER}/auth/login`,
-      { regNo: regNo.trim(), password }
+      { regNo: regNo.trim(), password, notificationId }
     );
 
     const token = response.headers["set-cookie"] || response.headers["cookie"];
@@ -24,19 +29,27 @@ export const signIn = async (regNo: string, password: string) => {
     );
     setAuthCookie(token[0]);
     await SecureStore.setItemAsync("userToken", token[0]);
-    return res.data.user;
+    return res.data.user as UserProps;
   } catch (err: any) {
-    console.error(err.message || "Login error");
-    return null;
+    console.error(err?.message || "Login error");
+    return err?.message || "Login error";
   }
 };
 
-export const signOut = async () => {
-  setAuthCookie(undefined);
-  await SecureStore.deleteItemAsync("userToken");
-  await FileSystem.deleteAsync(FileSystem.cacheDirectory!, {
-    idempotent: true,
-  });
+export const signOut = async (e: { id?: string; notificationId?: string }) => {
+  try {
+    const res = await api.post("/auth/logout", e);
+    if (!res) return false;
+    setAuthCookie(undefined);
+    await SecureStore.deleteItemAsync("userToken");
+    await FileSystem.deleteAsync(FileSystem.cacheDirectory!, {
+      idempotent: true,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 };
 
 export const refreshSession = () => {

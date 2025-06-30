@@ -1,5 +1,6 @@
 import type { NativeStackHeaderRightProps } from '@react-navigation/native-stack';
 import { Text, TouchableOpacity, View, Modal, Pressable } from 'react-native';
+import { useExpoNotificationState } from '@/lib/zustand/useNotificationStore';
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useThemeStore } from '@/lib/zustand/useThemeStore';
@@ -11,15 +12,17 @@ import { useState } from 'react';
 
 export default function DropdownMenu(props: NativeStackHeaderRightProps) {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
-    const { setIsLoggedIn, setUser } = useSessionStore()
+    const { setIsLoggedIn, setUser, user } = useSessionStore()
     const colorScheme = useColorScheme()
     const { theme, setTheme } = useThemeStore()
+    const { expoPushToken } = useExpoNotificationState()
 
     const logoutFxn = async () => {
-        await signOut().then(() => {
+        const res = await signOut({ id: user?.id, notificationId: expoPushToken })
+        if (res) {
             setUser(null)
             setIsLoggedIn(false)
-        })
+        } else alert('Failed to logout! Try getting online')
     }
 
     return (

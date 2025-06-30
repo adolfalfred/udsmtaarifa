@@ -1,28 +1,30 @@
-import Button from "@/components/ui/Button";
-import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
-import { colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { router } from "expo-router";
-import { useRef, useState } from "react";
 import { Image, KeyboardAvoidingView, Pressable, Text, TextInput, TouchableOpacity, View } from "react-native";
-import axios from "axios"
-import Toast, { type ToastType } from "@/components/ui/Toast";
-import SelectProgramme from "@/components/SelectProgramme";
-import { useQuery } from "@tanstack/react-query";
-import SelectImage from "@/components/SelectImage";
-import * as FileSystem from "expo-file-system";
-import SelectStartYear from "@/components/SelectStartYear";
-import SelectCurrentYear from "@/components/SelectCurrentYear";
-import { signIn } from "@/lib/auth";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useExpoNotificationState } from "@/lib/zustand/useNotificationStore";
+import ParallaxScrollViewStack from "@/components/ParallaxScrollViewStack";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
+import SelectCurrentYear from "@/components/SelectCurrentYear";
+import Toast, { type ToastType } from "@/components/ui/Toast";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import SelectProgramme from "@/components/SelectProgramme";
+import SelectStartYear from "@/components/SelectStartYear";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import SelectImage from "@/components/SelectImage";
+import { useQuery } from "@tanstack/react-query";
+import * as FileSystem from "expo-file-system";
+import { colors } from "@/constants/Colors";
+import Button from "@/components/ui/Button";
+import { useRef, useState } from "react";
+import { router } from "expo-router";
+import { signIn } from "@/lib/auth";
+import axios from "axios"
 
 export default function Register() {
     const colorScheme = useColorScheme()
     const { setIsLoggedIn, setUser } = useSessionStore()
+    const { expoPushToken } = useExpoNotificationState()
 
     const [regNo, setRegNo] = useState('');
     const [name, setName] = useState('');
@@ -156,7 +158,7 @@ export default function Register() {
             });
             addToast('success', "Account created successfully", true)
             console.log(res?.data)
-            const auth = await signIn(regNo, password)
+            const auth = await signIn(regNo, password, expoPushToken.length > 0 ? expoPushToken : undefined)
             if (auth) {
                 setIsLoggedIn(true)
                 setUser(auth)
