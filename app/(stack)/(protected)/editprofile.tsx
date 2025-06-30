@@ -112,13 +112,6 @@ export default function EditProfileScreen() {
             queryClient.clear();
             if (router.canGoBack()) router.back()
             else router.replace('/(stack)/(protected)/(tabs)/news')
-            // const auth = await signIn(regNo, password)
-            // if (auth) {
-            //     setIsLoggedIn(true)
-            //     setUser(auth)
-            //     addToast('success', "Welcome!", true)
-            //     return;
-            // }
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);
@@ -150,11 +143,11 @@ export default function EditProfileScreen() {
                 headerImage={
                     <View className="flex-col items-center justify-center gap-4">
                         {image ? (<Image
-                            source={{ uri: image }}
+                            source={{ uri: image, cache: "reload" }}
                             className="w-36 h-36 rounded-lg"
                         />) : <>
                             {user?.image ? (<Image
-                                source={{ uri: user.image }}
+                                source={{ uri: user.image, cache: 'reload' }}
                                 className="w-36 h-36 rounded-lg"
                             />) : <View className="w-36 h-36 rounded-lg bg-foreground-light/5 dark:bg-foreground-dark/5">
                                 <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-xs italic">No Image</Text>
@@ -273,7 +266,7 @@ export default function EditProfileScreen() {
                     </Button>
                 </KeyboardAvoidingView>
             </ParallaxScrollViewStack>
-            <Toast ref={toastRef} />
+            <Toast ref={toastRef} position="up" />
         </>
     )
 }

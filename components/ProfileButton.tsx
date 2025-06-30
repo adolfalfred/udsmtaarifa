@@ -1,10 +1,10 @@
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { TouchableOpacity, View } from 'react-native';
 import { colors } from '@/constants/Colors';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function ProfileButton(props: {
     tintColor?: string;
@@ -33,7 +33,7 @@ export default function ProfileButton(props: {
                             backgroundColor: `${colors.foreground[colorScheme]}10`,
                             borderRadius: '100%'
                         }}
-                        source={user?.image}
+                        source={`${user?.image}?t=${Date.now()}`}
                         contentFit="cover"
                     />
                 </TouchableOpacity>

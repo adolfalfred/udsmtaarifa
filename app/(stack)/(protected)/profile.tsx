@@ -47,6 +47,7 @@ export default function ProfileScreen() {
                                 borderRadius: '100%'
                             }}
                             source={user?.image}
+                            cachePolicy='none'
                             contentFit="cover"
                         />
                     </View>
