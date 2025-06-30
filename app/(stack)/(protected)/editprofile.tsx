@@ -145,7 +145,7 @@ export default function EditProfileScreen() {
             <ParallaxScrollViewStack
                 headerImage={
                     <View className="flex-col items-center justify-center gap-4">
-                        <View className="h-36 w-36 rounded-lg overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5">
+                        <View className="h-44 w-44 rounded-lg overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5">
                             {image ? (
                                 <Image
                                     style={{
@@ -173,6 +173,10 @@ export default function EditProfileScreen() {
                                     <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-xs italic">No Image</Text>
                                 }
                             </>}
+                        </View>
+                        <View className="mx-6 mt-4 p-4 rounded-2xl border border-primary-light dark:border-primary-dark bg-primary-light/20 dark:bg-primary-dark/20">
+                            <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-center">Only updated the fields you want to change</Text>
+                            <Text className="text-foreground-light/60 dark:text-foreground-dark/60 text-center">Input password onjy if you wish to change it</Text>
                         </View>
                     </View>
                 }>
