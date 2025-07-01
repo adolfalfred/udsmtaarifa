@@ -159,12 +159,12 @@ export default function Register() {
             addToast('success', "Account created successfully", true)
             console.log(res?.data)
             const auth = await signIn(regNo, password, expoPushToken.length > 0 ? expoPushToken : undefined)
-            if (auth) {
+            if (auth && typeof auth !== 'string') {
                 setIsLoggedIn(true)
                 setUser(auth)
                 addToast('success', "Welcome!", true)
                 return;
-            }
+            } else addToast('danger', auth, true)
         } catch (error: any) {
             if (error.isAxiosError && error.response) {
                 console.log(error.response.data);

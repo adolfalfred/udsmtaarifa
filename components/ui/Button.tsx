@@ -17,6 +17,8 @@ interface ButtonProps {
     disabled?: boolean;
     className?: string;
     textClassName?: string;
+    px?: string;
+    py?: string;
 }
 
 export default function Button({
@@ -28,7 +30,9 @@ export default function Button({
     loading = false,
     disabled = false,
     className,
-    textClassName
+    textClassName,
+    px,
+    py,
 }: ButtonProps) {
 
     return (
@@ -37,7 +41,7 @@ export default function Button({
                 disabled && { opacity: 0.6 },
                 style
             ]}
-            className={`flex-row items-center justify-center py-4 px-6 ${className}`}
+            className={`flex-row items-center justify-center ${py ? py : 'py-4'} ${px ? px : 'px-6'} ${className}`}
             onPress={onPress}
             disabled={disabled || loading}
             activeOpacity={0.8}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { EventProps } from '@/types/event';
 import { useEventsQuery } from '@/queries/useEventsQuery';
 import { EventComponent, EventSkeleton } from '@/components/EventComponent';
@@ -45,6 +45,10 @@ export default function HomeScreen() {
     setPage(1);
   }, [category]);
 
+  const header = useMemo(() => (
+    <HeaderComponent category={category} setCategory={setCategory} />
+  ), [category]);
+
   const renderEvent = ({ item }: { item: EventProps }) => <EventComponent item={item} />
   return (
     <>
@@ -57,7 +61,7 @@ export default function HomeScreen() {
         onRefresh={handleRefresh}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.2}
-        ListHeaderComponent={() => <HeaderComponent category={category} setCategory={setCategory} />}
+        ListHeaderComponent={header}
         ListFooterComponent={nextPage ? <EventSkeleton count={1} /> : null}
         recycleItems
         ListEmptyComponent={() => {

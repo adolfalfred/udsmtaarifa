@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FeedbackProps } from '@/types/feedback';
 import { useFeedbacksQuery } from '@/queries/useFeedbackQuery';
 import { FeedbackComponent, FeedbackSkeleton } from '@/components/FeedbackComponent';
@@ -44,6 +44,10 @@ export default function Feedback() {
         setPage(1);
     }, [type]);
 
+    const header = useMemo(() => (
+        <HeaderComponent type={type} setType={setType} />
+    ), [type]);
+
     const renderFeedback = ({ item }: { item: FeedbackProps }) => <FeedbackComponent item={item} />
     return (
         <>
@@ -56,7 +60,7 @@ export default function Feedback() {
                 onRefresh={handleRefresh}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.2}
-                ListHeaderComponent={() => <HeaderComponent type={type} setType={setType} />}
+                ListHeaderComponent={header}
                 ListFooterComponent={nextPage ? <FeedbackSkeleton count={1} /> : null}
                 recycleItems
                 ListEmptyComponent={() => {

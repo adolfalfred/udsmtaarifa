@@ -58,6 +58,13 @@ export default function TabLayout() {
                     title: "Post Feedback"
                 }}
             />
+            <Stack.Screen
+                name="createchat"
+                options={{
+                    animation: 'fade_from_bottom',
+                    title: "Create Chat"
+                }}
+            />
         </Stack>
     );
 }

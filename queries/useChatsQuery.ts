@@ -1,36 +1,29 @@
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import { useQuery } from "@tanstack/react-query";
-import type { UserProps } from "@/types/user";
+import type { ChatProps } from "@/types/chat";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 
-export const useUsersQuery = (search: string, page: number) => {
-  const [store, setStore] = useState<UserProps[]>([]);
+export const useChatsQuery = (search: string, page: number, type: string) => {
   const { user } = useSessionStore();
+  const [store, setStore] = useState<ChatProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["user", { search, page }],
+    queryKey: ["chat", { search, page, type }],
     queryFn: () =>
       api
-        .get(`/user?s=${search}&limit=20&page=${page}`)
+        .get(
+          `/chat?s=${search}&limit=20&page=${page}&user=${user?.id}&type=${type}`
+        )
         .then((res) => res.data),
   });
 
   useEffect(() => {
-    if (page === 1) {
-      if (data?.data) {
-        const present = data.data.filter(
-          (usr: UserProps) => usr.id !== user?.id
-        );
-        setStore(present);
-      } else setStore([]);
-    } else if (data)
+    if (page === 1) setStore(data?.data ?? []);
+    else if (data)
       setStore((prev) => {
-        const present = data.data.filter(
-          (usr: UserProps) => usr.id !== user?.id
-        );
         const map = new Map();
-        [...prev, ...present].forEach((item) => {
+        [...prev, ...data.data].forEach((item) => {
           map.set(item.id, item);
         });
         return Array.from(map.values()).sort(
@@ -48,10 +41,10 @@ export const useUsersQuery = (search: string, page: number) => {
   };
 };
 
-export const useUserQuery = (id: string) => {
-  const { data, isLoading } = useQuery<UserProps>({
-    queryKey: ["user", id],
-    queryFn: () => api.get(`/user/${id}`).then((res) => res.data),
+export const useChatQuery = (id: string) => {
+  const { data, isLoading } = useQuery<ChatProps>({
+    queryKey: ["chat", id],
+    queryFn: () => api.get(`/chat/${id}`).then((res) => res.data),
   });
   return { data: data || null, isLoading };
 };

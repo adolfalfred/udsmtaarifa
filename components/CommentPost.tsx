@@ -134,7 +134,7 @@ const ChatInput = ({ postId, handleRefresh }: { postId: string; handleRefresh: (
     const colorScheme = useColorScheme()
 
     const postFxn = async () => {
-        if (content.length === 0 || !user?.id) return
+        if (!content.trim() || !user?.id) return
         try {
             setLoading(true)
             const res = await api.post(`/post/comment`, {
