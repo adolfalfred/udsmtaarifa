@@ -8,7 +8,7 @@ import * as FileSystem from "expo-file-system";
 import { useSessionStore } from "@/lib/zustand/useSessionStore";
 import api from "@/lib/api";
 import { router } from "expo-router";
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function PostScreen() {
@@ -16,8 +16,7 @@ export default function PostScreen() {
     const [content, setContent] = useState('')
     const [location, setLocation] = useState('')
     const [date, setDate] = useState<Date>(new Date())
-    // const [startTime, setStartTime] = useState<Date>(new Date())
-    // const [endTime, setEndTime] = useState<Date>(new Date())
+    const [mode, setMode] = useState<'date' | 'time'>('date');
     const [media, setMedia] = useState<string[]>([])
     const [categories, setCategories] = useState<number[]>([])
     const [loading, setLoading] = useState(false)
@@ -30,20 +29,30 @@ export default function PostScreen() {
     };
 
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const onChangeDate = (_event: DateTimePickerEvent, date?: Date | undefined) => {
-        setShowDatePicker(Platform.OS === 'ios'); // keep open for iOS
-        if (date) setDate(date);
+
+    const onChangeDate = (_event: DateTimePickerEvent, selectedDate?: Date) => {
+        if (selectedDate) {
+            setDate((prevDate) => {
+                if (mode === 'date') {
+                    // Set date, keep time
+                    const newDate = new Date(selectedDate);
+                    newDate.setHours(prevDate.getHours(), prevDate.getMinutes());
+                    return newDate;
+                } else {
+                    // Set time, keep date
+                    const newDate = new Date(prevDate);
+                    newDate.setHours(selectedDate.getHours(), selectedDate.getMinutes());
+                    return newDate;
+                }
+            });
+        }
+        setShowDatePicker(false);
     };
-    // const [showStartPicker, setShowStartPicker] = useState(false);
-    // const onChangeStart = (_event: DateTimePickerEvent, date?: Date | undefined) => {
-    //     setShowStartPicker(Platform.OS === 'ios'); // keep open for iOS
-    //     if (date) setDate(date);
-    // };
-    // const [showEndPicker, setShowEndPicker] = useState(false);
-    // const onChangeEnd = (_event: DateTimePickerEvent, date?: Date | undefined) => {
-    //     setShowEndPicker(Platform.OS === 'ios'); // keep open for iOS
-    //     if (date) setDate(date);
-    // };
+
+    const showPicker = (currentMode: 'date' | 'time') => {
+        setMode(currentMode);
+        setShowDatePicker(true);
+    };
 
     const postFxn = async () => {
         try {
@@ -165,31 +174,21 @@ export default function PostScreen() {
                     />
 
                     <Pressable
-                        onPress={() => setShowDatePicker(true)}
+                        onPress={() => showPicker('date')}
                         className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
                     >
                         <Text className="text-black dark:text-white">
-                            {date.toDateString()}
+                            Date: {date.toLocaleDateString()}
                         </Text>
                     </Pressable>
-                    {/* <Pressable
-                            onPress={() => setShowStartPicker(true)}
-                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
-                        >
-                            <Text className="text-black dark:text-white">
-                                {startTime.toDateString()}
-                            </Text>
-                        </Pressable>
-                        <Pressable
-                            onPress={() => setShowEndPicker(true)}
-                            className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
-                        >
-                            <Text className="text-black dark:text-white">
-                                {endTime.toDateString()}
-                            </Text>
-                        </Pressable> */}
-
-
+                    <Pressable
+                        onPress={() => showPicker('time')}
+                        className="border border-[#aaa] px-3 py-5 rounded-full my-3 bg-background-light dark:bg-background-dark"
+                    >
+                        <Text className="text-black dark:text-white">
+                            Time: {date.toLocaleTimeString()}
+                        </Text>
+                    </Pressable>
                     <SelectMedia media={media} setMedia={setMedia} noVideo />
                     <SelectCategories categories={categories} setCategories={setCategories} />
                     <Button
@@ -205,27 +204,11 @@ export default function PostScreen() {
             {showDatePicker && (
                 <DateTimePicker
                     value={date}
-                    mode="date"
-                    display="default"
+                    mode={mode}
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                     onChange={onChangeDate}
                 />
             )}
-            {/* {showStartPicker && (
-                <DateTimePicker
-                    value={startTime}
-                    mode="time"
-                    display="default"
-                    onChange={onChangeStart}
-                />
-            )}
-            {showEndPicker && (
-                <DateTimePicker
-                    value={endTime}
-                    mode="time"
-                    display="default"
-                    onChange={onChangeEnd}
-                />
-            )} */}
             <Toast ref={toastRef} />
         </>
     )

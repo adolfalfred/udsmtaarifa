@@ -97,6 +97,7 @@ export default function SelectMedia({ media, setMedia, noVideo = false }: { medi
                 topInset={StatusBar.currentHeight || 0}
                 snapPoints={snapPoints}
                 onDismiss={closeModal}
+                enableDynamicSizing={false}
                 backdropComponent={(props) => <BottomSheetBackdrop
                     {...props}
                     appearsOnIndex={0}
@@ -132,7 +133,7 @@ export default function SelectMedia({ media, setMedia, noVideo = false }: { medi
                         <View className='w-80 h-80 mx-auto rounded-2xl border border-dashed border-primary-light/50 dark:border-primary-dark/50 items-center justify-center'>
                             <MaterialIcons name='image' size={48} color={colors.primary[colorScheme]} />
                             <Text className='text-foreground-light dark:text-foreground-dark mt-4'>
-                                No image selected
+                                No file selected
                             </Text>
                         </View>
                     )}

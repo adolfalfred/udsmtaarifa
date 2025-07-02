@@ -35,6 +35,7 @@ export default function CreateChat() {
             if (!user || !type) return
             const missingFields = [];
             if (name.length === 0 && type === 'group') missingFields.push("Name")
+            if (!userIds?.length || userIds?.length === 0) missingFields.push("User")
             if (missingFields.length > 0) {
                 const formattedFields =
                     missingFields.length > 1
@@ -68,8 +69,10 @@ export default function CreateChat() {
                 console.log("Image", e.get("image"))
             }
 
-            if (name.length === 0) e.append("name", 'Chat')
-            else e.append("name", name)
+            if (name.length === 0) {
+                const chatName = [userIds[0], user.id].sort().join('-');
+                e.append("name", chatName)
+            } else e.append("name", name)
             if (description) e.append("description", description)
             e.append("type", type)
             e.append('userId', user.id)
