@@ -1,8 +1,8 @@
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
 import { View, Text, Pressable } from 'react-native'
 import type { ChatProps } from '@/types/chat';
-import { Link } from 'expo-router';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 
 export function ChatComponent({ item }: { item: ChatProps }) {
     const { user } = useSessionStore()
@@ -10,10 +10,10 @@ export function ChatComponent({ item }: { item: ChatProps }) {
     const member = item.type === 'chat' ? item.members.find((item) => item.user.id !== user?.id) : null
 
     return (
-        <Link href={`/(stack)/(protected)/(tabs)/message/${item.id}`} asChild>
-            <Pressable className='overflow-hidden h-20 w-full px-3 my-1.5'>
-                <View className='flex-row gap-2 rounded-2xl h-full w-full p-3 bg-foreground-light/5 dark:bg-foreground-dark/5'>
-                    <View className='rounded-full overflow-hidden h-full aspect-auto'>
+        <Link href={`/(stack)/(protected)/${item.id}`} asChild>
+            <Pressable className='overflow-hidden h-16 w-full my-3'>
+                <View className='flex-row gap-2 rounded-2xl h-full w-full px-4'>
+                    <View className='h-16 w-16 shrink-0 rounded-full overflow-hidden bg-foreground-light/20 dark:bg-foreground-dark/20'>
                         {item.type === 'chat' && member ? (
                             <Image
                                 style={{
@@ -25,13 +25,29 @@ export function ChatComponent({ item }: { item: ChatProps }) {
                                 cachePolicy='none'
                                 contentFit="cover"
                             />
-                        ) : (
-                            <View className='bg-foreground-light/10 dark:bg-foreground-dark/10 w-full h-full' />
-                        )}
+                        ) : null}
                     </View>
-                    <View className='flex-col gap-1 flex-grow'>
-                        <Text className='text-foreground-light dark:text-foreground-dark font-semibold'>{item.type === 'chat' ? member ? member.user.name : "New Chat" : item.name}</Text>
-                        {item.messages.length > 0 ? <Text numberOfLines={1} ellipsizeMode="tail" className='text-foreground-light/60 dark:text-foreground-dark/60'>{item.messages[0].content}</Text> : null}
+                    <View className='flex-col justify-center gap-1 shrink'>
+                        <Text
+                            numberOfLines={3}
+                            ellipsizeMode="tail"
+                            className='text-foreground-light dark:text-foreground-dark text-lg font-semibold'
+                        >
+                            {item.type === 'chat' ? member ? member.user.name : "New Chat" : item.name}
+                        </Text>
+                        {item.messages.length > 0
+                            ? <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                className='text-foreground-light/60 dark:text-foreground-dark/60'
+                            >
+                                {item.messages[0].content}
+                            </Text>
+                            : <Text
+                                className='italic text-foreground-light/60 dark:text-foreground-dark/60'
+                            >
+                                No messages yet</Text>
+                        }
                     </View>
                 </View>
             </Pressable>
@@ -43,11 +59,15 @@ export const ChatSkeleton = ({ count }: { count: number }) => {
     return (
         <>
             {Array.from({ length: count }).map((_, i) => (
-                <View
-                    key={i}
-                    className='w-full px-3 py-1.5'
-                >
-                    <View className='w-full h-20 rounded-2xl bg-foreground-light/5 dark:bg-foreground-dark/5' />
+                <View key={i} className='overflow-hidden h-16 w-full my-3'>
+                    <View className='flex-row gap-2 rounded-2xl h-full w-full px-4'>
+                        <View className='h-16 w-16 shrink-0 rounded-full overflow-hidden bg-foreground-light/5 dark:bg-foreground-dark/5'>
+                        </View>
+                        <View className='flex-col justify-center gap-2 shrink'>
+                            <View className='bg-foreground-light/5 dark:bg-foreground-dark/5 h-4 w-28 rounded' />
+                            <View className='bg-foreground-light/5 dark:bg-foreground-dark/5 h-3 w-60 rounded' />
+                        </View>
+                    </View>
                 </View>
             ))}
         </>

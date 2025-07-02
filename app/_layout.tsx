@@ -48,8 +48,13 @@ export default function RootLayout() {
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-      .then(token => setExpoPushToken(token ?? ''))
-      .catch((error: any) => setExpoPushToken(`${error}`));
+      .then(token => {
+        if (token && !token.startsWith('Error:')) setExpoPushToken(token ?? '')
+      })
+      .catch((error: any) => {
+        console.log(error)
+        setExpoPushToken('')
+      });
     const notificationListener = Notifications.addNotificationReceivedListener(notification => {
       console.log("🔔 Notification Received: App is running!", notification);
       console.log(JSON.stringify(notification.request.content, null, 2))

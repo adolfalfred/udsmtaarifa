@@ -19,8 +19,9 @@ export default function MessagesScreen() {
     const [refreshing, setRefreshing] = useState(false)
     const { refresh } = useLocalSearchParams();
     const { hide } = useHideState()
+    const colorScheme = useColorScheme()
 
-    const { data, isLoading, nextPage } = useChatsQuery('', page, type)
+    const { data, isLoading, nextPage } = useChatsQuery(search, page, type)
     const queryClient = useQueryClient();
 
     const handleLoadMore = () => {
@@ -56,7 +57,7 @@ export default function MessagesScreen() {
                 data={data}
                 renderItem={renderChat}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{ paddingBottom: 100 }}
+                contentContainerStyle={{ paddingBottom: 100, backgroundColor: colors.background[colorScheme] }}
                 refreshing={refreshing}
                 onRefresh={handleRefresh}
                 onEndReached={handleLoadMore}
@@ -91,7 +92,7 @@ export default function MessagesScreen() {
 const HeaderComponent = ({ search, setSearch, type, setType }: { search: string; setSearch: (e: string) => void; type: ChatProps['type'] | ""; setType: React.Dispatch<React.SetStateAction<ChatProps['type'] | "">> }) => {
     const colorScheme = useColorScheme()
     return (
-        <View className='flex-row px-2 py-1 items-end border-b border-foreground-light/10 dark:border-foreground-dark/10'>
+        <View className='flex-row px-4 py-1 items-end border-b border-foreground-light/10 dark:border-foreground-dark/10'>
             <TextInput
                 className={`w-full shrink border border-foreground-light/20 dark:border-foreground-dark/20 px-3 py-3 rounded-[24px] text-black dark:text-white bg-foreground-light/10 dark:bg-foreground-dark/10`}
                 placeholder="Search chat"

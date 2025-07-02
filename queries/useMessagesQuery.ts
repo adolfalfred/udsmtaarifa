@@ -1,18 +1,20 @@
-// import { useSessionStore } from "@/lib/zustand/useSessionStore";
+import type { MessageProps } from "@/types/message";
 import { useQuery } from "@tanstack/react-query";
-import type { ChatProps } from "@/types/chat";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 
-export const useChatsQuery = (search: string, page: number, type: string) => {
-  // const { user } = useSessionStore();
-  const [store, setStore] = useState<ChatProps[]>([]);
+export const useMessagesQuery = (
+  search: string,
+  page: number,
+  chat: string
+) => {
+  const [store, setStore] = useState<MessageProps[]>([]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["chat", { search, page, type }],
+    queryKey: ["message", { search, page, chat }],
     queryFn: () =>
       api
-        .get(`/chat?s=${search}&page=${page}&type=${type}`)
+        .get(`/message?s=${search}&limit=20&page=${page}&chat=${chat}`)
         .then((res) => res.data),
   });
 
@@ -37,12 +39,4 @@ export const useChatsQuery = (search: string, page: number, type: string) => {
     isLoading,
     nextPage: (data?.nextPage as boolean) || false,
   };
-};
-
-export const useChatQuery = (id: string) => {
-  const { data, isLoading } = useQuery<ChatProps>({
-    queryKey: ["chat", id],
-    queryFn: () => api.get(`/chat/${id}`).then((res) => res.data),
-  });
-  return { data: data || null, isLoading };
 };

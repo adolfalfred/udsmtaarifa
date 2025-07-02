@@ -22,7 +22,7 @@ export default function TabLayout() {
 
   useEffect(() => {
     const updateUser = async () => {
-      if (!user?.id) return
+      if (!user?.id || expoPushToken.startsWith('Error:')) return
       const e = new FormData();
       e.append("notificationId", expoPushToken)
       try {
@@ -97,7 +97,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="message"
+        name="messages"
         options={{
           title: 'Messages',
           tabBarIcon: ({ color }) => <MaterialIcons color={color} size={22} name='message' />,

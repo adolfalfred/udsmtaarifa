@@ -1,16 +1,18 @@
-// app/ChatScreen.tsx or screens/ChatScreen.tsx
 import Button from '@/components/ui/Button';
 import { colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
+import { useMessagesQuery } from '@/queries/useMessagesQuery';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useNavigation } from 'expo-router';
-import React, { useLayoutEffect, useState } from 'react';
+import { LegendList } from '@legendapp/list';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocalSearchParams } from 'expo-router';
+import { useCallback, useState } from 'react';
 import {
     View,
     Text,
     TextInput,
-    FlatList,
+    // FlatList,
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
@@ -18,40 +20,74 @@ import {
 type Message = {
     id: string;
     text: string;
-    sender: 'me' | 'other';
+    sender: string;
 };
 
 export default function ChatScreen() {
-    const navigation = useNavigation();
     const [messages, setMessages] = useState<Message[]>([]);
+
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const { user } = useSessionStore()
+    const [page, setPage] = useState(1)
+    const [refreshing, setRefreshing] = useState(false)
+
+    const { data, isLoading, nextPage } = useMessagesQuery("", page, id);
+    const queryClient = useQueryClient();
+
+    const handleLoadMore = () => {
+        if (nextPage) setPage(prev => prev + 1)
+    }
+
+    const handleRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await queryClient.invalidateQueries({
+            refetchType: "active",
+            queryKey: ["message"],
+        });
+        setPage(1);
+        setRefreshing(false);
+    }, [queryClient])
 
     const sendMessage = (input: string) => {
         const newMessage: Message = {
             id: Date.now().toString(),
             text: input,
-            sender: 'me',
+            sender: user!.id,
         };
         setMessages((prev) => [...prev, newMessage]);
     };
 
-    useLayoutEffect(() => {
-        navigation.getParent()?.setOptions({
-            tabBarStyle: { display: 'none' }
-        });
-    }, [navigation]);
 
     return (
         <View className='flex-1 bg-background-light dark:bg-background-dark'>
-            <FlatList
-                data={messages}
-                keyExtractor={(item) => item.id}
+            <LegendList
+                data={data}
                 renderItem={({ item }) => (
-                    <View className={`max-w-[70%] p-2.5 rounded-[18px] my-0.5 ${item.sender === "me" ? 'bg-primary-light dark:bg-primary-dark/60 self-end' : 'bg-foreground-light/10 dark:bg-foreground-dark/10 self-start'}`}>
-                        <Text className={`${item.sender === 'me' ? 'text-foreground-dark' : 'text-foreground-light dark:text-foreground-dark'}`}>{item.text}</Text>
+                    <View className={`max-w-[70%] p-2.5 rounded-[18px] my-0.5 ${item.user.id === user?.id ? 'bg-primary-light dark:bg-primary-dark/60 self-end' : 'bg-foreground-light/10 dark:bg-foreground-dark/10 self-start'}`}>
+                        <Text className={`${item.user.id === user?.id ? 'text-foreground-dark' : 'text-foreground-light dark:text-foreground-dark'}`}>{item?.content}</Text>
                     </View>
                 )}
+                keyExtractor={(item) => item.id}
                 contentContainerStyle={{ padding: 12 }}
-                inverted
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.2}
+                ListFooterComponent={nextPage ?
+                    // <EventSkeleton count={1} />
+                    <></>
+                    : null}
+                recycleItems
+                ListEmptyComponent={() => {
+                    if (isLoading) return <></> //<EventSkeleton count={10} />
+                    return (
+                        <View className="items-center justify-center h-96">
+                            <Text className='text-foreground-light dark:text-foreground-dark'>
+                                No messages yet
+                            </Text>
+                        </View>
+                    )
+                }}
             />
 
             <KeyboardAvoidingView

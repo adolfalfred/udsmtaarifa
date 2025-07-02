@@ -18,6 +18,12 @@ export default function TabLayout() {
         >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
+                name="[id]"
+                options={{
+                    title: "Message"
+                }}
+            />
+            <Stack.Screen
                 name="notifications"
                 options={{
                     animation: 'fade_from_bottom',
