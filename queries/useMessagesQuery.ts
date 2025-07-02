@@ -9,6 +9,7 @@ export const useMessagesQuery = (
   chat: string
 ) => {
   const [store, setStore] = useState<MessageProps[]>([]);
+  const [seenIds, setSeenIds] = useState<Set<string>>(new Set());
 
   const { data, isLoading } = useQuery({
     queryKey: ["message", { search, page, chat }],
@@ -19,17 +20,35 @@ export const useMessagesQuery = (
   });
 
   useEffect(() => {
-    if (page === 1) setStore(data?.data ?? []);
-    else if (data)
-      setStore((prev) => {
-        const map = new Map();
-        [...prev, ...data.data].forEach((item) => {
-          map.set(item.id, item);
-        });
-        return Array.from(map.values()).sort(
+    if (!data) return;
+    if (page === 1) {
+      const newSet = new Set<string>();
+      data.data.forEach((item: MessageProps) => newSet.add(item.id));
+      setSeenIds(newSet);
+      setStore(
+        [...data.data].sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        )
+      );
+    } else
+      setStore((prev) => {
+        const newItems: MessageProps[] = [];
+        const updatedSet = new Set(seenIds);
+        data.data.forEach((item: MessageProps) => {
+          if (!updatedSet.has(item.id)) {
+            updatedSet.add(item.id);
+            newItems.push(item);
+          }
+        });
+        if (newItems.length > 0) {
+          setSeenIds(updatedSet);
+          return [...prev, ...newItems].sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        }
+        return prev;
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);

@@ -1,7 +1,7 @@
 import SelectMedia from "@/components/SelectMedia";
 import SelectUnits from "@/components/SelectUnits";
 import Button from "@/components/ui/Button";
-import Toast, { ToastType } from "@/components/ui/Toast";
+import Toast, { type ToastType } from "@/components/ui/Toast";
 import { useRef, useState } from "react";
 import { KeyboardAvoidingView, TextInput, ScrollView } from "react-native";
 import * as FileSystem from "expo-file-system";

@@ -25,7 +25,6 @@ export default function ImagePlayerView({ media, maxMediaHeight, screenWidth, hr
                         contentFit="cover"
                         style={StyleSheet.absoluteFill}
                         blurRadius={20}
-                        transition={500}
                     />
                     <Image
                         source={media.url}

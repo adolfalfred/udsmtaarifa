@@ -1,5 +1,5 @@
 import { useSessionStore } from '@/lib/zustand/useSessionStore';
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, StyleSheet } from 'react-native'
 import type { ChatProps } from '@/types/chat';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
@@ -13,7 +13,7 @@ export function ChatComponent({ item }: { item: ChatProps }) {
         <Link href={`/(stack)/(protected)/${item.id}`} asChild>
             <Pressable className='overflow-hidden h-16 w-full my-3'>
                 <View className='flex-row gap-2 rounded-2xl h-full w-full px-4'>
-                    <View className='h-16 w-16 shrink-0 rounded-full overflow-hidden bg-foreground-light/20 dark:bg-foreground-dark/20'>
+                    <View className={`h-16 w-16 shrink-0 overflow-hidden bg-foreground-light/20 dark:bg-foreground-dark/20 border-2 border-primary-light dark:border-primary-dark ${item.type === 'group' ? 'rounded-lg' : 'rounded-full'}`}>
                         {item.type === 'chat' && member ? (
                             <Image
                                 style={{
@@ -22,9 +22,24 @@ export function ChatComponent({ item }: { item: ChatProps }) {
                                     borderRadius: '100%'
                                 }}
                                 source={member.user.image}
-                                cachePolicy='none'
                                 contentFit="cover"
                             />
+                        ) : null}
+                        {item.type === 'group' && item?.image && item.image?.url ? (
+                            <>
+                                <Image
+                                    source={item.image.url}
+                                    contentFit="cover"
+                                    style={StyleSheet.absoluteFill}
+                                    blurRadius={20}
+                                />
+                                <Image
+                                    style={{ width: '100%', height: '100%' }}
+                                    source={item.image.url}
+                                    contentFit="cover"
+                                    transition={500}
+                                />
+                            </>
                         ) : null}
                     </View>
                     <View className='flex-col justify-center gap-1 shrink'>

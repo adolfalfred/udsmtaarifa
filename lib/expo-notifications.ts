@@ -7,8 +7,8 @@ export async function sendPushNotification(expoPushToken: string) {
   const message = {
     to: expoPushToken,
     sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
+    title: "Class Announcement",
+    body: "Test to of IS366 will be conducted on wednesday next week!",
     data: { url: "/(stack)/(protected)/(tabs)/events/event" },
   };
 

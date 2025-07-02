@@ -109,7 +109,6 @@ export function EventComponent({ item, page = false }: { item: EventProps, page?
                                 contentFit="cover"
                                 style={StyleSheet.absoluteFill}
                                 blurRadius={20}
-                                transition={500}
                             />
                             <Image
                                 source={mediaArray[0].url}

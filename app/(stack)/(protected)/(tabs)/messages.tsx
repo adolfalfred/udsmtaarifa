@@ -57,7 +57,7 @@ export default function MessagesScreen() {
                 data={data}
                 renderItem={renderChat}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{ paddingBottom: 100, backgroundColor: colors.background[colorScheme] }}
+                contentContainerStyle={{ paddingBottom: 100, flex: 1, backgroundColor: colors.background[colorScheme] }}
                 refreshing={refreshing}
                 onRefresh={handleRefresh}
                 onEndReached={handleLoadMore}
