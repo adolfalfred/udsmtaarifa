@@ -22,6 +22,7 @@ import {
 import * as FileSystem from "expo-file-system"
 import { Image } from 'expo-image';
 import { useChatQuery } from '@/queries/useChatsQuery';
+import { socket } from '@/lib/socket';
 
 export default function ChatScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -119,13 +120,16 @@ export default function ChatScreen() {
                     )
                 }}
             />
-            <ChatInput chatId={id} setPage={setPage} />
+            <ChatInput
+                chatId={id}
+                setPage={setPage}
+                name={chat ? chat.type === 'chat' ? chat.members.find((item) => item.user.id !== user?.id)?.user.name : chat.name : undefined} />
         </>
     );
 }
 
 
-const ChatInput = ({ chatId, setPage }: { chatId: string; setPage: (page: number) => void; }) => {
+const ChatInput = ({ chatId, setPage, name }: { chatId: string; setPage: (page: number) => void; name?: string | null }) => {
     const [content, setContent] = useState('')
     const [loading, setLoading] = useState(false)
     const [media, setMedia] = useState<string | null>(null);
@@ -180,6 +184,7 @@ const ChatInput = ({ chatId, setPage }: { chatId: string; setPage: (page: number
                     refetchType: "active",
                     queryKey: ["chat"],
                 })
+                socket.emit("send-message", chatId, user.id, name, content)
                 setPage(1)
                 setContent("")
             })
@@ -220,7 +225,7 @@ const ChatInput = ({ chatId, setPage }: { chatId: string; setPage: (page: number
                         multiline
                         numberOfLines={15}
                         textAlignVertical="top"
-                        editable={!loading}
+                        editable={!loading || name === null || name === undefined}
                         cursorColor={colors.primary[colorScheme]}
 
                     />

@@ -1,10 +1,43 @@
+import { useSessionStore } from '@/lib/zustand/useSessionStore';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useQueryClient } from '@tanstack/react-query';
 import BackButton from '@/components/BackButton';
 import { colors } from '@/constants/Colors';
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
+import { socket } from '@/lib/socket';
 
-export default function TabLayout() {
+export default function StackLayout() {
     const colorScheme = useColorScheme();
+    const { user } = useSessionStore();
+    const queryClient = useQueryClient()
+
+    useEffect(() => {
+        if (!user?.id) return;
+        socket.on("room-created", (id) => { console.log(id) });
+        socket.on("user-joined", () => { });
+        socket.on("add-message", async () => {
+            await queryClient.invalidateQueries({
+                refetchType: "active",
+                queryKey: ["message"],
+            })
+            await queryClient.invalidateQueries({
+                refetchType: "active",
+                queryKey: ["chat"],
+            })
+        });
+
+        return () => {
+            socket.off("room-created");
+            socket.off("user-joined");
+        }
+    }, [queryClient, user?.id])
+
+    useEffect(() => {
+        if (!user?.id) return;
+
+    }, [user?.id]);
+
     return (
         <Stack
             screenOptions={{

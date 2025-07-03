@@ -3,11 +3,17 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import type { ChatProps } from '@/types/chat';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
+import { useEffect } from 'react';
+import { socket } from '@/lib/socket';
 
 export function ChatComponent({ item }: { item: ChatProps }) {
     const { user } = useSessionStore()
 
     const member = item.type === 'chat' ? item.members.find((item) => item.user.id !== user?.id) : null
+
+    useEffect(() => {
+        socket.emit("create-room", item.id);
+    }, [item.id])
 
     return (
         <Link href={`/(stack)/(protected)/${item.id}`} asChild>
