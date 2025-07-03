@@ -14,7 +14,7 @@ export default function TabLayout() {
         queryClient.clear();
     }, [isLoggedIn, queryClient]);
 
-    console.log(process.env.EXPO_PUBLIC_LIVE_SERVER)
+    console.log('https://udsmtaarifalive.adlewolf.com')
 
     return (
         <Stack

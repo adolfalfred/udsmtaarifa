@@ -4,7 +4,7 @@ import axios from "axios";
 // It sets the base URL for the API and allows for setting authentication cookies.
 //The `setAuthCookie` function is used to set the authentication cookie in the Axios instance headers.
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_DB_SERVER,
+  baseURL: "https://udsmtaarifa.vercel.app/api",
   withCredentials: true,
 });
 

@@ -12,7 +12,7 @@ export const signIn = async (
 ): Promise<UserProps | string> => {
   try {
     const response = await axios.post(
-      `${process.env.EXPO_PUBLIC_DB_SERVER}/auth/login`,
+      `https://udsmtaarifa.vercel.app/api/auth/login`,
       { regNo: regNo.trim(), password, notificationId }
     );
 
@@ -20,7 +20,7 @@ export const signIn = async (
     if (!token) throw new Error("Cookie missing in response");
 
     const res = await axios.get(
-      `${process.env.EXPO_PUBLIC_DB_SERVER}/auth/session`,
+      `https://udsmtaarifa.vercel.app/api/auth/session`,
       {
         headers: {
           Cookie: token[0],

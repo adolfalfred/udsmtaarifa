@@ -70,7 +70,7 @@ export default function Register() {
             }
             setLoading(true)
             addToast('loading', "Verifying data...")
-            const res = await axios.post(`${process.env.EXPO_PUBLIC_DB_SERVER}/auth/verify`, { email, phone, regNo });
+            const res = await axios.post(`https://udsmtaarifa.vercel.app/api/auth/verify`, { email, phone, regNo });
             setPhoto(res.data?.image || null)
             setRegNo((prev) => res.data?.regNo ? res.data?.regNo : prev)
             setEmail((prev) => res.data?.email ? res.data?.email : prev)
@@ -151,7 +151,7 @@ export default function Register() {
             e.append("password", password)
             if (programmeId) e.append("programmeId", programmeId)
 
-            const res = await axios.post(`${process.env.EXPO_PUBLIC_DB_SERVER}/auth/signup`, e, {
+            const res = await axios.post(`https://udsmtaarifa.vercel.app/api/auth/signup`, e, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
@@ -187,7 +187,7 @@ export default function Register() {
 
     const { data } = useQuery({
         queryKey: ["programme", { search: "", limit: 10000, page: 1 }],
-        queryFn: () => axios.get(`${process.env.EXPO_PUBLIC_DB_SERVER}/programme?s=&limit=10000&page=1`, { withCredentials: true }),
+        queryFn: () => axios.get(`https://udsmtaarifa.vercel.app/api/programme?s=&limit=10000&page=1`, { withCredentials: true }),
     });
 
     return (
