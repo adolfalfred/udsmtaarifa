@@ -4,6 +4,7 @@ import * as FileSystem from "expo-file-system";
 import api, { setAuthCookie } from "./api";
 import axios from "axios";
 // This file is used to handle user authentication, including sign-in, sign-out, and session management.
+// It uses Axios for making HTTP requests and Expo SecureStore for storing user tokens securely.
 export const signIn = async (
   regNo: string,
   password: string,

@@ -2,6 +2,8 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
+// This file is used to handle push notifications in an Expo application.
+// It includes functions to register for push notifications and send a test notification.
 
 export async function sendPushNotification(expoPushToken: string) {
   const message = {
