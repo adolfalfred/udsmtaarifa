@@ -36,6 +36,7 @@ export default function Login() {
             if (auth && typeof auth !== 'string') {
                 setIsLoggedIn(true)
                 setUser(auth)
+                console.log(auth)
                 addToast('success', "Welcome!", true)
                 return;
             } else addToast('danger', auth, true)

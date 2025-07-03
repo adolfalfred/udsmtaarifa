@@ -10,6 +10,11 @@ export type UserProps = {
   name: string | null;
   phone: string;
   regNo: string;
+  userRoles: {
+    role: {
+      name: string;
+    };
+  }[];
 };
 
 type AuthState = {
