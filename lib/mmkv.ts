@@ -1,6 +1,6 @@
 import { StateStorage } from "zustand/middleware";
 import { MMKV } from "react-native-mmkv";
-
+// This file is used to create a Zustand storage using MMKV for persistent state management.
 const storage = new MMKV({
   id: "settings-store",
 });
