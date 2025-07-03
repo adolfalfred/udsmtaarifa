@@ -22,6 +22,7 @@ export const useCommentsQuery = (
   useEffect(() => {
     if (!data) return;
     if (page === 1) {
+      
       const newSet = new Set<string>();
       data.data.forEach((item: CommentProps) => newSet.add(item.id));
       setSeenIds(newSet);

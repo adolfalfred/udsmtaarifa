@@ -17,6 +17,7 @@ export const useLikesQuery = (search: string, page: number, post: string) => {
 
   useEffect(() => {
     if (!data) return;
+    
     if (page === 1) {
       const newSet = new Set<string>();
       data.data.forEach((item: LikeProps) =>

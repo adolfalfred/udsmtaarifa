@@ -16,6 +16,7 @@ export function convertISOToReadable(
     hour12: false,
   };
   const formatOptions = { ...defaultOptions, ...options };
+  // Ensure the locale is valid
   return date.toLocaleString(locale, formatOptions);
 }
 

@@ -8,6 +8,7 @@ import { router } from 'expo-router'
 
 export default function BackButton(props: HeaderBackButtonProps & { canGoBack?: boolean }) {
     const colorScheme = useColorScheme()
+    
     if (router.canGoBack())
         return (
             <HapticTab

@@ -22,6 +22,9 @@ export const useEventsQuery = (
 
   useEffect(() => {
     if (page === 1) setStore(data?.data ?? []);
+    // If the page is 1, we reset the store to the new data
+    else if (page > 1 && data?.data)
+      setStore((prev) => [...prev, ...data.data]);
     else if (data)
       setStore((prev) => {
         const map = new Map();
